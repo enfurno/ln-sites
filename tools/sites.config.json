@@ -1,8 +1,9 @@
 {
- "_doc": "Single source of truth for every site deploy. Read by deploylib.mjs (mkdeploy2, deploy-check, smoke). Do not hand-copy these into scripts.",
+ "_doc": "Single source of truth for every site deploy. dir and worker_src are relative to the repo root. Read by deploylib.mjs (mkdeploy2, deploy-check, smoke). Do not hand-copy these into scripts.",
  "meiji": {
   "worker": "meiji-loadednacho",
-  "dir": "drafts-next/meiji",
+  "dir": "sites/meiji/public",
+  "worker_src": "sites/meiji/worker.js",
   "base": "https://meijiok.com",
   "biz": "meiji",
   "assets": {
@@ -48,7 +49,8 @@
  },
  "canrocks": {
   "worker": "canrocks-loadednacho",
-  "dir": "drafts-next/canrocks",
+  "dir": "sites/canrocks/public",
+  "worker_src": "sites/canrocks/worker.js",
   "base": "https://canrocks.loadednacho.com",
   "biz": "canrocks",
   "assets": {
@@ -89,7 +91,8 @@
  },
  "cove": {
   "worker": "catfishcove-preview",
-  "dir": "drafts-next/cove",
+  "dir": "sites/cove/public",
+  "worker_src": "sites/cove/worker.js",
   "base": "https://cove-preview.loadednacho.com",
   "biz": "catfishcove",
   "assets": {
@@ -147,7 +150,8 @@
  },
  "loadednacho": {
   "worker": "loadednacho-preview",
-  "dir": "/workspace/loadednacho/site",
+  "dir": "sites/loadednacho/public",
+  "worker_src": "sites/loadednacho/worker.js",
   "base": "https://loadednacho.com",
   "biz": null,
   "assets": {
@@ -183,7 +187,8 @@
  },
  "cove-staging": {
   "worker": "catfishcove-staging",
-  "dir": "cove/cutover-20261026/site",
+  "dir": "sites/cove/public",
+  "worker_src": "sites/cove/worker.js",
   "base": "https://catfishcove-staging.loadednacho.workers.dev",
   "biz": "catfishcove",
   "assets": {
