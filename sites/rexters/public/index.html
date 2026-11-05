@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rexter's Self Storage | Self Storage in Gainesville, TX</title>
+<meta name="description" content="Clean, secure, convenient self storage in Gainesville, TX. A range of unit sizes, gated access, and easy online rentals. Call (940) 665-7245.">
+<meta name="theme-color" content="#0b1f3a">
+<link rel="icon" href="__LOGO_URI__" type="image/jpeg">
+<style>
+:root{
+  --navy:#0b1f3a; --navy-2:#12325e; --blue:#1f5fbf;
+  --orange:#f6863c; --orange-d:#e2641a; --red:#e2231a;
+  --ink:#141414; --mut:#5b6472; --bg:#ffffff; --bg2:#f2f5f9; --line:#e3e8ef;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:inherit}
+h1,h2,h3,.btn,.chip{font-weight:800;letter-spacing:-.01em}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+.util{background:var(--navy);color:#fff;font-size:13.5px}
+.util .wrap{display:flex;gap:22px;align-items:center;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.util a{color:#ffd8b8;text-decoration:none}
+.util .r{margin-left:auto;display:flex;gap:22px}
+
+.hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.hdr .wrap{display:flex;align-items:center;gap:26px;padding-top:12px;padding-bottom:12px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand .logo{height:58px;width:auto;max-width:230px;object-fit:contain;border-radius:6px;background:transparent}
+.brand .name{font-weight:800;font-size:19px;line-height:1.05;color:var(--navy)}
+.brand .name span{display:block;font-weight:500;font-size:12px;letter-spacing:.08em;color:var(--mut);text-transform:uppercase}
+nav{display:flex;align-items:center;gap:22px;margin-left:auto}
+nav a{text-decoration:none;font-weight:600;font-size:14.5px;color:var(--navy)}
+nav a:hover{color:var(--orange-d)}
+.hdr .cta{background:var(--orange);color:#3b1500;padding:11px 20px;border-radius:9px;font-weight:800;text-decoration:none;font-size:14.5px}
+.hdr .cta:hover{background:var(--orange-d);color:#fff}
+
+.hero{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 60%,#0d2f5c 100%);color:#fff;padding:74px 0 66px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-120px;top:-120px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(246,134,60,.38),transparent 70%)}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffbf8f;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:6px 12px;border-radius:999px}
+.hero h1{font-size:clamp(34px,5.4vw,60px);line-height:1.04;margin:20px 0 16px;max-width:19ch}
+.hero p.lead{font-size:clamp(16px,1.4vw,19px);color:#dbe6f5;max-width:54ch}
+.hero .acts{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.hero .acts .btn{background:var(--orange);color:#3b1500;padding:15px 26px;border-radius:10px;font-weight:800;text-decoration:none;font-size:16px}
+.hero .acts .btn.solid{background:var(--orange)}
+.hero .acts .btn.ghost{border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff}
+.hero .quick{margin-top:34px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:18px;max-width:640px}
+.hero .quick .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffbf8f;font-weight:700}
+.hero .quick .sg{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hero .quick a{background:#fff;color:var(--navy);text-decoration:none;font-weight:700;padding:8px 14px;border-radius:8px;font-size:14px}
+.hero .quick a:hover{background:var(--orange);color:#3b1500}
+
+section{padding:62px 0}
+.s-head{margin-bottom:30px}
+.s-head .k{color:var(--orange-d);font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.s-head h2{font-size:clamp(26px,3.4vw,36px);color:var(--navy);margin-top:6px}
+.s-head p{color:var(--mut);max-width:60ch;margin-top:10px}
+.bg2{background:var(--bg2)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:10px;transition:transform .15s,border-color .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);border-color:#c9d6e6;box-shadow:0 10px 24px rgba(11,31,58,.08)}
+.card .size{font-size:30px;font-weight:800;color:var(--navy)}
+.card .price{font-size:14px;color:var(--mut)}
+.card .price b{color:var(--red);font-size:19px}
+.card ul{list-style:none;font-size:13.5px;color:var(--mut);display:grid;gap:5px;margin:2px 0 6px}
+.card ul li:before{content:"\2713 ";color:#1f8a4c;font-weight:800}
+.card .reserve{margin-top:auto;background:var(--orange);color:#3b1500;border:0;border-radius:9px;padding:11px;font-weight:800;cursor:pointer;font-size:14.5px}
+.card .reserve:hover{background:var(--orange-d);color:#fff}
+.note{font-size:12.5px;color:var(--mut);margin-top:18px}
+/* amenities */
+.amen{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px}
+.amen .a{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 2px 10px rgba(11,31,58,.05)}
+.amen .a .i{font-size:26px}
+.amen .a h3{color:var(--navy);font-size:17px;margin:8px 0 5px}
+.amen .a p{font-size:14px;color:var(--mut)}
+
+/* how it works */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:0 2px 10px rgba(11,31,58,.05)}
+.step .n{width:34px;height:34px;border-radius:50%;background:var(--orange);color:#3b1500;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.step h3{color:var(--navy);font-size:17px;margin-bottom:6px}
+.step p{font-size:14px;color:var(--mut)}
+
+/* two-column layout + info list */
+.two{display:grid;grid-template-columns:1.1fr 1fr;gap:30px}
+.info .row{display:flex;gap:12px;margin-top:14px}
+.info .row b{color:var(--navy)}
+.info .row span{color:var(--mut);font-size:14.5px}
+.info a{color:var(--blue);text-decoration:none;font-weight:600}
+.info a:hover{color:var(--orange-d);text-decoration:underline}
+
+/* forms: distinct boxes that read against white */
+.reserve-block{background:#fff;border:1px solid #d5deea;border-radius:14px;padding:24px;box-shadow:0 10px 28px rgba(11,31,58,.08)}
+.reserve-block label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin:14px 0 5px;letter-spacing:.02em}
+.reserve-block input,.reserve-block select,.reserve-block textarea{width:100%;background:#fff;border:1.5px solid #c7d3e2;border-radius:9px;padding:11px 13px;font-size:15px;color:var(--ink)}
+.reserve-block input:focus,.reserve-block select:focus,.reserve-block textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(246,134,60,.16)}
+.reserve-block button{width:100%;background:var(--orange);color:#3b1500;border:0;border-radius:10px;padding:14px;font-weight:800;font-size:15.5px;margin-top:18px;cursor:pointer;box-shadow:0 4px 12px rgba(226,100,26,.26)}
+.reserve-block button:hover{background:var(--orange-d);color:#fff}
+.reserve-block .ok{display:none;background:#eaf7f0;color:#1f6b3c;border:1px solid #bfe6cf;border-radius:9px;padding:12px;margin-top:14px;font-size:14.5px}
+
+/* pay band */
+.band{background:linear-gradient(120deg,#13233f,var(--navy-2));color:#fff;border-radius:16px;padding:34px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.band h3{font-size:clamp(22px,2.6vw,30px)}
+.band p{color:#d6e4f5;margin-top:6px;max-width:52ch}
+.band .btn{background:var(--orange);color:#3b1500;text-decoration:none;font-weight:800;padding:15px 28px;border-radius:10px;margin-left:auto;box-shadow:0 4px 14px rgba(226,100,26,.3)}
+.band .btn:hover{background:var(--orange-d);color:#fff}
+
+/* footer: readable, colourful, distinct columns */
+footer{background:linear-gradient(180deg,#12325e 0%,#0b1f3a 100%);color:#eaf1fa;padding:0 0 26px;font-size:14.5px;border-top:6px solid var(--orange)}
+footer .wrap{display:grid;grid-template-columns:2fr 1fr 1fr;gap:20px;padding-top:38px}
+footer .wrap > div{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px}
+footer h4{color:var(--orange);font-size:12.5px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
+footer .brand .name{color:#fff}
+footer a{color:#d5e4f5;text-decoration:none;display:block;font-size:14.5px;margin:8px 0;font-weight:500}
+footer a:hover{color:var(--orange);text-decoration:underline}
+footer p{color:#b9cade}
+footer .base{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;color:#a7bcd4;display:flex;gap:18px;flex-wrap:wrap}
+
+@media(max-width:900px){nav{display:none}.two{grid-template-columns:1fr}}
+@media(max-width:640px){.util .r{display:none}}
+</style>
+</head>
+<body>
+
+<div class="util">
+  <div class="wrap">
+    <span>3222 E US Hwy 82, Gainesville, TX 76240</span>
+    <div class="r">
+      <a href="tel:19406657245">(940) 665-7245</a>
+      <span>Mon–Fri 8:30am–5pm · Sat by appt</span>
+    </div>
+  </div>
+</div>
+
+<header class="hdr">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img class="logo" src="__LOGO_URI__" alt="Rexter's Self Storage">
+      <span class="name">Rexter's<br><span>Self Storage · Gainesville, TX</span></span>
+    </a>
+    <nav>
+      <a href="#units">Units &amp; Pricing</a>
+      <a href="#how">How It Works</a>
+      <a href="#pay">Pay Online</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="cta" href="#reserve">Rent Now</a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">Now under new ownership</span>
+    <h1>Clean, secure self storage in Gainesville, TX</h1>
+    <p class="lead">Find the right size, reserve it in minutes, and move in on your schedule. Gated, well-lit, and easy to get to on US Hwy 82.</p>
+    <div class="acts">
+      <a class="btn solid" href="#reserve">Rent Online</a>
+      <a class="btn ghost" href="tel:19406657245">Call (940) 665-7245</a>
+    </div>
+    <div class="quick">
+      <div class="t">Pick a size to get started</div>
+      <div class="sg">
+        <a data-s="5x5" href="#reserve">5×5</a>
+        <a data-s="5x10" href="#reserve">5×10</a>
+        <a data-s="10x10" href="#reserve">10×10</a>
+        <a data-s="10x15" href="#reserve">10×15</a>
+        <a data-s="10x20" href="#reserve">10×20</a>
+        <a data-s="10x25" href="#reserve">10×25</a>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="units">
+  <div class="wrap">
+    <div class="s-head">
+      <div class="k">Units &amp; Pricing</div>
+      <h2>Find your size</h2>
+      <p>Every size below is available to rent online. Prices shown are sample rates for this preview — confirm the current monthly rate when you reserve.</p>
+    </div>
+    <div class="grid" id="unitgrid">
+      <div class="card" data-size="5x5"><div class="size">5×5</div><div class="price">from <b>$55</b>/mo</div><ul><li>Locker size</li><li>Documents &amp; small boxes</li></ul><button class="reserve">Reserve this unit</button></div>
+      <div class="card" data-size="5x10"><div class="size">5×10</div><div class="price">from <b>$70</b>/mo</div><ul><li>Small household items</li><li>Seasonal gear</li></ul><button class="reserve">Reserve this unit</button></div>
+      <div class="card" data-size="10x10"><div class="size">10×10</div><div class="price">from <b>$95</b>/mo</div><ul><li>One-room apartment</li><li>Furniture &amp; boxes</li></ul><button class="reserve">Reserve this unit</button></div>
+      <div class="card" data-size="10x15"><div class="size">10×15</div><div class="price">from <b>$120</b>/mo</div><ul><li>Two-bedroom home</li><li>Furniture + appliances</li></ul><button class="reserve">Reserve this unit</button></div>
+      <div class="card" data-size="10x20"><div class="size">10×20</div><div class="price">from <b>$150</b>/mo</div><ul><li>Two/three-bedroom home</li><li>Vehicle or large items</li></ul><button class="reserve">Reserve this unit</button></div>
+      <div class="card" data-size="10x25"><div class="size">10×25</div><div class="price">from <b>$175</b>/mo</div><ul><li>Largest size</li><li>Full household + vehicle</li></ul><button class="reserve">Reserve this unit</button></div>
+    </div>
+    <p class="note">Need a different size, a covered/RV space, or climate-controlled? Ask — most combinations are available.</p>
+  </div>
+</section>
+
+<section class="bg2">
+  <div class="wrap">
+    <div class="s-head"><div class="k">Why Rexter's</div><h2>Convenient, secure, and easy</h2></div>
+    <div class="amen">
+      <div class="a"><div class="i">🔐</div><h3>Gated access</h3><p>Secure, well-lit, with controlled entry.</p></div>
+      <div class="a"><div class="i">📦</div><h3>Variety of sizes</h3><p>From small lockers to drive-up 10×25 spaces.</p></div>
+      <div class="a"><div class="i">🚚</div><h3>Moving supplies</h3><p>Boxes, tape, locks, and packing materials on site.</p></div>
+      <div class="a"><div class="i">💳</div><h3>Online payments</h3><p>Reserve and pay from your phone, anytime.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="s-head"><div class="k">Renting is easy</div><h2>How it works</h2></div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Choose a unit</h3><p>Pick your size above or ask us what fits.</p></div>
+      <div class="step"><div class="n">2</div><h3>Reserve &amp; pay</h3><p>Rent online — sign and pay your first month by card.</p></div>
+      <div class="step"><div class="n">3</div><h3>Move in</h3><p>Get your access code and move in on your schedule.</p></div>
+    </div>
+  </div>
+</section>
+<section id="reserve" class="bg2">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <div class="s-head"><div class="k">Reserve</div><h2>Reserve your unit</h2>
+        <p>Tell us which size you need and we'll lock it in. Online card rental is being turned on here — until it is, pick a size and we'll call you right back to finish the rental in a couple of minutes.</p></div>
+        <div class="reserve-block">
+          <label>Size *</label>
+          <select id="rz-size">
+            <option>5×5</option><option>5×10</option><option>10×10</option><option>10×15</option><option>10×20</option><option>10×25</option><option>Other / ask us</option>
+          </select>
+          <label>Name *</label><input id="rz-name" placeholder="Your name" type="text">
+          <label>Phone *</label><input id="rz-phone" placeholder="(555) 000-0000" type="tel">
+          <button id="rz-go">Request this unit</button>
+          <div class="ok" id="rz-ok">Thanks! We'll confirm availability and call you shortly. Need it now? Call <b>(940) 665-7245</b>.</div>
+        </div>
+      </div>
+      <div id="about" class="info">
+        <div class="s-head"><div class="k">About</div><h2>Rexter's Self Storage</h2>
+        <p style="color:var(--mut)">Under new ownership and serving Gainesville and all of Cooke County. A straight-forward place to store what you need — clean, secure, and close to the main highway.</p></div>
+        <div class="row"><b>📍</b><span>3222 E US Hwy 82,<br>Gainesville, TX 76240</span></div>
+        <div class="row"><b>📞</b><span><a href="tel:19406657245">(940) 665-7245</a></span></div>
+        <div class="row"><b>🕒</b><span>Mon–Fri 8:30am–5pm<br>Sat by appointment</span></div>
+        <div class="row"><b>🗺️</b><span><a href="https://www.google.com/maps/search/?api=1&amp;query=3222+East+US+Highway+82+Gainesville+TX+76240" target="_blank" rel="noopener">Get directions</a></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pay">
+  <div class="wrap">
+    <div class="band">
+      <div>
+        <h3>Pay your bill online</h3>
+        <p>Make a payment from your phone or computer, anytime. (Online payments are being connected here — you can also call or stop by the office.)</p>
+      </div>
+      <a class="btn" href="tel:19406657245">Pay Online</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="s-head"><div class="k">Contact</div><h2>Talk to us</h2>
+    <p>Questions about sizes, availability, or pricing? Call, email, or drop by the office.</p></div>
+    <div class="reserve-block">
+      <label>Your name *</label><input id="ct-name" type="text" placeholder="Your name">
+      <label>Email or phone *</label><input id="ct-contact" type="text" placeholder="you@example.com or phone">
+      <label>Message *</label><textarea id="ct-msg" rows="3" style="width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;font:inherit"></textarea>
+      <button id="ct-go">Send message</button>
+      <div class="ok" id="ct-ok">Message received — we'll get back to you shortly. Urgent? Call <b>(940) 665-7245</b>.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="brand" style="color:#fff"><img class="logo" src="__LOGO_URI__" alt="" style="height:48px;width:auto;max-width:200px;object-fit:contain"><span class="name">Rexter's<br><span style="color:#93a5bd">Self Storage · Gainesville, TX</span></span></div>
+      <p style="margin-top:14px;color:#93a5bd">Clean, secure, and convenient storage in Gainesville, TX.</p>
+    </div>
+    <div><h4>Explore</h4><a href="#units">Units &amp; Pricing</a><a href="#how">How It Works</a><a href="#reserve">Rent Online</a><a href="#pay">Pay Online</a></div>
+    <div><h4>Contact</h4><a href="tel:19406657245">(940) 665-7245</a><a href="mailto:gainesselfstorage@gmail.com">gainesselfstorage@gmail.com</a><a href="https://www.google.com/maps/search/?api=1&amp;query=3222+East+US+Highway+82+Gainesville+TX+76240" target="_blank" rel="noopener">Get directions</a></div>
+  </div>
+  <div class="wrap base">&copy; 2026 Rexter's Self Storage · Gainesville, TX · All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  document.querySelectorAll('.quick a').forEach(function(a){
+    a.addEventListener('click',function(){var s=a.getAttribute('data-s');var sel=document.getElementById('rz-size');if(!s||!sel)return;var want=s.toLowerCase().replace('x','\u00d7');for(var i=0;i<sel.options.length;i++){if(sel.options[i].text.toLowerCase().indexOf(want)>-1){sel.selectedIndex=i;break}}});
+  });
+  document.querySelectorAll('.card .reserve').forEach(function(b){
+    b.addEventListener('click',function(){var sz=b.closest('.card').getAttribute('data-size');var sel=document.getElementById('rz-size');if(sz&&sel){var want=sz.toLowerCase().replace('x','\u00d7');for(var i=0;i<sel.options.length;i++){if(sel.options[i].text.toLowerCase().indexOf(want)>-1){sel.selectedIndex=i;break}}}
+      var n=document.getElementById('rz-name');if(n)n.focus();location.hash='#reserve';});
+  });
+  document.getElementById('rz-go').addEventListener('click',function(){document.getElementById('rz-ok').style.display='block'});
+  document.getElementById('ct-go').addEventListener('click',function(){document.getElementById('ct-ok').style.display='block'});
+})();
+</script>
+</body>
+</html>
