@@ -45,6 +45,23 @@ Prices change and depend on features/gate hardware; treat these as ballparks.
 - **Our Stripe path:** the only ongoing cost is **Stripe's transaction fees** (no monthly software
   fee); our cost is the one-time build effort.
 
+## Can we build our own backend to manage gate access + the rest?
+Yes, and here's the honest split of what that means:
+
+**Fully buildable by us (the "management software"):**
+- Tenant accounts, unit inventory, rental/lease records, deposits & first month → **Stripe**.
+- **Recurring monthly billing, payment reminders, late notices**, and a customer "pay my bill / manage" page.
+- **Access-code policy**: auto-issue a gate PIN when a lease starts, expire it when it ends or rent lapses.
+- Emailed receipts and renewals. Everything stays in our D1 DB + Stripe.
+
+**The one thing you can't do in pure software — the physical gate:**
+- Somewhere at the facility there is a **gate controller / keypad / electric gate opener**. "Managing gate access" ultimately means telling *that box* to accept/revoke a code.
+- **If that controller has a cloud or local API** (many modern "WiFi/cellular gate control" boxes do), we can talk to it directly over HTTP and issue/revoke codes — no vendor middle-man needed. That's the `api/gate.js` adapter.
+- **If it's a closed controller** (only pairs with ESS/StorEdge/SiteLink's software), then to automate gate codes you either replace the controller or use the vendor's access features.
+
+**Bottom line:** you can build ~90% of what ESS/StorEdge do (the software: rentals, billing, payments, codes, portal) with Stripe + D1 + a gate adapter. What you keep that's physical is the gate hardware itself — and you'll want an installer/quote for that. Tell us **which gate/access controller is at the facility** and we'll say with certainty whether it has an open API (most do these days).
+
 ## Files
 - `api/schema.sql` — D1 tables (units, reservations, payments), provider-agnostic.
 - `api/reserve.js` — `startRental` entry point (Stripe now, swappable for a platform).
+- `api/gate.js` — gate/access adapter seam (`setGateCode` / `revokeGateCode`), ready for a physical controller's API.
