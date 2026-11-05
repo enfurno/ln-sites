@@ -178,8 +178,10 @@ ${body}
 const PAGE_JS = `(function(){
 var root=document.documentElement, RM=false;
 try{RM=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
-/* Hero video: the looped clip is a ~4.4s forward-and-back camera push (zoom in/out).
-   Slowing the playback rate makes that push much gentler. 1 = as shot, 0.55 = ~half speed. */
+/* Hero motion:
+   KB=1 (default): Ken Burns effect — a slow left-right pan + slight zoom on the hero still. No video.
+   KB=0: the looped video clip, slowed to HB playback rate (0.55 = ~half speed). */
+var KB=1;
 var HB=0.55;
 function onScroll(){var y=window.pageYOffset||root.scrollTop;root.classList[y>40?'add':'remove']('scrolled')}
 addEventListener('scroll',onScroll,{passive:true});onScroll();
@@ -216,6 +218,12 @@ Array.prototype.forEach.call(document.querySelectorAll('[data-sw]'),function(sw)
 /* hero video: poster stays until the video is actually painting; errors fall back to the poster */
 Array.prototype.forEach.call(document.querySelectorAll('[data-hero]'),function(h){
   var v=h.querySelector('video');if(!v)return;
+  if(KB){
+    var poster=h.querySelector('.hposter');
+    if(poster&&!RM)poster.classList.add('kb');
+    try{v.removeAttribute('autoplay');v.setAttribute('preload','none');v.remove()}catch(e){}
+    return;
+  }
   try{v.defaultPlaybackRate=HB;v.playbackRate=HB}catch(e){}
   /* small screens take the 720 encode, but only before it has painted */
   try{if(v.dataset.small&&matchMedia('(max-width: 900px)').matches&&v.readyState<2){v.src=v.dataset.small;v.load()}}catch(e){}
@@ -352,6 +360,9 @@ padding:calc(var(--hh) + var(--s5) + var(--pvh)) var(--g) var(--s6);overflow:hid
 .hero .hposter{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease)}
 .hero.vid-live video{opacity:1}
+.hero .hposter.kb{transform:scale(1.06);transform-origin:50% 50%;will-change:transform}
+@media(prefers-reduced-motion:no-preference){.hero .hposter.kb{animation:lnkb 34s ease-in-out infinite}}
+@keyframes lnkb{0%{transform:scale(1.06) translate(-1.2%,0)}50%{transform:scale(1.06) translate(1.2%,0)}100%{transform:scale(1.06) translate(-1.2%,0)}}
 .hero .scrim{position:absolute;inset:0;z-index:-1;background:
 linear-gradient(90deg,rgba(11,10,13,.94) 0%,rgba(11,10,13,.82) 34%,rgba(11,10,13,.42) 62%,rgba(11,10,13,.3) 100%),
 linear-gradient(0deg,rgba(11,10,13,.96) 0%,rgba(11,10,13,.55) 26%,rgba(11,10,13,0) 62%)}
@@ -917,6 +928,9 @@ padding:calc(var(--hh) + var(--pvh) + var(--s5)) var(--g) var(--s6)}
 .hero .hposter{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s var(--ease)}
 .hero.vid-live video{opacity:1}
+.hero .hposter.kb{transform:scale(1.06);transform-origin:50% 50%;will-change:transform}
+@media(prefers-reduced-motion:no-preference){.hero .hposter.kb{animation:lnkb 34s ease-in-out infinite}}
+@keyframes lnkb{0%{transform:scale(1.06) translate(-1.2%,0)}50%{transform:scale(1.06) translate(1.2%,0)}100%{transform:scale(1.06) translate(-1.2%,0)}}
 .hero .scrim{position:absolute;inset:0;z-index:-1;background:
 linear-gradient(90deg,rgba(15,10,9,.9) 0%,rgba(15,10,9,.74) 42%,rgba(15,10,9,.34) 72%,rgba(6,9,16,.55) 100%),
 linear-gradient(0deg,rgba(10,7,6,.92) 0%,rgba(10,7,6,.4) 34%,rgba(10,7,6,.05) 70%)}
