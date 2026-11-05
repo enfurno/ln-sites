@@ -1,0 +1,243 @@
+{
+ "_doc": "Single source of truth for every site deploy. Read by deploylib.mjs (mkdeploy2, deploy-check, smoke). Do not hand-copy these into scripts.",
+ "meiji": {
+  "worker": "meiji-loadednacho",
+  "dir": "drafts-next/meiji",
+  "base": "https://meijiok.com",
+  "biz": "meiji",
+  "assets": {
+   "html_handling": "auto-trailing-slash",
+   "not_found_handling": "404-page",
+   "run_worker_first": true
+  },
+  "headers_file": "_headers",
+  "bindings": [
+   {
+    "type": "assets",
+    "name": "ASSETS"
+   },
+   {
+    "type": "d1",
+    "name": "DB"
+   },
+   {
+    "type": "service",
+    "name": "PORTAL",
+    "service": "ln-portal"
+   },
+   {
+    "type": "secret_text",
+    "name": "BREVO_API_KEY"
+   }
+  ],
+  "crons": [
+   "0 9 * * *"
+  ],
+  "noindex": false,
+  "pages_200": [
+   "/",
+   "/menu",
+   "/locations"
+  ],
+  "module_pages": {
+   "/careers": "applications",
+   "/reservations": "reservations",
+   "/catering": "catering",
+   "/blog": "blog"
+  }
+ },
+ "canrocks": {
+  "worker": "canrocks-loadednacho",
+  "dir": "drafts-next/canrocks",
+  "base": "https://canrocks.loadednacho.com",
+  "biz": "canrocks",
+  "assets": {
+   "html_handling": "auto-trailing-slash",
+   "not_found_handling": "404-page",
+   "run_worker_first": true
+  },
+  "headers_file": "_headers",
+  "bindings": [
+   {
+    "type": "assets",
+    "name": "ASSETS"
+   },
+   {
+    "type": "d1",
+    "name": "DB"
+   },
+   {
+    "type": "service",
+    "name": "PORTAL",
+    "service": "ln-portal"
+   }
+  ],
+  "crons": [],
+  "noindex": false,
+  "pages_200": [
+   "/",
+   "/menu",
+   "/contact",
+   "/visit"
+  ],
+  "module_pages": {
+   "/careers": "applications",
+   "/reservations": "reservations",
+   "/catering": "catering",
+   "/blog": "blog"
+  }
+ },
+ "cove": {
+  "worker": "catfishcove-preview",
+  "dir": "drafts-next/cove",
+  "base": "https://cove-preview.loadednacho.com",
+  "biz": "catfishcove",
+  "assets": {
+   "html_handling": "auto-trailing-slash",
+   "not_found_handling": "404-page",
+   "run_worker_first": true
+  },
+  "headers_file": "_headers",
+  "bindings": [
+   {
+    "type": "assets",
+    "name": "ASSETS"
+   },
+   {
+    "type": "d1",
+    "name": "DB"
+   },
+   {
+    "type": "service",
+    "name": "PORTAL",
+    "service": "ln-portal"
+   },
+   {
+    "type": "r2_bucket",
+    "name": "RESUMES"
+   },
+   {
+    "type": "plain_text",
+    "name": "RESERVE_EMAIL_ENABLED"
+   },
+   {
+    "type": "plain_text",
+    "name": "CAREERS_EMAIL_ENABLED"
+   },
+   {
+    "type": "plain_text",
+    "name": "RESERVE_NOTIFY_TO"
+   },
+   {
+    "type": "plain_text",
+    "name": "CAREERS_NOTIFY_TO"
+   }
+  ],
+  "crons": [],
+  "noindex": true,
+  "pages_200": [
+   "/"
+  ],
+  "module_pages": {
+   "/careers": "applications",
+   "/reserve": "reservations",
+   "/catering": "catering",
+   "/blog": "blog"
+  }
+ },
+ "loadednacho": {
+  "worker": "loadednacho-preview",
+  "dir": "/workspace/loadednacho/site",
+  "base": "https://loadednacho.com",
+  "biz": null,
+  "assets": {
+   "html_handling": "auto-trailing-slash",
+   "not_found_handling": "404-page",
+   "run_worker_first": true
+  },
+  "headers_file": "_headers",
+  "bindings": [
+   {
+    "type": "assets",
+    "name": "ASSETS"
+   },
+   {
+    "type": "d1",
+    "name": "DB"
+   },
+   {
+    "type": "service",
+    "name": "PORTAL",
+    "service": "ln-portal"
+   }
+  ],
+  "crons": [],
+  "noindex": false,
+  "pages_200": [
+   "/",
+   "/mother-sauce",
+   "/privacy",
+   "/security"
+  ],
+  "module_pages": {}
+ },
+ "cove-staging": {
+  "worker": "catfishcove-staging",
+  "dir": "cove/cutover-20261026/site",
+  "base": "https://catfishcove-staging.loadednacho.workers.dev",
+  "biz": "catfishcove",
+  "assets": {
+   "html_handling": "auto-trailing-slash",
+   "not_found_handling": "404-page",
+   "run_worker_first": true
+  },
+  "headers_file": "_headers",
+  "bindings": [
+   {
+    "type": "assets",
+    "name": "ASSETS"
+   },
+   {
+    "type": "d1",
+    "name": "DB"
+   },
+   {
+    "type": "service",
+    "name": "PORTAL",
+    "service": "ln-portal"
+   },
+   {
+    "type": "r2_bucket",
+    "name": "RESUMES"
+   },
+   {
+    "type": "plain_text",
+    "name": "RESERVE_EMAIL_ENABLED"
+   },
+   {
+    "type": "plain_text",
+    "name": "CAREERS_EMAIL_ENABLED"
+   },
+   {
+    "type": "plain_text",
+    "name": "RESERVE_NOTIFY_TO"
+   },
+   {
+    "type": "plain_text",
+    "name": "CAREERS_NOTIFY_TO"
+   }
+  ],
+  "crons": [],
+  "noindex": true,
+  "pages_200": [
+   "/"
+  ],
+  "module_pages": {
+   "/careers": "applications",
+   "/reserve": "reservations",
+   "/catering": "catering",
+   "/blog": "blog"
+  },
+  "_note": "Oct 26 2026 (t616u): STAGING copy of Cove on workers.dev for testing (prod catfishcove.co + cove-preview share catfishcove-preview). Email flags false."
+ }
+}

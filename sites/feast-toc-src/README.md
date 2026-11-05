@@ -1,0 +1,1 @@
+Feast Buffet + Taste of China generator. build.mjs reads worker.tpl.js, images/, icons/inline.json, logos/ and writes dist/feast-preview.js and dist/toc-preview.js. Paths in build.mjs are absolute to /workspace/feast-toc on the box; adjust to run elsewhere. Also needs /workspace/loadednacho/footer-credit/ln-mark.png (not included; inlined into the built bundles).

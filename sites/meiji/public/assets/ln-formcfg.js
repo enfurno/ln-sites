@@ -1,0 +1,27 @@
+/* LN form config v1. Applies Mother Sauce form settings to <form data-ln-cfg="reservations|applications|catering" data-biz="slug">.
+   Feed: https://portal.loadednacho.com/api/forms/<biz>?module=&loc=  -> {intro,confirm,party_min,party_max,lead_hours,fields:{key:{label,help,required,show}}}
+   With no config (or a failed feed) the form is left exactly as built. Mother Sauce's preview sends {lnFormCfg} by postMessage. */
+(function(){var FEED=window.LN_FORMS_FEED||'https://portal.loadednacho.com/api/forms/',ORIG='https://portal.loadednacho.com';
+var CORE={reservations:['name','phone','date','time','party','location'],applications:['name','phone','position','location','consent'],catering:['name','phone','event_date','guests','location']};
+function lab(el){var f=el.form,l=el.id&&f.querySelector('label[for="'+el.id+'"]');if(l)return l;var w=el.closest('label');if(w&&w.querySelector('input,select,textarea')===el)return w;var fs=el.closest('fieldset');return fs&&fs.querySelector('legend')}
+function setLabelText(l,t){if(!l)return;for(var i=0;i<l.childNodes.length;i++){var n=l.childNodes[i];if(n.nodeType===3&&n.textContent.trim()){n.textContent=t+' ';return}}if(!l.querySelector('input,select,textarea'))l.textContent=t}
+function labelText(l){if(!l)return'';for(var i=0;i<l.childNodes.length;i++){var n=l.childNodes[i];if(n.nodeType===3&&n.textContent.trim())return n.textContent.trim()}return l.textContent.trim()}
+function wrap(el){if(el.type==='checkbox'&&el.name!=='consent'){return el.closest('fieldset')||el.closest('.days,.chips,.shifts')||el.parentNode.parentNode}var l=el.closest('label');if(l&&l.querySelector('input,select,textarea')===el)return l;return el.closest('.row>div,div')||el}
+function snap(f){if(f.__ln)return f.__ln;var s={ok:f.getAttribute('data-ln-ok'),fields:{}};[].forEach.call(f.elements,function(el){if(!el.name||s.fields[el.name])return;var l=lab(el),w=wrap(el);s.fields[el.name]={label:labelText(l),ph:el.getAttribute('placeholder'),req:el.required,disp:w.style.display,opts:el.tagName==='SELECT'?el.innerHTML:null,min:el.getAttribute('min')}});f.__ln=s;return s}
+function apply(f,c){var mod=f.getAttribute('data-ln-cfg'),s=snap(f),core=CORE[mod]||[];c=c||{};var F=c.fields||{};
+ Object.keys(s.fields).forEach(function(n){var o=s.fields[n],els=f.querySelectorAll('[name="'+n+'"]'),el=els[0],x=F[n]||{},w=wrap(el),l=lab(el);
+  setLabelText(l,x.label||o.label);if(el.type!=='checkbox'&&el.tagName!=='SELECT'){if(x.help!=null&&x.help!=='')el.setAttribute('placeholder',x.help);else if(o.ph!=null)el.setAttribute('placeholder',o.ph);else el.removeAttribute('placeholder')}
+  var isCore=core.indexOf(n)>=0,show=isCore||x.show!==false;w.style.display=show?o.disp:'none';
+  if(el.type!=='checkbox'||n==='consent'){el.required=isCore?o.req||n!=='location':(x.required!=null?!!x.required&&show:o.req&&show)}
+  if(n==='party'&&el.tagName==='SELECT'){if(c.party_min||c.party_max){var a=Math.max(1,+c.party_min||1),b=Math.min(50,+c.party_max||12),h='';for(var i=a;i<=b;i++)h+='<option value="'+i+'">'+i+'</option>';el.innerHTML=h}else el.innerHTML=o.opts}});
+ var it=f.parentNode.querySelector('.ln-intro');if(c.intro){if(!it){it=document.createElement('p');it.className='ln-intro';it.style.cssText='margin:0 0 16px;opacity:.9';f.parentNode.insertBefore(it,f)}it.textContent=c.intro}else if(it)it.remove();
+ if(c.confirm)f.setAttribute('data-ln-ok',c.confirm);else if(s.ok!=null)f.setAttribute('data-ln-ok',s.ok);
+ var d=f.querySelector('[name="date"],[name="event_date"]');if(d){var o2=s.fields[d.name].min,lh=+c.lead_hours||0;f.__lnLead=lh;if(lh){var t=new Date(Date.now()+lh*36e5);var tz=f.getAttribute('data-tz')||window.LN_TZ||'America/Chicago';try{d.min=new Intl.DateTimeFormat('en-CA',{timeZone:tz}).format(t)}catch(_){d.min=new Date(t-t.getTimezoneOffset()*6e4).toISOString().slice(0,10)}}else if(o2)d.min=o2;if(d.name==='date'&&d.value&&d.min&&d.value<d.min){d.value=d.min;d.dispatchEvent(new Event('change'))}}}
+function load(f){var biz=f.getAttribute('data-biz'),mod=f.getAttribute('data-ln-cfg'),loc=f.querySelector('[name="location"]');if(!biz)return;
+ fetch(FEED+biz+'?module='+mod+(loc&&loc.value?'&loc='+encodeURIComponent(loc.value):''),{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(c){if(!f.__lnPrev)apply(f,c&&c.config)}).catch(function(){})}
+var forms=[].slice.call(document.querySelectorAll('form[data-ln-cfg]'));
+forms.forEach(function(f){load(f);var loc=f.querySelector('[name="location"]');if(loc)loc.addEventListener('change',function(){load(f)});
+ f.addEventListener('submit',function(e){var lh=f.__lnLead;if(!lh)return;var d=f.querySelector('[name="date"],[name="event_date"]'),t=f.querySelector('[name="time"],[name="event_time"]');if(!d||!d.value)return;var when=new Date(d.value+'T'+((t&&t.value)||'23:59'));if(when<new Date(Date.now()+lh*36e5)){e.preventDefault();e.stopImmediatePropagation();alert('Please choose a time at least '+lh+' hours from now.')}},true)});
+window.addEventListener('message',function(e){if(e.origin!==ORIG||!e.data||!e.data.lnFormCfg)return;forms.forEach(function(f){if(f.getAttribute('data-ln-cfg')===e.data.module){f.__lnPrev=1;apply(f,e.data.lnFormCfg)}})});
+if(/[?&]ln_preview=1/.test(location.search)&&window.parent!==window){document.documentElement.classList.add('ln-preview');var pf=document.querySelector('form[data-ln-cfg]');if(pf)setTimeout(function(){pf.scrollIntoView({block:'start'})},300);try{window.parent.postMessage({lnPreviewReady:1},ORIG)}catch(e){}}
+})();

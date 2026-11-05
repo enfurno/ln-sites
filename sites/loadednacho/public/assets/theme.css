@@ -1,0 +1,168 @@
+/* LN theme v1: light theme + toggle (dark stays the default look). Loaded after style.css. */
+.tt{flex:none;display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:var(--ink);cursor:pointer;padding:0;transition:border-color .2s,box-shadow .3s,background .2s}
+.tt svg{width:18px;height:18px}.tt .moon{color:#7cc6fe}.tt .sun{color:#e0601c;display:none}
+.tt:hover{border-color:#7cc6fe;box-shadow:0 0 14px #7cc6fe55;background:rgba(124,198,254,.12)}
+.tt:focus-visible{outline:2px solid #7cc6fe;outline-offset:2px}
+[data-theme=light] .tt .sun{display:block}[data-theme=light] .tt .moon{display:none}
+[data-theme=light] .tt{border-color:rgba(26,20,16,.16);background:#fff}
+[data-theme=light] .tt:hover{border-color:#e0601c;box-shadow:0 0 14px #f6b31d66;background:#fdf0d8}
+[data-theme=light] .tt:focus-visible{outline-color:#e0601c}
+.nav .tt{order:3}.nav nav{order:1}.nav .btn.sm{order:2}.nav .burger{order:4}.nav .brand{order:0}
+@media (max-width:760px){.nav .tt{margin-left:auto}.nav .burger{margin-left:.4rem}}
+@media (prefers-reduced-motion:reduce){.tt{transition:none}}
+
+/* Light palette */
+[data-theme=light]{color-scheme:light;--bg:#faf6ef;--bg2:#ffffff;--ink:#1a1410;--mute:#5f554c;--orange:#b3560b;--pink:#c4214a;--yellow:#a87800;--lime:#4f7d00;
+ --grad:linear-gradient(90deg,#ec3d63,#f7892b 40%,#f6cf1d 70%,#b9dd2a);--gradt:linear-gradient(90deg,#c4214a,#c4600e 45%,#9a7300 72%,#4f7d00)}
+[data-theme=dark]{color-scheme:dark}
+[data-theme=light] .grad{background:var(--gradt);-webkit-background-clip:text;background-clip:text}
+[data-theme=light] .grain{opacity:.035}
+[data-theme=light] .nav.solid,[data-theme=light] body.open .nav{background:rgba(250,246,239,.8);border-bottom-color:rgba(26,20,16,.08)}
+[data-theme=light] body.open .nav nav{background:rgba(250,246,239,.97)}
+[data-theme=light] .brand b{color:#e06f12}
+[data-theme=light] .marquee{background:rgba(250,246,239,.6);border-top-color:rgba(26,20,16,.08)}
+[data-theme=light] .card,[data-theme=light] .proj,[data-theme=light] .form{border-color:rgba(26,20,16,.09);box-shadow:0 1px 3px rgba(60,40,20,.06)}
+[data-theme=light] .stat,[data-theme=light] .lb-card{background:linear-gradient(160deg,#ffffff,#f4ede2);border-color:rgba(26,20,16,.09)}
+[data-theme=light] .lb-card{box-shadow:0 30px 80px rgba(60,40,20,.25)}
+[data-theme=light] .lightbox{background:rgba(60,45,30,.45)}
+[data-theme=light] .lightbox button{color:var(--ink)}
+[data-theme=light] .steps li{border-top-color:rgba(26,20,16,.14)}
+[data-theme=light] .info li,[data-theme=light] footer,[data-theme=light] .rx-h,[data-theme=light] .rx-list li{border-color:rgba(26,20,16,.1)}
+[data-theme=light] .nums-in{border-color:rgba(26,20,16,.1);background:linear-gradient(135deg,#ffffff,#f7f0e6);box-shadow:0 0 40px rgba(247,137,43,.12)}
+[data-theme=light] .shot{background:#efe7da}
+[data-theme=light] .btn.ghost{background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(rgba(26,20,16,.28),rgba(26,20,16,.28)) border-box}
+[data-theme=light] .btn.ghost:hover,[data-theme=light] .btn.ghost:focus-visible{background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box}
+[data-theme=light] .btn:hover,[data-theme=light] .btn:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #f7892b,0 10px 30px -6px rgba(247,137,43,.5),0 0 24px -4px rgba(236,61,99,.35)}
+[data-theme=light] .see{border-bottom-color:#f7892b}
+[data-theme=light] input,[data-theme=light] select,[data-theme=light] textarea,[data-theme=light] #contact-form select{background-color:#fff;border-color:rgba(26,20,16,.18)}
+[data-theme=light] #contact-form input:not([type=checkbox]):hover,[data-theme=light] #contact-form select:hover,[data-theme=light] #contact-form textarea:hover{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,color-mix(in srgb,var(--c) 60%,transparent),color-mix(in srgb,var(--c2,var(--c)) 60%,transparent)) border-box}
+[data-theme=light] #contact-form input:not([type=checkbox]):focus,[data-theme=light] #contact-form select:focus,[data-theme=light] #contact-form textarea:focus{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,var(--c) 0%,var(--c) 70%,var(--c2,var(--c)) 100%) border-box}
+[data-theme=light] #contact-form input:-webkit-autofill{-webkit-box-shadow:0 0 0 1000px #fff inset}
+[data-theme=light] .msg.err{color:#b3123a}
+[data-theme=light] .social a.soc{color:var(--ink);border-color:rgba(26,20,16,.16);background:#fff padding-box}
+[data-theme=light] .social a.soc:hover,[data-theme=light] .social a.soc:focus-visible{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(var(--c,#f7892b),var(--c,#f7892b)) border-box;color:var(--ink)}
+[data-theme=light] .social a.soc-linkedin:hover,[data-theme=light] .social a.soc-linkedin:focus-visible{background:linear-gradient(#fff,#fff) padding-box,var(--g,var(--grad)) border-box}
+[data-theme=light] .rx .k,[data-theme=light] .bub,[data-theme=light] .rx-mini{background:#fff padding-box;border-color:rgba(26,20,16,.12)}
+[data-theme=light] .rx .k:hover,[data-theme=light] .rx .k:focus-visible,[data-theme=light] .bub:hover,[data-theme=light] .bub:focus-visible,[data-theme=light] .rx-mini:hover .k,[data-theme=light] .rx-mini:hover .bub{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(var(--c,#f7892b),var(--c,#f7892b)) border-box}
+[data-theme=light] .rx .k.g:hover,[data-theme=light] .rx-mini:hover .k.g{background:linear-gradient(#fff,#fff) padding-box,var(--g,var(--grad)) border-box}
+[data-theme=light] .rx .arr,[data-theme=light] .rx-mini .arr,[data-theme=light] .lb-body .arr{background:#fff;border-color:rgba(26,20,16,.14)}
+[data-theme=light] .rx-bars s{background:rgba(26,20,16,.08)}
+[data-theme=light] .rx-bars s::after{background:rgba(95,85,76,.45)}
+[data-theme=light] .lb-x{border-color:rgba(26,20,16,.2)}
+[data-theme=light] .pills li{border-color:rgba(26,20,16,.14);background:#fff padding-box}
+[data-theme=light] .pills li:hover{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(var(--c),var(--c)) border-box}
+[data-theme=light] .pills li.more{border-color:rgba(179,86,11,.5);background:transparent}
+[data-theme=light] .hero-mark{filter:drop-shadow(0 24px 40px rgba(236,61,99,.18))}
+[data-theme=light] .hero-mark::before{opacity:.55}
+[data-theme=light] .info a,[data-theme=light] footer a{border-bottom-color:rgba(179,86,11,.6)}
+/* the CTA band keeps its gradient; its gap ring follows --bg automatically */
+[data-theme=light] .doc h2{border-top-color:rgba(26,20,16,.1)}
+[data-theme=light] .doc p,[data-theme=light] .doc li{color:#2b231d}
+[data-theme=light] .doc a{border-bottom-color:rgba(179,86,11,.6)}
+[data-theme=light] .doc a:hover{color:var(--orange)}
+
+/* Scrollbars: blue in dark (matches Mainframe moon), orange in light (sun) */
+html,*{scrollbar-color:#7cc6fe99 var(--bg);scrollbar-width:thin}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#7cc6fe99;border:2px solid var(--bg);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#7cc6fedd}
+[data-theme=light],[data-theme=light] *{scrollbar-color:#e0601cb3 var(--bg)}
+[data-theme=light] ::-webkit-scrollbar-thumb{background:#e0601cb3}
+[data-theme=light] ::-webkit-scrollbar-thumb:hover{background:#e0601c}
+
+/* light-mode fix: bottom "Start a project" pill was dark text on dark fill */
+[data-theme=light] .cta-dark{color:#f7f2ea}
+[data-theme=light] .cta-dark:hover,[data-theme=light] .join-in .cta-dark:focus-visible{color:var(--yellow)}
+
+/* Header "Client login": same .btn.sm element as "Start a project" (sibling in .nav, outside <nav>), colors only. */
+.nav > .btn.sm{white-space:nowrap;justify-content:center}
+.nav > .btn.sm.clog{min-width:12.61em;--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
+.nav > .btn.sm.clog::before{background:linear-gradient(#f7892b,#f7892b) border-box}
+.nav > .btn.sm.clog:hover,.nav > .btn.sm.clog:focus-visible{color:#fff;box-shadow:0 0 0 2px #0d0a0f,0 0 0 4px #f7892b,0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
+.nav > .btn.sm.clog::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
+[data-theme=light] .nav > .btn.sm.clog{--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08)}
+[data-theme=light] .nav > .btn.sm.clog::before{background:linear-gradient(#b3560b,#b3560b) border-box}
+[data-theme=light] .nav > .btn.sm.clog:hover,[data-theme=light] .nav > .btn.sm.clog:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #e0601c,0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
+[data-theme=light] .nav > .btn.sm.clog::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
+.nav nav{align-items:center}
+/* Tablet header: the full nav + both buttons only fit above ~1020px, so 761-1100px uses the phone menu (burger). */
+@media(min-width:761px) and (max-width:1100px){.nav nav,.nav > .btn{display:none}.burger{display:block}.nav .tt{margin-left:auto}.nav .burger{margin-left:.4rem}
+ body.open .nav nav{display:flex;flex-direction:column;align-items:flex-start;position:fixed;top:64px;left:0;right:0;background:rgba(13,10,15,.97);padding:1.5rem 5vw;gap:1.2rem;font-size:1.2rem}
+ body.open .nav{background:rgba(13,10,15,.97)}body.open .burger i:first-child{transform:translateY(4.5px) rotate(45deg)}body.open .burger i:last-child{transform:translateY(-4.5px) rotate(-45deg)}
+ body.open .nav nav .m-only{display:block;color:var(--orange);font-weight:800}}
+/* Very narrow phones: keep the theme toggle clear of the wordmark */
+@media(max-width:360px){.nav{gap:.6rem}.nav .brand span{font-size:.9em}}
+@media(max-width:900px){.nav nav{align-items:flex-start}}
+
+/* Featured work: thin border that fades out on hover (draft) */
+.proj{border:1px solid rgba(255,255,255,.14);transition:transform .35s,border-color .2s ease}
+[data-theme=light] .proj{border-color:rgba(26,20,16,.16)}
+.proj:hover,.proj:focus-visible,[data-theme=light] .proj:hover,[data-theme=light] .proj:focus-visible{border-color:transparent}
+@media (prefers-reduced-motion:reduce){.proj{transition:none}}
+
+/* Results footnotes (draft) */
+.nums-row b::after,.stats .num:not(.noast)::after,.rx-kpis .k b::after{content:"*";font-size:.45em;vertical-align:super;margin-left:.08em;opacity:.7;font-weight:700}
+.fn-note{font-size:.75rem;opacity:.6;margin:.6rem 0 0;line-height:1.4}
+.stats.quick+.rx-src+.fn-note,.nums-in .fn-note{text-align:center}
+.rx-mini .fn-note{display:none}
+
+/* About: one consistent text block (draft) */
+.about .about-in p:not(.kicker){font-size:17px;line-height:1.6;margin-top:1rem;color:var(--mute);font-weight:400}
+.about .about-in p.about-em{color:var(--ink)}
+
+/* About logo: dark/light swap, stacked in one cell (draft) */
+.about-logo-sw{display:grid;aspect-ratio:703/460}
+.about-logo-sw img{grid-area:1/1;width:100%;height:100%;display:block}
+.about-logo-sw .lg-light{visibility:hidden}
+[data-theme=light] .about-logo-sw .lg-light{visibility:visible}
+[data-theme=light] .about-logo-sw .lg-dark{visibility:hidden}
+.fn-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+/* Results-card numbers use the same scheme as the top stats bar (pink-orange-yellow; darker variants in light theme) */
+.stats .num{background:linear-gradient(90deg,var(--pink),var(--orange),var(--yellow));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Mother Sauce social buttons: hide the row when nothing is rendered */
+.social:empty{display:none}
+
+/* Results source row: source left, footnote right; wraps left-aligned on narrow screens */
+.src-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.3rem 1.5rem;margin-top:.9rem}.src-row>p{margin:0;line-height:1.4}.src-row .fn-right{font-size:.75rem;color:var(--mute);opacity:.85;text-align:left}
+
+/* Footer: brand + tagline centered; links left, contact right on one row; stacks on mobile */
+footer .f-top{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.5rem 1.25rem;text-align:center}
+footer .f-top p{margin:0}
+footer .f-row{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:.6rem 1.5rem}
+footer .f-row .fc{margin:0 0 0 auto;font-size:.8rem;text-align:right}
+@media (max-width:700px){footer .f-row{flex-direction:column;align-items:flex-start}footer .f-row .fc{margin:0;text-align:left}}
+
+/* v18: bottom row = copyright left, brand + tagline right */
+footer .f-bot{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.75rem 1.5rem}
+footer .f-bot .small{margin:0}
+footer .f-bot .f-top{flex-basis:auto;justify-content:flex-end;text-align:right;gap:.5rem 1rem}
+footer .f-bot .f-top p{font-size:.8rem}
+@media (max-width:700px){footer .f-bot{flex-direction:column-reverse;align-items:flex-start}footer .f-bot .f-top{justify-content:flex-start;text-align:left}}
+
+/* v19: By the numbers footnote row matches its source line */
+.nums-in .src-row{margin-top:0}.nums-in .src-row .fn-right{font-size:.8rem;opacity:.6;color:inherit;text-align:left}
+
+/* v20: bottom row flipped = brand + tagline left, copyright right */
+footer .f-bot .f-top{justify-content:flex-start;text-align:left}
+footer .f-bot .small{margin-left:auto;text-align:right}
+@media (max-width:700px){footer .f-bot{flex-direction:column;align-items:flex-start}footer .f-bot .small{margin-left:0;text-align:left}}
+
+/* v21: Mother Sauce social slot sits beside email/phone in the footer links row */
+footer .f-contact{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.6rem 1rem;margin-left:auto}
+footer .f-row .f-contact .fc{margin:0}
+footer .f-contact .social{margin:0;gap:8px;justify-content:flex-end}
+footer .f-contact .social a.soc{width:34px;height:34px;border-radius:10px}
+footer .f-contact .social a.soc svg{width:17px;height:17px}
+@media (max-width:700px){footer .f-contact{margin-left:0;justify-content:flex-start}footer .f-contact .social{justify-content:flex-start}}
+.social a.soc-youtube{--c:var(--pink)}.social a.soc-yelp{--c:var(--orange)}.social a.soc-google{--c:var(--yellow)}
+
+/* v22: hide the contact Follow row when Mother Sauce has no social links (slot removed or empty) */
+.info .info-follow:not(:has(.social a)){display:none}
+
+/* v23: live Mother Sauce version badge (Freeman's MS .vbdg; light as-is, dark mixed toward dark bg) */
+.kicker .ms-ver{display:inline-block;padding:2px 8px 3px;border:1px solid color-mix(in srgb,#f7892b 45%,#e2d8ca);border-radius:6px;background:color-mix(in srgb,#f7892b 9%,#fff);color:color-mix(in srgb,#f7892b 55%,#1a1410);font:700 10.5px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.02em;white-space:nowrap;box-shadow:0 1px 0 color-mix(in srgb,#f7892b 20%,transparent);text-transform:none;margin-left:10px;vertical-align:middle;position:relative;top:-1px}
+:root:not([data-theme=light]) .kicker .ms-ver{border-color:color-mix(in srgb,#f7892b 45%,#3a3029);background:color-mix(in srgb,#f7892b 12%,#15110f);color:color-mix(in srgb,#f7892b 80%,#f3eadf);box-shadow:0 1px 0 color-mix(in srgb,#000 40%,transparent)}
+.kicker .ms-ver[hidden],.kicker .ms-ver:empty{display:none}

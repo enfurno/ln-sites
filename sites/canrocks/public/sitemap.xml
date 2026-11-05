@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DRAFT static fallback; the site Worker serves /sitemap.xml with every published post added. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://canrocks.loadednacho.com/</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/menu.html</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/visit.html</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/reservations.html</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/catering.html</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/careers.html</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/blog</loc></url>
+</urlset>

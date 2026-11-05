@@ -1,0 +1,10 @@
+import http from 'http';
+const DEMO = process.env.DEMO === 'on';
+const of = globalThis.fetch;
+globalThis.fetch = async (u, o) => { u = String(u);
+  if (DEMO && u.includes('/api/public/modules/')) return new Response(JSON.stringify({ ordering: { on: true, url: 'https://example.com/order' }, reservations: { on: true, url: 'https://example.com/r' }, catering: { on: true, url: 'https://example.com/c' }, loyalty: { on: true, url: 'https://example.com/club' } }), { headers: { 'content-type': 'application/json' } });
+  if (DEMO && u.includes('/api/site/')) return new Response(JSON.stringify({ slug: 'x', name: 'x', modules: {}, ordering: { on: true, url: 'https://example.com/order', locations: [{ slug: 'okc', name: 'Oklahoma City', url: 'https://example.com/order-okc', delivery: { doordash: 'https://www.doordash.com/', ubereats: null, grubhub: 'https://www.grubhub.com/' } }, { slug: 'midwest-city', name: 'Midwest City', url: null, delivery: { doordash: null, ubereats: 'https://www.ubereats.com/', grubhub: null } }] } }), { headers: { 'content-type': 'application/json' } });
+  return of(u, o); };
+const w = { feast: (await import('./dist/feast-preview.js?' + Date.now())).default, toc: (await import('./dist/toc-preview.js?' + Date.now())).default };
+const base = DEMO ? 8720 : 8710;
+for (const [k, port] of [['feast', base + 1], ['toc', base + 2]]) http.createServer(async (q, s) => { const r = await w[k].fetch(new Request('http://localhost:' + port + q.url), {}, { waitUntil() {} }); s.writeHead(r.status, Object.fromEntries(r.headers)); s.end(Buffer.from(await r.arrayBuffer())); }).listen(port);

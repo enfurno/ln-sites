@@ -1,0 +1,5 @@
+(function(){var d=document.documentElement;function sync(){var l=d.dataset.theme=='light';document.querySelectorAll('.tt').forEach(function(b){b.setAttribute('aria-label',l?'Switch to dark theme':'Switch to light theme');b.setAttribute('aria-pressed',l?'true':'false')});var m=document.querySelector('meta[name=theme-color]');if(m)m.content=l?'#faf6ef':'#0d0a0f'}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.tt');if(!b)return;var t=d.dataset.theme=='light'?'dark':'light';d.dataset.theme=t;try{localStorage.setItem('ln-theme',t)}catch(x){}sync()});
+try{matchMedia('(prefers-color-scheme: light)').addEventListener('change',function(e){var s=null;try{s=localStorage.getItem('ln-theme')}catch(x){}if(s!='light'&&s!='dark'){d.dataset.theme=e.matches?'light':'dark';sync()}})}catch(x){}
+sync()})();
+(function(){var n=document.getElementById('nav');if(!n||document.querySelector('script[src*="/assets/app.js"]'))return;var f=function(){n.classList.toggle('solid',scrollY>30)};addEventListener('scroll',f,{passive:true});f()})();

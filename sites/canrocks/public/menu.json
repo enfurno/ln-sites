@@ -1,0 +1,246 @@
+{
+  "note": "price null = shows \"$ TBD\"",
+  "categories": [
+    {
+      "id": "337d3abd-61dc-45c9-b85e-66d336e48462",
+      "name": "Grindhouse Signatures",
+      "description": "From the Grindhouse concept. Prices TBD.",
+      "items": [
+        {
+          "name": "The Canrock Classic Burger",
+          "description": "Thick-ground premium beef, aged cheddar, house-made bacon, caramelized onions, arugula, and special aioli on a toasted brioche bun. Served with tallow fries. (Price TBD)",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Brisket Nachos",
+          "description": "House-smoked brisket piled over tortilla chips with queso, fresh pico, pickled jalapeños, sour cream, and cilantro. Built for sharing. (Price TBD)",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Tallow Fries",
+          "description": "Hand-cut fries cooked in beef tallow until perfectly crisp, finished with rosemary salt. Served with spicy ranch or house barbecue sauce. (Price TBD)",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Smoked Brisket Plate",
+          "description": "Slow-smoked brisket with a deep bark and smoke ring, served with mac & cheese, collard greens, and Texas toast. (Price TBD)",
+          "price": null,
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "f7d18c8d-81bd-4fbf-8a97-93902c45a4e4",
+      "name": "Out of the Chute",
+      "description": "Arena appetizers & shareables",
+      "items": [
+        {
+          "name": "Canrock's Rattlesnake Bites",
+          "description": "Six hand-battered roasted jalapeño, smoked brisket, and sharp cheddar poppers fried golden; served with smoky chipotle-lime ranch.",
+          "price": "$11.00",
+          "image": null
+        },
+        {
+          "name": "1903 Colcord Burnt Ends",
+          "description": "Hickory-smoked prime brisket point cubes double-glazed in bourbon-molasses BBQ, plated with house dill pickles and thick Texas toast.",
+          "price": "$14.00",
+          "image": null
+        },
+        {
+          "name": "Panhandle Calf Fries",
+          "description": "Authentic Oklahoma rodeo classic: tender cornmeal-dusted calf fries served hot with cracked-pepper country gravy and cocktail sauce.",
+          "price": "$12.00",
+          "image": null
+        },
+        {
+          "name": "Grandstand Brisket Queso & Chips",
+          "description": "Skillet-melted white cheddar and hatch green chile queso topped with chopped smoked brisket, pico de gallo, and warm tortilla chips.",
+          "price": "$11.00",
+          "image": null
+        },
+        {
+          "name": "Cast-Iron Poblano Cornbread",
+          "description": "Baked-to-order sweet corn and roasted poblano skillet bread brushed with melted honey-pecan butter and flaky sea salt.",
+          "price": "$8.00",
+          "image": null
+        },
+        {
+          "name": "Smokehouse Wings (1 lb)",
+          "description": "Pit-smoked jumbo chicken wings flash-crisped and tossed in your choice of Whiskey-Peach Glaze, Dry Ranch Rub, or Outlaw Buffalo.",
+          "price": "$13.00",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "8c2ff20b-c831-4dfd-bbc7-2d4b8e2a0958",
+      "name": "Rodeo Burgers & Ranch Sandwiches",
+      "description": "100% Oklahoma Black Angus. Served with Ranch Fries, Kettle Chips, or Rodeo Coleslaw (Sweet Potato Fries or Onion Rings +$2).",
+      "items": [
+        {
+          "name": "The Canrock Memorial Burger",
+          "description": "Half-pound Black Angus patty, thick-cut peppered bacon, aged sharp cheddar, crispy beer-battered onion strings, and signature bourbon-espresso BBQ glaze on brioche.",
+          "price": "$15.00",
+          "image": null
+        },
+        {
+          "name": "1903 Oklahoma Fried-Onion Smash",
+          "description": "Two lacy-edged beef patties smashed over paper-thin sweet white onions, double American cheese, house dill pickles, and mustard sauce on a steamed potato bun.",
+          "price": "$13.00",
+          "image": null
+        },
+        {
+          "name": "The 8-Second Buzzer Scorcher",
+          "description": "Half-pound patty crusted with cracked black pepper, pepper jack cheese, crispy fried jalapeños, applewood bacon, cool avocado crema, and hot-honey drizzle.",
+          "price": "$14.00",
+          "image": null
+        },
+        {
+          "name": "Jim Shoulders 7x World Champion",
+          "description": "Two half-pound Angus patties, smoked brisket burnt ends, melted smoked gouda, roasted garlic aioli, and crisp lettuce on a branded brioche bun.",
+          "price": "$17.00",
+          "image": null
+        },
+        {
+          "name": "Freckles Brown Smoked Brisket Dip",
+          "description": "Half-pound of tender 14-hour hickory-smoked prime brisket, melted provolone, and caramelized onions on a toasted garlic French roll with smoky beef au jus.",
+          "price": "$15.00",
+          "image": null
+        },
+        {
+          "name": "Vinita Rodeo Crispy Chicken Club",
+          "description": "Buttermilk-fried chicken breast, thick-cut bacon, Monterey Jack, honey-mustard dressing, lettuce, tomato, and house pickles on toasted brioche.",
+          "price": "$13.00",
+          "image": null
+        },
+        {
+          "name": "Vaquero Ribeye Steakhouse Philly",
+          "description": "Shaved prime ribeye seared with roasted poblano peppers, sweet onions, cremini mushrooms, and white cheddar queso on a griddled hoagie roll.",
+          "price": "$16.00",
+          "image": null
+        },
+        {
+          "name": "Red River Pulled Pork Sandwich",
+          "description": "Slow-smoked pulled pork shoulder with tangy hickory BBQ sauce, creamy apple-cider slaw, and crispy onion tanglers on a brioche bun.",
+          "price": "$12.00",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "6212e2d6-6004-43c9-957a-4baab6f650f1",
+      "name": "Post-Oak Steaks",
+      "description": "Wood-fired, served with 2 sides",
+      "items": [
+        {
+          "name": "12 oz Hand-Cut Ribeye",
+          "description": "Richly marbled, post-oak seared, cowboy herb butter.",
+          "price": "$28.00",
+          "image": null
+        },
+        {
+          "name": "8 oz Bacon-Wrapped Filet",
+          "description": "Center-cut tenderloin, peppercorn whiskey reduction.",
+          "price": "$31.00",
+          "image": null
+        },
+        {
+          "name": "10 oz Top Sirloin",
+          "description": "Hearty ranch cut brushed with garlic-tallow glaze.",
+          "price": "$21.00",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "b1d461a2-16ef-4835-951f-0f06a9fd64cc",
+      "name": "Ranch House Sides",
+      "description": "$4 each",
+      "items": [
+        {
+          "name": "Smoked Gouda Mac & Cheese",
+          "description": "Cavatappi pasta, green chile breadcrumb crust.",
+          "price": "$4.00",
+          "image": null
+        },
+        {
+          "name": "Charro Ranch Pinto Beans",
+          "description": "Simmered with smoked brisket, bacon, and tomato.",
+          "price": "$4.00",
+          "image": null
+        },
+        {
+          "name": "Loaded Baked Potato",
+          "description": "Cheddar, sour cream, bacon bits, green onions.",
+          "price": "$4.00",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "49603941-e424-40c3-9abe-c89175e53db1",
+      "name": "Campfire Desserts",
+      "description": "$8 each",
+      "items": [
+        {
+          "name": "Bourbon-Pecan Bread Pudding",
+          "description": "Warm brioche, whiskey caramel, vanilla bean ice cream.",
+          "price": "$8.00",
+          "image": null
+        },
+        {
+          "name": "Dutch-Oven Peach Cobbler",
+          "description": "Spiced Oklahoma peaches, flaky biscuit crust.",
+          "price": "$8.00",
+          "image": null
+        },
+        {
+          "name": "S'mores Cast-Iron Brownie",
+          "description": "Fudge brownie, toasted marshmallow, graham crumble.",
+          "price": "$8.00",
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "ed6925e4-27c0-4400-af27-f64c266f61fb",
+      "name": "Chute #8 Whiskey Bar",
+      "description": "Signature libations",
+      "items": [
+        {
+          "name": "The Canrock",
+          "description": "2 oz small-batch Oklahoma bourbon (100 proof), roasted pecan & Redbed wildflower honey syrup, charred oak & ancho chili bitters, Angostura. Stirred over a rock ice sphere, smoked tableside with Oklahoma hickory, flamed orange peel and bourbon-soaked cherry.",
+          "price": "$14.00",
+          "image": null
+        },
+        {
+          "name": "Vinita Gold Rush",
+          "description": "High-rye bourbon, local clover honey, fresh-pressed lemon juice, spicy ginger beer float, and candied ginger skewer.",
+          "price": "$12.00",
+          "image": null
+        },
+        {
+          "name": "Cowgirl Round-Up Paloma",
+          "description": "100% Blue Weber reposado tequila, charred ruby red grapefruit, fresh lime, agave nectar, and smoked red-clay sea salt rim.",
+          "price": "$11.00",
+          "image": null
+        },
+        {
+          "name": "No Man's Land Prickly Pear Mule",
+          "description": "Tito's Handmade Vodka, desert prickly pear cactus puree, fresh lime juice, and snappy ginger beer in a hammered copper mug.",
+          "price": "$11.00",
+          "image": null
+        },
+        {
+          "name": "Colcord Park Cold-Brew Old Fashioned",
+          "description": "Rittenhouse Bonded Rye, dark roast espresso liqueur, demerara brown sugar, and toasted black walnut bitters.",
+          "price": "$13.00",
+          "image": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DRAFT static fallback; the site Worker serves /sitemap.xml with every published post added. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://cove-preview.loadednacho.com/</loc></url>
+  <url><loc>https://cove-preview.loadednacho.com/careers</loc></url>
+  <url><loc>https://cove-preview.loadednacho.com/catering</loc></url>
+  <url><loc>https://cove-preview.loadednacho.com/blog</loc></url>
+</urlset>

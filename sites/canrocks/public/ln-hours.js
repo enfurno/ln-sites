@@ -1,0 +1,13 @@
+(function(){var E=document.querySelectorAll('[data-ln-hours]'),L=document.querySelector('script[type="application/ld+json"][data-ln-hours-ld]');if(!E.length&&!L)return;
+var D=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],S={Monday:'Mon',Tuesday:'Tue',Wednesday:'Wed',Thursday:'Thu',Friday:'Fri',Saturday:'Sat',Sunday:'Sun'},SO={Monday:'Mo',Tuesday:'Tu',Wednesday:'We',Thursday:'Th',Friday:'Fr',Saturday:'Sa',Sunday:'Su'};
+function t(v,lo){var p=v.split(':'),h=+p[0],m=p[1];var s=(h%12||12)+(m!='00'?':'+m:'');return lo?s+(h<12?'am':'pm'):s+(h<12?' AM':' PM')}
+function ok(h){return h&&h.length&&h.some(function(x){return x.closed||(x.open&&x.close)})}
+function groups(h){var by={};h.forEach(function(x){by[x.day]=x});var k=function(d){var x=by[d];return !x?'?':x.closed?'closed':(x.open&&x.close?x.open+'-'+x.close:'?')};var st=0;if(k('Sunday')==k('Monday')){st=6;var n=0;while(n++<6&&k(D[st-1])==k(D[st]))st--;if(n>=7)st=0}
+ var o=[];for(var j=0;j<7;j++){var d=D[(st+j)%7],v=k(d);if(o.length&&o[o.length-1].v==v)o[o.length-1].e=d;else o.push({s:d,e:d,v:v})}return o.filter(function(g){return g.v!='?'})}
+function fmt(h,lo,sep){return groups(h).map(function(g){var dd=S[g.s]+(g.e!=g.s?(lo?' – ':'–')+S[g.e]:'');if(g.v=='closed')return dd+' closed';var p=g.v.split('-');return dd+' '+t(p[0],lo)+(lo?' – ':'–')+t(p[1],lo)}).join(sep)}
+function pick(d,loc){var ls=d.locations||[];if(loc)return ls.filter(function(l){return l.slug==loc})[0]||null;if(ls.length)return ls.filter(function(l){return l.status=='open'})[0]||ls[0];return {hours:d.hours,status:'open'}}
+fetch('/api/hours',{credentials:'omit'}).then(function(r){return r.ok?r.json():null}).then(function(d){if(!d)return;
+ [].forEach.call(E,function(el){var l=pick(d,el.getAttribute('data-loc'));if(!l||!ok(l.hours))return;var lo=el.getAttribute('data-fmt')=='lower',br=el.getAttribute('data-sep')=='br',s=fmt(l.hours,lo,br?'\n':' · ');
+  if(br){el.textContent='';s.split('\n').forEach(function(x,i){if(i)el.appendChild(document.createElement('br'));el.appendChild(document.createTextNode(x))})}else el.textContent=s;el.setAttribute('data-live','1')});
+ if(L){try{var j=JSON.parse(L.textContent),l=pick(d,L.getAttribute('data-loc'));if(l&&ok(l.hours)){var sp=[],oh=[];groups(l.hours).forEach(function(g){if(g.v=='closed')return;var p=g.v.split('-'),days=[],i=D.indexOf(g.s);while(true){days.push(D[i]);if(D[i]==g.e)break;i=(i+1)%7}sp.push({'@type':'OpeningHoursSpecification',dayOfWeek:days.length==1?days[0]:days,opens:p[0],closes:p[1]});oh.push(SO[g.s]+(g.e!=g.s?'-'+SO[g.e]:'')+' '+p[0]+'-'+p[1])});j.openingHoursSpecification=sp;j.openingHours=oh;L.textContent=JSON.stringify(j)}}catch(e){}}
+}).catch(function(){})})();

@@ -1,0 +1,129 @@
+{
+  "note": "price null = shows \"$ TBD\"",
+  "categories": [
+    {
+      "id": "ea77fea6-e837-4f4c-98f7-29cfcf437f75",
+      "name": "Hibachi Dinners",
+      "description": "Placeholder section",
+      "items": [
+        {
+          "name": "Hibachi Steak (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Hibachi Chicken (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Hibachi Shrimp (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Filet Mignon (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Lobster Tail (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Steak & Shrimp Combo (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "7c0a26d9-8e1f-4521-886e-fe8b77025a4c",
+      "name": "Sushi & Rolls",
+      "description": "Placeholder section",
+      "items": [
+        {
+          "name": "Signature Roll (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "California Roll (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Spicy Tuna Roll (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Nigiri Selection (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "522ba3e8-3570-42a4-9871-8b9c90bcfe1e",
+      "name": "Starters",
+      "description": "Placeholder section",
+      "items": [
+        {
+          "name": "Edamame (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Gyoza (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Shrimp Tempura (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Miso Soup (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        }
+      ]
+    },
+    {
+      "id": "9b0177a4-5a85-43a5-8289-1d2e38d2cc5f",
+      "name": "Kids",
+      "description": "Placeholder section",
+      "items": [
+        {
+          "name": "Kids Hibachi Chicken (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        },
+        {
+          "name": "Kids Hibachi Steak (placeholder)",
+          "description": "PLACEHOLDER: replace with the real dish and description. Price TBD (set to 0 until confirmed).",
+          "price": null,
+          "image": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "source": "catfishcove.co/menus?menu=all-you-can-eat (Catfish Cove - Yukon), captured 2026-10-25",
+  "note": "Yukon menu only. Edit prices here. price null shows '$ TBD'.",
+  "categories": [
+    {"id":"buffet","name":"Buffet","blurb":"Our legendary All You Can Eat buffet is packed with southern style and options for everyone in the family.","items":[
+      {"name":"Lunch Buffet","description":"Lunch buffet is available from 11am - 4pm","price":"$16.99","tag":"Popular"},
+      {"name":"Dinner Buffet","description":"Available 4pm - Close, includes drink!","price":"$22.99","tag":"Popular"}]},
+    {"id":"seniors","name":"Senior Specials","blurb":"","items":[
+      {"name":"Senior Lunch Buffet","description":"Lunch buffet is available from 11am - 4pm","price":"$15.99","tag":"Popular"},
+      {"name":"Senior Dinner Buffet","description":"Available 4pm - Close, includes drink!","price":"$21.49","tag":"Popular"}]},
+    {"id":"kids","name":"Little Buckaroos","blurb":"For the little ones, with BIG appetites!","items":[
+      {"name":"Ages 4 - 7 years","description":"","price":"$10.99"},
+      {"name":"Ages 8 - 11 years","description":"","price":"$12.99"}]},
+    {"id":"crab","name":"Crab Legs","blurb":"All You Can EAT! Served up hot and fresh, includes our full seafood buffet and salad bar!","items":[
+      {"name":"All You Can Eat Crab Legs","description":"Served up hot and fresh, includes our full seafood buffet and salad bar!","price":"$59.99","tag":"Cove Original"}]},
+    {"id":"drinks","name":"Wet Your Whistle!","blurb":"","items":[
+      {"name":"Coca Cola Sodas","description":"","price":"$3.00"},
+      {"name":"Fresh brewed iced tea","description":"","price":"$3.00"},
+      {"name":"Coffee","description":"","price":"$2.00"}]}
+  ]
+}
