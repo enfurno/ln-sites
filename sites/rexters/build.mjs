@@ -3,7 +3,7 @@ import fs from 'node:fs';
 // with the logo inlined as a data URI (no asset routing needed for the preview).
 const root = process.cwd();
 const html = fs.readFileSync(root + '/public/index.html', 'utf8');
-const logo = fs.readFileSync(root + '/public/assets/rexters-logo.jpg', 'utf8');
+const logo = fs.readFileSync(root + '/public/assets/rexters-logo.jpg'); // keep bytes, never decode as utf8
 const uri = 'data:image/jpeg;base64,' + Buffer.from(logo).toString('base64');
 const page = html.replaceAll('__LOGO_URI__', uri);
 const code = `const HTML = ${JSON.stringify(page)};
