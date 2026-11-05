@@ -178,6 +178,9 @@ ${body}
 const PAGE_JS = `(function(){
 var root=document.documentElement, RM=false;
 try{RM=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+/* Hero video: the looped clip is a ~4.4s forward-and-back camera push (zoom in/out).
+   Slowing the playback rate makes that push much gentler. 1 = as shot, 0.55 = ~half speed. */
+var HB=0.55;
 function onScroll(){var y=window.pageYOffset||root.scrollTop;root.classList[y>40?'add':'remove']('scrolled')}
 addEventListener('scroll',onScroll,{passive:true});onScroll();
 
@@ -213,6 +216,7 @@ Array.prototype.forEach.call(document.querySelectorAll('[data-sw]'),function(sw)
 /* hero video: poster stays until the video is actually painting; errors fall back to the poster */
 Array.prototype.forEach.call(document.querySelectorAll('[data-hero]'),function(h){
   var v=h.querySelector('video');if(!v)return;
+  try{v.defaultPlaybackRate=HB;v.playbackRate=HB}catch(e){}
   /* small screens take the 720 encode, but only before it has painted */
   try{if(v.dataset.small&&matchMedia('(max-width: 900px)').matches&&v.readyState<2){v.src=v.dataset.small;v.load()}}catch(e){}
   var live=false;
