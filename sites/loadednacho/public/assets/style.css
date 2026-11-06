@@ -34,9 +34,9 @@ h1,h2,h3{font-weight:800;line-height:1.02;letter-spacing:-.02em}
 .card::before{content:"";position:absolute;inset:auto -30% -60% auto;width:220px;height:220px;border-radius:50%;background:var(--c);filter:blur(60px);opacity:.0;transition:opacity .4s}
 .card:hover{transform:translateY(-6px);border-color:var(--c)}.card:hover::before{opacity:.35}
 .ico{font-weight:800;color:var(--c);font-size:.9rem;letter-spacing:.1em;margin-bottom:3rem}.card h3{font-size:1.5rem;margin-bottom:.7rem}.card p{color:var(--mute);font-size:.95rem}
-.projects{overflow:hidden;width:100%;padding:.6rem 0 1.8rem;position:relative;-webkit-mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}@supports (overflow-x:clip){.projects{overflow-x:clip;overflow-y:visible}}@keyframes marquee{to{transform:translateX(-50%)}}
+.projects{overflow:hidden;width:100%;padding:1.05rem 0 1.9rem;position:relative;-webkit-mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}@keyframes marquee{to{transform:translateX(-50%)}}
 .proj{display:flex;flex-direction:column;background:var(--bg2);border-radius:24px;overflow:hidden;border:1.5px solid rgba(255,255,255,.12);transition:transform .35s,border-color .25s ease,box-shadow .35s ease;flex:0 0 min(420px,82vw)}.track{display:flex;gap:1.4rem;width:max-content;padding-right:1.4rem;animation:marquee 70s linear infinite;will-change:transform}.projects:hover .track,.projects:focus-within .track{animation-play-state:paused}
-.proj:hover{transform:scale(1.055);box-shadow:0 12px 36px -12px rgba(247,137,43,.55),0 0 24px -6px rgba(247,137,43,.45)}.shot{overflow:hidden;aspect-ratio:16/10}
+.proj:hover{transform:scale(1.03);box-shadow:0 10px 22px -16px rgba(247,137,43,.6),0 0 12px -5px rgba(247,137,43,.5)}.shot{overflow:hidden;aspect-ratio:16/10}
 .projects .proj.reveal{opacity:1;transform:none}@media (prefers-reduced-motion:reduce){.projects .track{animation:none;flex-wrap:wrap}.projects{-webkit-mask:none;mask:none}}
 .shot img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .8s}.proj:hover .shot img{transform:scale(1.05)}
 .meta{padding:1.4rem 1.6rem 1.6rem}.tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;color:var(--lime);font-weight:800}
