@@ -96,9 +96,9 @@ html,*{scrollbar-color:#7cc6fe99 var(--bg);scrollbar-width:thin}
 @media(max-width:900px){.nav nav{align-items:flex-start}}
 
 /* Featured work: thin border that fades out on hover (draft) */
-.proj{border:1px solid rgba(255,255,255,.14);transition:transform .35s,border-color .2s ease}
-[data-theme=light] .proj{border-color:rgba(26,20,16,.16)}
-.proj:hover,.proj:focus-visible,[data-theme=light] .proj:hover,[data-theme=light] .proj:focus-visible{border-color:transparent}
+.proj{border:1.5px solid rgba(255,255,255,.18);transition:transform .35s,border-color .25s ease}
+[data-theme=light] .proj{border-color:rgba(26,20,16,.25)}
+.proj:hover,.proj:focus-visible,[data-theme=light] .proj:hover,[data-theme=light] .proj:focus-visible{border-color:var(--orange)}
 @media (prefers-reduced-motion:reduce){.proj{transition:none}}
 
 /* Results footnotes (draft) */
