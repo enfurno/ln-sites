@@ -109,7 +109,7 @@ footer{padding:3rem 5vw;border-top:1px solid rgba(255,255,255,.08);display:flex;
 .social a.soc:hover,.social a.soc:focus-visible{transform:translateY(-2px);border-color:transparent;background:linear-gradient(#1a1220,#1a1220) padding-box,linear-gradient(135deg,var(--pink),var(--orange),var(--yellow)) border-box;color:#fff;box-shadow:0 8px 24px rgba(236,61,99,.35);outline:none}
 .social a.soc:hover svg,.social a.soc:focus-visible svg{color:var(--orange)}
 /* work images v2: fixed-ratio boxes, never stretched */
-.shot{position:relative;aspect-ratio:16/10;background:#120d14}
+.shot{position:relative;aspect-ratio:16/10;background:#120d14;border:2px solid color-mix(in srgb,var(--orange) 42%,transparent)}
 .shot picture{display:block;width:100%;height:100%}
 .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
 
@@ -123,7 +123,7 @@ footer{padding:3rem 5vw;border-top:1px solid rgba(255,255,255,.08);display:flex;
 /* v3: tile buttons with icons */
 .btn{border-radius:14px;border:2px solid transparent;background:var(--grad) border-box;background-size:200% 100%;color:#140c10;gap:.55rem}
 .btn .bi{flex:0 0 auto;margin-left:-.15rem}
-.btn:hover,.btn:focus-visible{transform:translateY(-2px);background-position:100% 0;box-shadow:0 0 0 2px #0d0a0f,0 0 0 4px var(--orange),0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(236,61,99,.5);outline:none}
+.btn:hover,.btn:focus-visible{transform:translateY(-2px);background-position:100% 0;box-shadow:0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(236,61,99,.5);outline:none}
 .btn.ghost{background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.28)) border-box;color:var(--ink);box-shadow:none}
 .btn.ghost:hover,.btn.ghost:focus-visible{background:linear-gradient(#1a1220,#1a1220) padding-box,var(--grad) border-box;color:var(--ink);box-shadow:0 10px 28px -8px rgba(236,61,99,.55),0 0 18px -4px rgba(247,137,43,.45)}
 .btn.ghost:hover .bi,.btn.ghost:focus-visible .bi{color:var(--yellow)}
