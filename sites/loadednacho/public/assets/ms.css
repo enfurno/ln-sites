@@ -77,7 +77,7 @@
 .ms-hero .head h1{font-size:clamp(2.1rem,5vw,3.8rem);margin:0}
 
 /* MS page hero: full ambient animated glow background (video-styled paint blobs), content centered */
-.ms-hero{position:relative;display:flex;align-items:center;justify-content:center;min-height:82svh;padding-top:9rem;padding-bottom:6rem;overflow:hidden}
+.ms-hero{position:relative;display:flex;align-items:center;justify-content:center;min-height:100svh;padding-top:8rem;padding-bottom:6rem;overflow:hidden}
 .ms-hero .head{position:relative;z-index:1;max-width:840px;margin:0;text-align:center}
 .ms-hero .head > p{margin-left:auto;margin-right:auto;max-width:640px}
 .ms-hero .ms-ctas{justify-content:center}
@@ -87,9 +87,11 @@
 .ms-a2{width:560px;height:560px;background:radial-gradient(circle,rgba(196,72,127,.8),transparent 68%);bottom:-130px;right:2%;opacity:.45;animation:msa2 24s ease-in-out infinite}
 .ms-a3{width:440px;height:440px;background:radial-gradient(circle,rgba(255,176,70,.6),transparent 68%);top:16%;right:24%;opacity:.4;animation:msa3 18s ease-in-out infinite}
 .ms-a4{width:520px;height:520px;background:radial-gradient(circle,rgba(210,243,79,.55),transparent 68%);bottom:-90px;left:32%;opacity:.14;animation:msa4 26s ease-in-out infinite}
+.ms-a5{width:680px;height:680px;background:radial-gradient(circle,rgba(236,72,153,.5),transparent 70%);top:-170px;right:2%;opacity:.5;animation:msa5 22s ease-in-out infinite}
 @keyframes msa1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(70px,-64px) scale(1.18)}66%{transform:translate(-52px,44px) scale(.94)}}
 @keyframes msa2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-84px,54px) scale(1.14)}66%{transform:translate(62px,-42px) scale(.94)}}
 @keyframes msa3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(52px,32px) scale(1.22)}}
 @keyframes msa4{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-34px) scale(1.12)}}
+@keyframes msa5{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,44px) scale(1.16)}66%{transform:translate(46px,-34px) scale(.95)}}
 @media (max-width:680px){.ms-hero{min-height:auto;padding-top:7rem}}
 @media (prefers-reduced-motion:reduce){.ms-ambient span{animation:none}}
