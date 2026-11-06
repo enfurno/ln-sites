@@ -26,4 +26,9 @@ footer{background:var(--navy);color:#eaf1fa;padding:0 0 26px;margin-top:40px;bor
 footer h4{color:var(--orange);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}footer a{color:#d5e4f5;text-decoration:none;display:block;margin:7px 0}footer .base{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;color:#a7bcd4}
 @media(max-width:900px){nav{display:none}.two{grid-template-columns:1fr}}
 .amen{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}.amen .a{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}.amen .a h3{color:var(--navy);margin:8px 0 4px}.amen .a p{font-size:14px;color:var(--mut)}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}.step .n{width:34px;height:34px;border-radius:50%;background:var(--orange);color:#3b1500;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:12px}.step h3{color:var(--navy);margin-bottom:6px}.step p{font-size:14px;color:var(--mut)}`;
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}.step .n{width:34px;height:34px;border-radius:50%;background:var(--orange);color:#3b1500;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:12px}.step h3{color:var(--navy);margin-bottom:6px}.step p{font-size:14px;color:var(--mut)}
+.sizepick{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sizepick span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffbf8f;font-weight:700;margin-right:4px}
+.sizepick a{background:#fff;color:var(--navy);text-decoration:none;font-weight:700;padding:8px 14px;border-radius:8px;font-size:14px}
+.sizepick a:hover{background:var(--orange);color:#3b1500}
+footer .wrap > div{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:20px}`;
