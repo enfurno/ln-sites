@@ -1,0 +1,34 @@
+{
+  "slug": "rexters",
+  "name": "Rexter's Self Storage",
+  "domain": "",
+  "tagline": "Clean, secure self storage in Gainesville, TX",
+  "contact": {
+    "phone": "(940) 665-7245",
+    "email": "gainesselfstorage@gmail.com",
+    "address": "3222 E US Hwy 82",
+    "city": "Gainesville, TX 76240",
+    "maps": "3222 East US Highway 82 Gainesville TX 76240"
+  },
+  "hours": "Mon–Fri 8:30am–5pm · Sat by appt",
+  "theme": {
+    "navy": "#0b1f3a",
+    "navy2": "#12325e",
+    "orange": "#f6863c",
+    "orangeDark": "#e2641a"
+  },
+  "units": [
+    { "size": "5x5",   "label": "5×5",   "price": 5500,  "deposit": 0, "type": "standard" },
+    { "size": "5x10",  "label": "5×10",  "price": 7000,  "deposit": 0, "type": "standard" },
+    { "size": "10x10", "label": "10×10", "price": 9500,  "deposit": 0, "type": "standard" },
+    { "size": "10x15", "label": "10×15", "price": 12000, "deposit": 0, "type": "standard" },
+    { "size": "10x20", "label": "10×20", "price": 15000, "deposit": 0, "type": "standard" },
+    { "size": "10x25", "label": "10×25", "price": 17500, "deposit": 0, "type": "standard" }
+  ],
+  "modules": {
+    "online_rental": "lead",
+    "pay_online": "lead",
+    "gate": "pending"
+  },
+  "note": "Prices are SAMPLE placeholders until real rates are confirmed. Add 'climate'/'driveup'/'rv' unit_type entries as actual units are confirmed."
+}
