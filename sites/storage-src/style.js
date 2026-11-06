@@ -4,7 +4,7 @@ export const CSS = `:root{--navy:${'__NAVY__'};--navy2:'__NAVY2__';--orange:'__O
 .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
 .util{background:var(--navy);color:#fff;font-size:13.5px}.util .wrap{display:flex;gap:20px;padding:8px 20px;flex-wrap:wrap}.util .r{margin-left:auto}.util a{color:#ffd8b8;text-decoration:none}
 .hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}.hdr .wrap{display:flex;align-items:center;gap:24px;padding:12px 20px}
-.brand{display:flex;align-items:center;gap:12px}.brand img{height:72px;width:auto;max-width:260px;object-fit:contain;background:#f2f5f9;border:1px solid var(--line);border-radius:10px;padding:6px}.brand .nm{font-weight:600;font-size:15px;color:var(--navy);letter-spacing:.02em}
+.brand{display:flex;align-items:center;gap:12px}.brand img{height:72px;width:auto;max-width:260px;object-fit:contain}.brand .nm{font-weight:600;font-size:15px;color:var(--navy);letter-spacing:.02em}
 nav{margin-left:auto;display:flex;gap:20px}nav a{text-decoration:none;font-weight:600;color:var(--navy);font-size:14.5px}
 .hdr .cta{background:var(--orange);color:#3b1500;padding:11px 20px;border-radius:9px;font-weight:800;text-decoration:none}
 .hero{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:72px 0;position:relative;overflow:hidden}

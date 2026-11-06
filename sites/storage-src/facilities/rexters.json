@@ -2,6 +2,8 @@
   "slug": "rexters",
   "name": "Rexter's Self Storage",
   "brandLine": "Self Storage · Gainesville, TX",
+  "logoHeight": 144,
+  "logoMaxWidth": 440,
   "domain": "",
   "tagline": "Clean, secure self storage in Gainesville, TX",
   "backendUrl": "",
