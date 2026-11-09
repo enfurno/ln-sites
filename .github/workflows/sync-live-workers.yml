@@ -1,0 +1,54 @@
+# Keeps sites/toc/worker.js and sites/feast/worker.js identical to the scripts
+# that are actually deployed. Those two workers are uploaded straight to the
+# Cloudflare API and are deliberately not deployed by deploy.yml, so a repo copy
+# silently went stale before. This fetches the live source and parks it on a
+# branch; merging the branch is the only thing that changes the repo.
+#
+# Nothing here deploys, uploads or serves anything.
+
+name: sync-live-workers
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mondays 13:00 UTC
+    - cron: "0 13 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-live-workers
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pull the deployed worker scripts
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node tools/sync-live-workers.mjs
+
+      - name: Park any difference on the sync branch
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- sites/toc/worker.js sites/feast/worker.js; then
+            echo "Repo already matches the deployed workers. Nothing to do."
+            exit 0
+          fi
+          git config user.name "ln-sites sync"
+          git config user.email "sync@loadednacho.com"
+          git checkout -B chore/sync-live-workers
+          git add sites/toc/worker.js sites/feast/worker.js
+          git commit -m "sync: match sites/toc and sites/feast to the deployed workers"
+          git push --force origin chore/sync-live-workers
+          echo "Pushed chore/sync-live-workers. Open a pull request against main to merge it."
