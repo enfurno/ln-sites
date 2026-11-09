@@ -42,10 +42,25 @@ async function __rcpt(env,ev,fb){if(env.NOTIFY_TEST_ONLY==='true')return fb.spli
 const J=(o,s=200)=>new Response(JSON.stringify(o),{status:s,headers:{'content-type':'application/json','cache-control':'no-store'}});
 const clean=(v,n)=>typeof v==='string'?v.trim().slice(0,n):'';
 const EM=/^[^\s@<>"']{1,64}@[a-z0-9.-]{1,190}\.[a-z]{2,}$/i;
-// Yukon hours: Mon-Sat 11am-9pm, Sun 11am-8pm. Slots every 30 min, 11:00 to 1h before close.
-// Keep in sync with site/assets/app.js reserveTimes().
+// Yukon hours come live from Mother Sauce (/api/hours, 60s cache); the constants below are
+// only the fallback if that feed is unreachable. Slots every 30 min, from open to 1h before close.
+// Keep in sync with public/assets/app.js reserveTimes().
 const LAST_SLOT={0:'19:00'},LAST_DEFAULT='20:00';
 const timesFor=date=>{const dow=new Date(date+'T12:00:00Z').getUTCDay(),last=LAST_SLOT[dow]||LAST_DEFAULT,out=[];for(let m=660;;m+=30){const t=String(m/60|0).padStart(2,'0')+':'+String(m%60).padStart(2,'0');out.push(t);if(t===last)break}return out};
+const LN_DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const lnMins=t=>{const p=String(t||'').split(':');return (+p[0])*60+(+p[1]||0)};
+const lnHM=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+let __lnHoursMemo={t:0,v:null};
+async function lnHoursLive(env){if(__lnHoursMemo.v&&Date.now()-__lnHoursMemo.t<60000)return __lnHoursMemo.v;
+ let d=null;try{const r=await env.PORTAL.fetch('https://ln-portal/api/hours/catfishcove');if(r.ok)d=await r.json()}catch(e){}
+ if(!d)return __lnHoursMemo.v;const ls=d.locations||[],l=ls.filter(x=>x.slug==='yukon')[0]||ls.filter(x=>x.status==='open')[0]||ls[0];
+ const h=(l&&l.hours&&l.hours.length?l.hours:d.hours)||[];if(!h.length)return __lnHoursMemo.v;
+ const m={};h.forEach(x=>{if(x&&x.day)m[x.day]={closed:!!x.closed,open:x.open||'',close:x.close||''}});
+ __lnHoursMemo={t:Date.now(),v:m};return m}
+async function liveTimesFor(env,date){const m=await lnHoursLive(env);const dow=new Date(date+'T12:00:00Z').getUTCDay(),day=m&&m[LN_DOW[dow]];
+ if(day&&day.closed)return [];let first='11:00',closeM=lnMins(LAST_SLOT[dow]||LAST_DEFAULT)+60;
+ if(day&&day.open&&day.close){first=day.open;closeM=lnMins(day.close)}
+ const out=[];for(let i=lnMins(first);i<=closeM-60;i+=30)out.push(lnHM(i));return out}
 const PARTY=new Set([...Array.from({length:20},(_,i)=>String(i+1)),'21+']);
 const todayCT=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -167,7 +182,7 @@ const __lnInner ={async fetch(req,env,ctx){if(new URL(req.url).pathname==='/api/
   if(r.phone.replace(/\D/g,'').length<10)return J({ok:false,error:'Please enter a phone number we can call or text.'},400);
   if(r.email&&!EM.test(r.email))return J({ok:false,error:"That email doesn't look right (or leave it blank)."},400);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(r.date)||r.date<todayCT())return J({ok:false,error:'Please pick today or a future date.'},400);
-  if(!timesFor(r.date).includes(r.time))return J({ok:false,error:'Please choose a time from the list for that day.'},400);
+  if(!(await liveTimesFor(env,r.date)).includes(r.time))return J({ok:false,error:'Please choose a time from the list for that day.'},400);
   if(!PARTY.has(r.party))return J({ok:false,error:'Please choose your party size.'},400);
   {const __rr=await lnResvEnforce(env,r,'');if(__rr.err)return J({ok:false,error:__rr.err,code:__rr.code},__rr.code==='full'?409:400);if(__rr.note){r.grat=__rr.grat;r.notes=(r.notes?r.notes+' | ':'')+__rr.note}} // v61 booking rules
   if(await fgFindDup(env,{table:'cove_reservations',brand:'catfishcove',spam:__spam,row:{...r,res_date:r.date,res_time:r.time,party_size:r.party},cols:['name','phone','email','res_date','res_time','party_size','notes']}))return J({ok:true});
@@ -387,7 +402,7 @@ async function __lnTsGate(req, env) {
   console.log('turnstile ok', JSON.stringify({ path: u.pathname, verified: true }));
   return null;
 }
-// Browser side: one VISIBLE widget per protected form (appearance always), token sent as x-ln-ts. Errors/expiry reset and retry.
+// Browser side: one hidden widget per protected form (size invisible, appearance interaction-only), placed right of the submit button; token sent as x-ln-ts. Errors/expiry reset and retry.
 // On submit: wait up to 8 s for a token, then submit anyway (the server accepts and flags it).
 const __TS_CLIENT = `(function(){var K=document.currentScript&&document.currentScript.getAttribute('data-k');if(!K)return;
 var P=/^\\/api\\/(apply|reserve|subscribe|club|catering)$/,W=new Map(),T=new Map(),R=new Map(),last=null,ready=null;
@@ -397,8 +412,8 @@ document.addEventListener('submit',function(e){if(F.indexOf(e.target)>=0)last=e.
 document.addEventListener('focusin',function(e){var f=e.target&&e.target.closest&&e.target.closest('form');if(f&&F.indexOf(f)>=0)last=f},true);
 function load(){if(ready)return ready;ready=new Promise(function(res){window.__lnTsOnload=function(){res(true)};var s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__lnTsOnload';s.async=true;s.defer=true;s.onerror=function(){res(null)};document.head.appendChild(s);setTimeout(function(){res(null)},15000)});return ready}
 function retry(f){var n=(R.get(f)||0)+1;R.set(f,n);if(n>3)return;setTimeout(function(){var id=W.get(f);try{if(window.turnstile&&id!=null)window.turnstile.reset(id)}catch(e){}},1500*n)}
-function render(f){var b=f.querySelector('button[type=submit],button:not([type]),input[type=submit]');var d=document.createElement('div');d.className='ln-ts';d.style.cssText='margin:10px 0;max-width:100%;min-height:65px;overflow:hidden';if(b&&b.parentNode)b.parentNode.insertBefore(d,b);else f.appendChild(d);
- try{W.set(f,window.turnstile.render(d,{sitekey:K,action:'form',size:'flexible',appearance:'always','refresh-expired':'auto','retry':'auto','retry-interval':4000,
+function render(f){var b=f.querySelector('button[type=submit],button:not([type]),input[type=submit]');var d=document.createElement('div');d.className='ln-ts';d.style.cssText='display:inline-flex;vertical-align:middle;align-items:center;margin:0;min-height:0;max-width:100%';if(b&&b.parentNode)b.parentNode.insertBefore(d,b.nextSibling);else f.appendChild(d);
+ try{W.set(f,window.turnstile.render(d,{sitekey:K,action:'form',size:'invisible',appearance:'interaction-only','refresh-expired':'auto','retry':'auto','retry-interval':4000,
   callback:function(t){T.set(f,t);R.set(f,0)},'error-callback':function(){T.delete(f);retry(f);return true},'expired-callback':function(){T.delete(f);var id=W.get(f);try{window.turnstile.reset(id)}catch(e){}},'timeout-callback':function(){T.delete(f);var id=W.get(f);try{window.turnstile.reset(id)}catch(e){}}}))}catch(e){}}
 load().then(function(ok){if(!ok||!window.turnstile)return;F.forEach(render)});
 function cur(f){var t=T.get(f)||'';if(!t){var id=W.get(f);try{if(window.turnstile&&id!=null)t=window.turnstile.getResponse(id)||''}catch(e){}}return t}

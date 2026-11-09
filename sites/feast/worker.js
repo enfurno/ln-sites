@@ -1328,7 +1328,7 @@ export default {
     if (ICONS[url.pathname]) { const [k, t] = ICONS[url.pathname]; const b = Uint8Array.from(atob(CFG.icons[k]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': t, 'cache-control': 'public, max-age=86400' } }); }
     if (url.pathname === '/site.webmanifest') return new Response(JSON.stringify({ name: CFG.icon.name, short_name: CFG.icon.short, icons: [{ src: '/icon-180.png', sizes: '180x180', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }], theme_color: CFG.icon.theme, background_color: CFG.icon.theme, display: 'standalone' }), { headers: { 'content-type': 'application/manifest+json', 'cache-control': 'public, max-age=86400' } });
     const im = url.pathname.match(/^\/img\/([a-z_]+)\.webp$/); if (im && IMG[im[1]]) { const b = Uint8Array.from(atob(IMG[im[1]]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': 'image/webp', 'cache-control': 'public, max-age=86400' } }); }
-    if (url.pathname !== '/' && url.pathname !== '/index.html') return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } });
+    if (url.pathname !== '/' && url.pathname !== '/index.html') return new Response('Not found', { status: 404 });
     const s = CFG.slug;
     const [contact, hours, menu, social, jobs, mods, site] = await Promise.all([
       ms('/api/contact/' + s, ctx), ms('/api/hours/' + s, ctx), ms('/api/menu/' + s, ctx), ms('/api/social/' + s, ctx), ms('/api/jobs/' + s, ctx), ms('/api/public/modules/' + s, ctx), ms('/api/site/' + s, ctx)]);
