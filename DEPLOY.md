@@ -24,3 +24,21 @@ The token and account id are read from the environment. They are not stored in t
 ## Branch protection
 
 Turn on branch protection for `main`: require a pull request before merging, and require the `deploy / precheck` check to pass. Direct pushes to `main` would run this workflow with the Cloudflare token, so keep that branch review-only.
+
+## Keeping the repo in sync with live
+
+Live is the baseline. Before touching a worker, check the repo against what is
+actually deployed:
+
+```
+CLOUDFLARE_API_TOKEN=... npm run verify:live
+```
+
+It compares every `worker_src` in `tools/sites.config.json` plus `toc`, `feast`
+and `storage-api` against the live script and exits non-zero on any difference.
+Line endings are unified before comparing; everything else must match exactly.
+
+When a site has drifted, pull the live script into the repo rather than
+patching from a local copy. `sites/toc`, `sites/feast` and `sites/storage-api`
+are not deployed by this workflow, so their repo copy is the only record of
+what is running.

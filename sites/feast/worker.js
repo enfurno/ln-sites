@@ -178,6 +178,9 @@ ${body}
 const PAGE_JS = `(function(){
 var root=document.documentElement, RM=false;
 try{RM=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+/* Hero video: the looped clip is a ~4.4s forward-and-back camera push (zoom in/out).
+   Slowing the playback rate makes that push much gentler. 1 = as shot, 0.55 = ~half speed. */
+var HB=0.55;
 function onScroll(){var y=window.pageYOffset||root.scrollTop;root.classList[y>40?'add':'remove']('scrolled')}
 addEventListener('scroll',onScroll,{passive:true});onScroll();
 
@@ -213,6 +216,7 @@ Array.prototype.forEach.call(document.querySelectorAll('[data-sw]'),function(sw)
 /* hero video: poster stays until the video is actually painting; errors fall back to the poster */
 Array.prototype.forEach.call(document.querySelectorAll('[data-hero]'),function(h){
   var v=h.querySelector('video');if(!v)return;
+  try{v.defaultPlaybackRate=HB;v.playbackRate=HB}catch(e){}
   /* small screens take the 720 encode, but only before it has painted */
   try{if(v.dataset.small&&matchMedia('(max-width: 900px)').matches&&v.readyState<2){v.src=v.dataset.small;v.load()}}catch(e){}
   var live=false;
@@ -662,8 +666,7 @@ function feastHeader(v) {
 <button type="button" data-sw-btn aria-expanded="false" aria-controls="locmenu"><span>${esc(loc ? loc.name : 'Locations')}</span>${chev}</button>
 <div class="menu" id="locmenu" role="group" aria-label="Choose a location">${locs.map(l => `<a href="${esc(q({ loc: l.slug }))}" ${l === loc ? 'aria-current="page"' : ''}><span>${esc(l.name)}</span>${l === loc ? '<b>You are here</b>' : ''}</a>`).join('')}</div></div>` : '';
   const drawerSw = locs.length > 1 ? `<div class="sw"><span class="lab">Location</span>${locs.map(l => `<a href="${esc(q({ loc: l.slug }))}" ${l === loc ? 'aria-current="page"' : ''}><span>${esc(l.name)}</span>${l === loc ? '<b>You are here</b>' : ''}</a>`).join('')}</div>` : '';
-  return `
-<header class="hdr">
+  return `<header class="hdr">
 <a class="logo" href="${esc(q({}))}" aria-label="${esc(v.name)} home">${CFG.logos[v.th.logo]}</a>
 <nav aria-label="Main">${nav.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
 <div class="hact">${ordBtn}${sw}${tel ? `<a class="tel" href="tel:${tel}">${esc(phone)}</a>` : ''}</div>
@@ -838,7 +841,7 @@ h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,
 background:var(--ink);color:var(--gold);font:500 9.5px/1 'Jost';letter-spacing:.3em;text-transform:uppercase;border-bottom:1px solid rgba(201,162,75,.45)}
 
 /* left rail */
-.strip{position:fixed;left:0;top:var(--pvh);bottom:0;width:var(--strip);z-index:50;display:flex;flex-direction:column;align-items:center;
+.strip{position:fixed;left:0;top:var(--pvh);bottom:0;width:var(--strip);z-index:50;display:flex;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;overscroll-behavior:contain;
 padding:var(--s4) 0 var(--s4);gap:var(--s3);border-right:1px solid rgba(201,162,75,.55);
 background:
 radial-gradient(circle at 20% 30%,rgba(243,233,210,.055) 0 1px,transparent 2px) 0 0/9px 9px,
@@ -1095,7 +1098,7 @@ font:500 9.5px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;transition
 /* footer */
 footer{background:linear-gradient(180deg,#121A2B,#0B0F1A);color:#F3E9D2;margin-left:0;padding-block:var(--s5) var(--s4);margin-top:0;border-top:1px solid rgba(201,162,75,.55)}
 .fgrid{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;gap:var(--s5) var(--s4);max-width:var(--max);margin-inline:auto;padding-inline:var(--g)}
-.fbrand .logo{display:block;margin-bottom:var(--s3)}.fbrand .logo svg{height:42px;width:auto;filter:brightness(0) invert(1) sepia(.28) saturate(2.4) hue-rotate(3deg)}
+.fbrand .logo{display:block;margin-bottom:var(--s3)}.fbrand .logo svg{height:42px;width:auto}.fbrand .logo svg.mk-dark{display:none}
 .fbrand p{font-family:'Jost',sans-serif;font-size:13px;line-height:1.65;color:rgba(243,233,210,.6);max-width:30ch}
 .fcol h4{font:500 9px/1 'Jost';letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:var(--s3)}
 .fcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
@@ -1157,6 +1160,32 @@ footer{padding-block:var(--s4)}
 .ttl h2{font-size:clamp(32px,8.4vw,44px)}
 }
 @media(max-width:420px){.hero h1{font-size:clamp(36px,11vw,50px)}.band .bn .n{font-size:32px}.chapter p{font-size:18px}}
+.strip::-webkit-scrollbar{display:none}
+/* short viewports: keep the whole rail on screen, compressing as height drops */
+@media(max-height:880px){
+.strip{padding:var(--s3) 0;gap:var(--s2)}
+.strip .seal{width:46px;height:46px;font-size:18px}
+.strip .vt{font-size:20px;letter-spacing:.26em;margin-top:var(--s1)}
+.strip .rail{margin-top:var(--s2);gap:var(--s2)}
+.strip .rail a{font-size:8.5px;padding:4px 0;letter-spacing:.24em}
+.strip .vs{font-size:8.5px;letter-spacing:.22em}
+}
+@media(max-height:800px){
+.strip{padding:var(--s3) 0;gap:12px}
+.strip .seal{width:42px;height:42px;font-size:17px}
+.strip .vt{font-size:18px;letter-spacing:.24em;margin-top:var(--s1)}
+.strip .rail{margin-top:12px;gap:12px}
+.strip .rail a{font-size:8px;padding:3px 0;letter-spacing:.22em}
+.strip .vs{display:none}
+}
+@media(max-height:680px){
+.strip{padding:var(--s2) 0;gap:10px}
+.strip .seal{width:38px;height:38px;font-size:15px}
+.strip .vt{font-size:16px;letter-spacing:.2em;margin-top:0;max-height:150px;overflow:hidden}
+.strip .rail{margin-top:8px;gap:8px}
+.strip .rail a{font-size:7.5px;padding:2px 0;letter-spacing:.18em}
+.strip .vs{display:none}
+}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero video{transition:none}.frame img{transition:none}}
 `;
 
@@ -1167,8 +1196,7 @@ function tocHeader(v) {
   const nav = [['#chapters', 'The table'], ['#hours', 'Hours'], ['#family', 'Family'], ['#menu', 'Menu'], ['#more', 'Order & more']];
   const ord = v.modList[0];
   const ordBtn = ord.on && ord.url ? `<a class="ordcta" href="${esc(ord.url)}" rel="noopener" target="_blank">Order online</a>` : '';
-  return `
-<aside class="strip" aria-label="${esc(v.name)}">
+  return `<aside class="strip" aria-label="${esc(v.name)}">
 <a class="seal" href="${esc(v.q({}))}" aria-label="${esc(v.name)} home">${esc(CFG.sealText)}</a>
 <div class="vt">${esc(v.name)}</div>
 <nav class="rail" aria-label="Sections">${nav.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
@@ -1300,7 +1328,7 @@ export default {
     if (ICONS[url.pathname]) { const [k, t] = ICONS[url.pathname]; const b = Uint8Array.from(atob(CFG.icons[k]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': t, 'cache-control': 'public, max-age=86400' } }); }
     if (url.pathname === '/site.webmanifest') return new Response(JSON.stringify({ name: CFG.icon.name, short_name: CFG.icon.short, icons: [{ src: '/icon-180.png', sizes: '180x180', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }], theme_color: CFG.icon.theme, background_color: CFG.icon.theme, display: 'standalone' }), { headers: { 'content-type': 'application/manifest+json', 'cache-control': 'public, max-age=86400' } });
     const im = url.pathname.match(/^\/img\/([a-z_]+)\.webp$/); if (im && IMG[im[1]]) { const b = Uint8Array.from(atob(IMG[im[1]]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': 'image/webp', 'cache-control': 'public, max-age=86400' } }); }
-    if (url.pathname !== '/' && url.pathname !== '/index.html') return new Response('Not found', { status: 404, headers: {} });
+    if (url.pathname !== '/' && url.pathname !== '/index.html') return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } });
     const s = CFG.slug;
     const [contact, hours, menu, social, jobs, mods, site] = await Promise.all([
       ms('/api/contact/' + s, ctx), ms('/api/hours/' + s, ctx), ms('/api/menu/' + s, ctx), ms('/api/social/' + s, ctx), ms('/api/jobs/' + s, ctx), ms('/api/public/modules/' + s, ctx), ms('/api/site/' + s, ctx)]);
