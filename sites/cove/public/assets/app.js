@@ -32,11 +32,27 @@ if(f)f.addEventListener('submit',function(e){e.preventDefault();var fd=new FormD
   fetch('/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)}).then(function(r){return r.json()}).then(function(j){
     if(j.ok){msg.className='msg ok';msg.textContent="You're in! Welcome to Club Cove.";f.reset()}else{msg.className='msg err';msg.textContent=j.error||'Something went wrong.'}
   }).catch(function(){msg.className='msg err';msg.textContent='Network error. Please try again.'}).finally(function(){btn.disabled=false})});
-// RESERVATIONS. Yukon hours: Mon-Sat 11am-9pm, Sun 11am-8pm (Google, Oct 2026).
-// Slots every 30 min from open to 1 hour before close. Must match worker.js timesFor().
-var RESERVE_LAST={0:'19:00'},RESERVE_LAST_DEFAULT='20:00';
-function reserveTimes(dateStr){var dow=dateStr?new Date(dateStr+'T12:00:00').getDay():-1,last=RESERVE_LAST[dow]||RESERVE_LAST_DEFAULT,out=[];
- for(var m=660;;m+=30){var t=String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');out.push(t);if(t===last)break}return out}
+// RESERVATIONS. Hours come live from Mother Sauce via /api/hours (60s cache); the
+// constants below are only the fallback when that feed is unreachable.
+// Slots every 30 min from open to 1 hour before close. Must match worker.js liveTimesFor().
+var RESERVE_OPEN='11:00',RESERVE_CLOSE={0:'20:00'},RESERVE_CLOSE_DEFAULT='21:00';
+var lnHoursMap=null,lnHoursReq=null;
+function lnMins(t){var p=String(t||'').split(':');return (+p[0])*60+(+p[1]||0)}
+function lnHM(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
+function lnHoursLoad(){if(lnHoursReq)return lnHoursReq;
+ lnHoursReq=fetch('/api/hours',{credentials:'omit'}).then(function(r){return r.ok?r.json():null}).then(function(d){
+  if(!d)return null;var ls=d.locations||[],l=ls.filter(function(x){return x.slug==='yukon'})[0]||ls.filter(function(x){return x.status==='open'})[0]||ls[0];
+  var h=(l&&l.hours&&l.hours.length?l.hours:d.hours)||[];if(!h.length)return null;
+  var m={};h.forEach(function(x){if(x&&x.day)m[x.day]={closed:!!x.closed,open:x.open||'',close:x.close||''}});lnHoursMap=m;return m;
+ }).catch(function(){return null});
+ return lnHoursReq}
+function reserveTimes(dateStr){var dow=dateStr?new Date(dateStr+'T12:00:00').getDay():-1;
+ var day=dow>=0?['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dow]:'';
+ var live=lnHoursMap&&day?lnHoursMap[day]:null;
+ if(live&&live.closed)return [];
+ var first=RESERVE_OPEN,closeM=lnMins(RESERVE_CLOSE[dow]||RESERVE_CLOSE_DEFAULT);
+ if(live&&live.open&&live.close){first=live.open;closeM=lnMins(live.close)}
+ var out=[];for(var m=lnMins(first);m<=closeM-60;m+=30)out.push(lnHM(m));return out}
 function lnTzToday(tz){try{var p={};new Intl.DateTimeFormat('en-US',{timeZone:tz||'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value});return{date:p.year+'-'+p.month+'-'+p.day,hm:(p.hour==='24'?'00':p.hour)+':'+p.minute}}catch(e){var n=new Date(),z=function(v){return String(v).padStart(2,'0')};return{date:n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate()),hm:z(n.getHours())+':'+z(n.getMinutes())}}}
 function lnAddDays(s,k){var d=new Date(s+'T12:00:00'),z=function(v){return String(v).padStart(2,'0')};d.setDate(d.getDate()+k);return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
 var rf=document.getElementById('reserveForm');
@@ -46,7 +62,7 @@ var rt=document.getElementById('rTime'),rp=document.getElementById('rParty'),big
  function fillTimes(){var keep=rt.value,ph=rt.options[0]&&rt.options[0].value===''?rt.options[0]:null;rt.innerHTML='';if(ph)rt.appendChild(ph);
   reserveTimes(rf.date.value).forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=lbl(t);rt.appendChild(o)});
   rt.value=[].some.call(rt.options,function(o){return o.value===keep})?keep:''}
- fillTimes();rf.date.addEventListener('change',fillTimes);rf.date.addEventListener('input',fillTimes);rf.addEventListener('reset',function(){setTimeout(fillTimes,0)});
+ fillTimes();lnHoursLoad().then(function(h){if(!h)return;if(window.LNRUI)window.LNRUI.run(rf);else fillTimes()});rf.date.addEventListener('change',fillTimes);rf.date.addEventListener('input',fillTimes);rf.addEventListener('reset',function(){setTimeout(fillTimes,0)});
  for(var n=1;n<=20;n++){var o=document.createElement('option');o.value=n;o.textContent=n+(n===1?' guest':' guests');rp.appendChild(o)}
  var ob=document.createElement('option');ob.value='21+';ob.textContent='More than 20 (please call)';rp.appendChild(ob);
  rp.addEventListener('change',function(){big.hidden=!(rp.value==='21+'||+rp.value>=12)});
