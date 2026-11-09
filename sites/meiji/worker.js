@@ -284,7 +284,7 @@ async function __lnTsGate(req, env) {
   console.log('turnstile ok', JSON.stringify({ path: u.pathname, verified: true }));
   return null;
 }
-// Browser side: one hidden widget per protected form (size invisible, appearance interaction-only), placed right of the submit button; token sent as x-ln-ts. Errors/expiry reset and retry.
+// Browser side: one hidden widget per protected form (appearance interaction-only), placed right of the submit button; token sent as x-ln-ts. Errors/expiry reset and retry.
 // On submit: wait up to 8 s for a token, then submit anyway (the server accepts and flags it).
 const __TS_CLIENT = `(function(){var K=document.currentScript&&document.currentScript.getAttribute('data-k');if(!K)return;
 var P=/^\\/api\\/(apply|reserve|subscribe|club|catering)$/,W=new Map(),T=new Map(),R=new Map(),last=null,ready=null;
@@ -295,7 +295,7 @@ document.addEventListener('focusin',function(e){var f=e.target&&e.target.closest
 function load(){if(ready)return ready;ready=new Promise(function(res){window.__lnTsOnload=function(){res(true)};var s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__lnTsOnload';s.async=true;s.defer=true;s.onerror=function(){res(null)};document.head.appendChild(s);setTimeout(function(){res(null)},15000)});return ready}
 function retry(f){var n=(R.get(f)||0)+1;R.set(f,n);if(n>3)return;setTimeout(function(){var id=W.get(f);try{if(window.turnstile&&id!=null)window.turnstile.reset(id)}catch(e){}},1500*n)}
 function render(f){var b=f.querySelector('button[type=submit],button:not([type]),input[type=submit]');var d=document.createElement('div');d.className='ln-ts';d.style.cssText='display:inline-flex;vertical-align:middle;align-items:center;margin:0;min-height:0;max-width:100%';if(b&&b.parentNode)b.parentNode.insertBefore(d,b.nextSibling);else f.appendChild(d);
- try{W.set(f,window.turnstile.render(d,{sitekey:K,action:'form',size:'invisible',appearance:'interaction-only','refresh-expired':'auto','retry':'auto','retry-interval':4000,
+ try{W.set(f,window.turnstile.render(d,{sitekey:K,action:'form',appearance:'interaction-only','refresh-expired':'auto','retry':'auto','retry-interval':4000,
   callback:function(t){T.set(f,t);R.set(f,0)},'error-callback':function(){T.delete(f);retry(f);return true},'expired-callback':function(){T.delete(f);var id=W.get(f);try{window.turnstile.reset(id)}catch(e){}},'timeout-callback':function(){T.delete(f);var id=W.get(f);try{window.turnstile.reset(id)}catch(e){}}}))}catch(e){}}
 load().then(function(ok){if(!ok||!window.turnstile)return;F.forEach(render)});
 function cur(f){var t=T.get(f)||'';if(!t){var id=W.get(f);try{if(window.turnstile&&id!=null)t=window.turnstile.getResponse(id)||''}catch(e){}}return t}
