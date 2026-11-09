@@ -666,8 +666,7 @@ function feastHeader(v) {
 <button type="button" data-sw-btn aria-expanded="false" aria-controls="locmenu"><span>${esc(loc ? loc.name : 'Locations')}</span>${chev}</button>
 <div class="menu" id="locmenu" role="group" aria-label="Choose a location">${locs.map(l => `<a href="${esc(q({ loc: l.slug }))}" ${l === loc ? 'aria-current="page"' : ''}><span>${esc(l.name)}</span>${l === loc ? '<b>You are here</b>' : ''}</a>`).join('')}</div></div>` : '';
   const drawerSw = locs.length > 1 ? `<div class="sw"><span class="lab">Location</span>${locs.map(l => `<a href="${esc(q({ loc: l.slug }))}" ${l === loc ? 'aria-current="page"' : ''}><span>${esc(l.name)}</span>${l === loc ? '<b>You are here</b>' : ''}</a>`).join('')}</div>` : '';
-  return `<div class="pv">Preview only. Not the live site.</div>
-<header class="hdr">
+  return `<header class="hdr">
 <a class="logo" href="${esc(q({}))}" aria-label="${esc(v.name)} home">${CFG.logos[v.th.logo]}</a>
 <nav aria-label="Main">${nav.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
 <div class="hact">${ordBtn}${sw}${tel ? `<a class="tel" href="tel:${tel}">${esc(phone)}</a>` : ''}</div>
@@ -842,16 +841,16 @@ h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,
 background:var(--ink);color:var(--gold);font:500 9.5px/1 'Jost';letter-spacing:.3em;text-transform:uppercase;border-bottom:1px solid rgba(201,162,75,.45)}
 
 /* left rail */
-.strip{position:fixed;left:0;top:var(--pvh);bottom:0;width:var(--strip);z-index:50;display:flex;flex-direction:column;align-items:center;
+.strip{position:fixed;left:0;top:var(--pvh);bottom:0;width:var(--strip);z-index:50;display:flex;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;overscroll-behavior:contain;
 padding:var(--s4) 0 var(--s4);gap:var(--s3);border-right:1px solid rgba(201,162,75,.55);
 background:
 radial-gradient(circle at 20% 30%,rgba(243,233,210,.055) 0 1px,transparent 2px) 0 0/9px 9px,
 radial-gradient(circle at 72% 64%,rgba(201,162,75,.09) 0 1px,transparent 2px) 0 0/13px 13px,
 linear-gradient(180deg,#131A2B,#0D1220 55%,#131A2B)}
-.strip .seal{width:52px;height:52px;background:var(--brand);color:#F6EBD2;display:grid;place-items:center;
-font:600 20px/1 'Cormorant Garamond';outline:1px solid var(--gold);outline-offset:3px;flex:none;transition:outline-offset .25s}
-.strip .seal:hover{outline-offset:6px}
-.strip .vt{writing-mode:vertical-rl;font:600 24px/1 'Cormorant Garamond';letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-top:var(--s2)}
+.strip .railbrand{display:block;flex:none;line-height:0}
+.strip .railbrand svg{display:block;height:var(--railBrandH,300px);width:auto;transition:opacity .25s}
+.strip .railbrand:hover svg{opacity:.85}
+.strip .railbrand:focus-visible svg{outline:1px solid var(--gold);outline-offset:4px}
 .strip .rail{margin-top:var(--s3);display:flex;flex-direction:column;gap:var(--s3);align-items:center}
 .strip .rail a{writing-mode:vertical-rl;font:500 9px/1 'Jost';letter-spacing:.28em;text-transform:uppercase;color:rgba(243,233,210,.62);padding:6px 0;position:relative}
 .strip .rail a:after{content:"";position:absolute;left:50%;bottom:-4px;width:0;height:1px;background:var(--gold);transform:translateX(-50%);transition:width .25s}
@@ -1099,7 +1098,7 @@ font:500 9.5px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;transition
 /* footer */
 footer{background:linear-gradient(180deg,#121A2B,#0B0F1A);color:#F3E9D2;margin-left:0;padding-block:var(--s5) var(--s4);margin-top:0;border-top:1px solid rgba(201,162,75,.55)}
 .fgrid{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;gap:var(--s5) var(--s4);max-width:var(--max);margin-inline:auto;padding-inline:var(--g)}
-.fbrand .logo{display:block;margin-bottom:var(--s3)}.fbrand .logo svg{height:42px;width:auto;filter:brightness(0) invert(1) sepia(.28) saturate(2.4) hue-rotate(3deg)}
+.fbrand .logo{display:block;margin-bottom:var(--s3)}.fbrand .logo svg{height:42px;width:auto}.fbrand .logo svg.mk-dark{display:none}
 .fbrand p{font-family:'Jost',sans-serif;font-size:13px;line-height:1.65;color:rgba(243,233,210,.6);max-width:30ch}
 .fcol h4{font:500 9px/1 'Jost';letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:var(--s3)}
 .fcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
@@ -1119,7 +1118,7 @@ ${LN_CREDIT_CSS}
 @media(max-width:1240px){.fgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:1100px){
 :root{--strip:76px;--g:clamp(24px,3.4vw,44px)}
-.strip .vt{font-size:20px;letter-spacing:.28em}.strip .seal{width:44px;height:44px;font-size:17px}
+.strip{--railBrandH:250px}
 .chapter,.chapter:nth-of-type(even){grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:var(--s4)}
 .mcats{grid-template-columns:1fr}
 }
@@ -1161,6 +1160,29 @@ footer{padding-block:var(--s4)}
 .ttl h2{font-size:clamp(32px,8.4vw,44px)}
 }
 @media(max-width:420px){.hero h1{font-size:clamp(36px,11vw,50px)}.band .bn .n{font-size:32px}.chapter p{font-size:18px}}
+.strip::-webkit-scrollbar{display:none}
+/* short viewports: keep the whole rail on screen, compressing as height drops */
+@media(max-height:880px){
+.strip{padding:var(--s3) 0;gap:var(--s2)}
+.strip{--railBrandH:250px}
+.strip .rail{margin-top:var(--s2);gap:var(--s2)}
+.strip .rail a{font-size:8.5px;padding:4px 0;letter-spacing:.24em}
+.strip .vs{font-size:8.5px;letter-spacing:.22em}
+}
+@media(max-height:800px){
+.strip{padding:var(--s3) 0;gap:12px}
+.strip{--railBrandH:210px}
+.strip .rail{margin-top:12px;gap:12px}
+.strip .rail a{font-size:8px;padding:3px 0;letter-spacing:.22em}
+.strip .vs{display:none}
+}
+@media(max-height:680px){
+.strip{padding:var(--s2) 0;gap:10px}
+.strip{--railBrandH:160px}
+.strip .rail{margin-top:8px;gap:8px}
+.strip .rail a{font-size:7.5px;padding:2px 0;letter-spacing:.18em}
+.strip .vs{display:none}
+}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero video{transition:none}.frame img{transition:none}}
 `;
 
@@ -1171,10 +1193,8 @@ function tocHeader(v) {
   const nav = [['#chapters', 'The table'], ['#hours', 'Hours'], ['#family', 'Family'], ['#menu', 'Menu'], ['#more', 'Order & more']];
   const ord = v.modList[0];
   const ordBtn = ord.on && ord.url ? `<a class="ordcta" href="${esc(ord.url)}" rel="noopener" target="_blank">Order online</a>` : '';
-  return `<div class="pv">Preview only. Not the live site.</div>
-<aside class="strip" aria-label="${esc(v.name)}">
-<a class="seal" href="${esc(v.q({}))}" aria-label="${esc(v.name)} home">${esc(CFG.sealText)}</a>
-<div class="vt">${esc(v.name)}</div>
+  return `<aside class="strip" aria-label="${esc(v.name)}">
+<a class="railbrand" href="${esc(v.q({}))}" aria-label="${esc(v.name)} home">${CFG.railLogo}</a>
 <nav class="rail" aria-label="Sections">${nav.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
 <div class="vs">${esc(CFG.eyebrow)}</div>
 </aside>

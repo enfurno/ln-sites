@@ -1,4 +1,4 @@
-import fs from 'fs';
+﻿import fs from 'fs';
 const ICONS = JSON.parse(fs.readFileSync('/workspace/feast-toc/icons/inline.json', 'utf8'));
 const L = f => fs.readFileSync('/workspace/feast-toc/logos/' + f, 'utf8').replace(/<\?xml[^>]*>/, '').replace(/\s(width|height)="[^"]*"/g, (m, a, o) => o < 200 ? m : '').replace('<svg', '<svg role="img"');
 const tpl = fs.readFileSync('worker.tpl.js', 'utf8');
@@ -20,14 +20,14 @@ const VIDEO_TOC = video('toc');
 // Module copy: every slot has an ON line and a deliberate OFF line (no greyed-out dead buttons).
 const modsFeast = {
   ordering:      { on: 'Order online and we will have it ready.', off: 'Ordering direct from us goes live here shortly. Until then, the buffet is walk-in, and the phone still works.', cta: 'Order online', soon: 'Coming soon' },
-  reservations:  { on: 'Save a table before you come in.', off: 'Walk-ins welcome — no reservation needed for the buffet. A booking tool is on the way for bigger groups.', cta: 'Reserve a table', soon: 'Walk-ins welcome' },
+  reservations:  { on: 'Save a table before you come in.', off: 'Walk-ins welcome â€” no reservation needed for the buffet. A booking tool is on the way for bigger groups.', cta: 'Reserve a table', soon: 'Walk-ins welcome' },
   catering:      { on: 'Feeding a crowd? Let us handle the trays.', off: 'Catering for offices and parties is being set up. Call us now and we will talk through numbers.', cta: 'Plan catering', soon: 'Ask us now' },
   club:          { title: 'The Feast club', on: 'Join for news, offers and first look at specials.', off: 'A rewards club is coming. For now, specials show up right on this page when we run them.', cta: 'Join the club', soon: 'Coming soon' },
   careers:       { on: 'We are hiring. Come join the line.', off: 'No open roles posted right now. If you want to work here, call and ask for a manager.', cta: 'See open roles', soon: 'No roles posted' },
 };
 const modsToc = {
   ordering:      { on: 'Order online and we will have it ready.', off: 'Ordering direct is being set up. Until then the buffet is walk-in, and you can always call ahead.', cta: 'Order online', soon: 'Coming soon' },
-  reservations:  { on: 'Book a table before you come in.', off: 'No reservation needed — walk in and we will seat you. Booking for larger parties is on its way.', cta: 'Reserve a table', soon: 'Walk-ins welcome' },
+  reservations:  { on: 'Book a table before you come in.', off: 'No reservation needed â€” walk in and we will seat you. Booking for larger parties is on its way.', cta: 'Reserve a table', soon: 'Walk-ins welcome' },
   catering:      { on: 'Let us cater the party.', off: 'Catering is being arranged. Call us and we can plan a table for your group right now.', cta: 'Plan catering', soon: 'Ask us now' },
   club:          { title: 'The house club', on: 'Join for news and seasonal specials.', off: 'A house club is in the works. In the meantime, seasonal specials appear on this page.', cta: 'Join the club', soon: 'Coming soon' },
   careers:       { on: 'We are hiring.', off: 'Nothing posted at the moment. Call and ask for the manager if you would like to join us.', cta: 'See open roles', soon: 'No roles posted' },
@@ -39,7 +39,7 @@ const brands = {
     tagline: 'Every craving, one table.',
     lead: 'Pho built to order, sushi coming off the board, a Mongolian grill that turns your bowl into a wall of flame, hibachi and a dessert line worth pacing yourself for. Six stations, one price, in Oklahoma City and Midwest City.',
     desc: 'Feast Buffet in Oklahoma City and Midwest City: all-you-can-eat pho, sushi, Mongolian grill, hibachi and dessert. One price, and room for the whole family.',
-    eyebrow: 'Oklahoma City · Midwest City',
+    eyebrow: 'Oklahoma City Â· Midwest City',
     headline: 'Every craving.<em>One table.</em>',
     marquee: ['Pho', 'Sushi', 'Mongolian grill', 'Hibachi', 'All you can eat', 'Kids welcome', 'Dessert'],
     video: VIDEO_FEAST,
@@ -77,7 +77,7 @@ const brands = {
     tagline: "South OKC's family table.",
     lead: 'A red-lacquer room on South Western where the sushi is cut behind glass, the Mongolian grill takes your bowl and hands back fire, and the chocolate fountain settles the dessert question. All you can eat, with room for every generation.',
     desc: 'Taste of China in South Oklahoma City: all-you-can-eat sushi, a Mongolian grill, Chinese classics and a chocolate fountain. Made for big family tables.',
-    eyebrow: 'South Western Ave · Oklahoma City',
+    eyebrow: 'South Western Ave Â· Oklahoma City',
     headline: "<span class=\"loc\">South OKC's</span> <i>family</i> table.",
     sealText: 'TC',
     band: '<span>All you can eat</span> <span>Sushi</span> <span>Mongolian grill</span> <span>Chocolate fountain</span> <span>Kids &amp; families welcome</span>',
@@ -90,7 +90,7 @@ const brands = {
       { name: 'Dumplings, steamed', img: 'toc_dumplings', line: 'Small, hot and gone quickly. Worth a second pass.' },
       { name: 'The Mongolian grill', img: 'toc_wok', line: 'Build your bowl, hand it to the grill, and wait for the flame.' },
     ],
-    fam: { eyebrow: 'For the whole family', title: 'A table for every generation.', lead: 'Grandparents, cousins, kids who only want the fountain — everyone finds their plate here.',
+    fam: { eyebrow: 'For the whole family', title: 'A table for every generation.', lead: 'Grandparents, cousins, kids who only want the fountain â€” everyone finds their plate here.',
       items: [['Plenty for kids', 'Familiar favorites sit right beside the Asian dishes, and the chocolate fountain does the rest.'],
               ['Something for everyone', 'You do not have to choose. The line runs from sushi to the grill to the classics, and nobody has to agree.'],
               ['Room for the family', 'Grandparents, cousins, the whole table. Pull up another chair; there is space.']] },
@@ -107,6 +107,7 @@ const brands = {
     footLine: 'Taste of China: all you can eat in South Oklahoma City. Sushi, a Mongolian grill, Chinese classics and a chocolate fountain. The table is long; pull up a chair.',
     themes: { modern: { bg: '#F3E9D2', navy: '#1F2A44', ink: '#0F1524', gold: '#C9A24B', fg: '#14110F', mut: '#5a4f45', brand: '#9E1B14', brandFg: '#F3E9D2', acc: '#C9A24B', acc2: '#9E1B14', card: '#F3E9D2', line: '#C9A24B', hf: 'Cormorant Garamond', logo: 'modern' } },
     logos: { modern: L('toc_light_cls.svg') + L('toc_dark_cls.svg') },
+    railLogo: L('toc_rail.svg'),
     favicon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="4" y="4" width="56" height="56" rx="8" fill="#B3261E"/><rect x="10" y="10" width="44" height="44" rx="5" fill="none" stroke="#F6E7C8" stroke-width="3"/></svg>',
   },
 };

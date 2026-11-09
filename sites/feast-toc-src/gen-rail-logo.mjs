@@ -1,0 +1,15 @@
+﻿import fs from "fs";
+const s = fs.readFileSync("logos/toc_light_cls.svg", "utf8");
+const g = s.match(/<g transform="translate\(110,120\)">[\s\S]*?<\/g>/);
+if (!g) throw new Error("mark group not found");
+const mark = g[0].replace("translate(110,120)", "translate(75,75)");
+const paths = [...s.matchAll(/<path d="([^"]+)" fill="(#[0-9A-Fa-f]{6})"/g)];
+if (paths.length < 2) throw new Error("wordmark path not found");
+const word = paths[1][0];
+const cx = (227.33 + 893.92) / 2;
+const cy = (68.63 + 141.80) / 2;
+const topY = 190;
+const rot = `translate(75,${(topY + 333.30).toFixed(2)}) rotate(90) translate(-${cx.toFixed(3)},-${cy.toFixed(3)})`;
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 857">${mark}<g transform="${rot}">${word}</g></svg>`;
+fs.writeFileSync("logos/toc_rail.svg", svg);
+console.log("wrote logos/toc_rail.svg", svg.length, "bytes; word path", word.length, "chars");
