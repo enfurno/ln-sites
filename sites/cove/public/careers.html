@@ -67,22 +67,5 @@
 </footer>
 <script src="/assets/social.js" defer></script>
 <script src="/assets/app.js?v=rf2" defer></script><script src="/assets/ln-jobs.js?v=2" defer></script>
-<script>try{navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,q:location.search,r:document.referrer,t:/[?&]ln_test=1/.test(location.search)||localStorage.getItem("ln-test")=="1"?1:0}))}catch(e){}</script><script src="/ln-hours.js?v=1" defer></script><script src="/assets/ln-formcfg.js?v=2" defer></script><script src="/assets/scrollspy.js?v=1" defer data-nav="#menuNav" data-header="#nav"></script><script data-k="0x4AAAAAAFnUa24V6fGHvxtA">(function(){var K=document.currentScript&&document.currentScript.getAttribute('data-k');if(!K)return;
-var P=/^\/api\/(apply|reserve|subscribe|club|catering)$/,W=new Map(),T=new Map(),R=new Map(),last=null,ready=null;
-function forms(){return [].filter.call(document.querySelectorAll('form'),function(f){return !f.hasAttribute('data-demo')&&(f.hasAttribute('data-ln-form')||f.hasAttribute('data-ln-cfg')||/^(club-form|signup|reserveForm|careerForm|catf)$/.test(f.id))})}
-var F=forms();if(!F.length)return;
-document.addEventListener('submit',function(e){if(F.indexOf(e.target)>=0)last=e.target},true);
-document.addEventListener('focusin',function(e){var f=e.target&&e.target.closest&&e.target.closest('form');if(f&&F.indexOf(f)>=0)last=f},true);
-function load(){if(ready)return ready;ready=new Promise(function(res){window.__lnTsOnload=function(){res(true)};var s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__lnTsOnload';s.async=true;s.defer=true;s.onerror=function(){res(null)};document.head.appendChild(s);setTimeout(function(){res(null)},15000)});return ready}
-function retry(f){var n=(R.get(f)||0)+1;R.set(f,n);if(n>3)return;setTimeout(function(){var id=W.get(f);try{if(window.turnstile&&id!=null)window.turnstile.reset(id)}catch(e){}},1500*n)}
-function render(f){var b=f.querySelector('button[type=submit],button:not([type]),input[type=submit]');var d=document.createElement('div');d.className='ln-ts';if(b&&b.parentNode)b.parentNode.insertBefore(d,b);else f.appendChild(d);
- try{W.set(f,window.turnstile.render(d,{sitekey:K,action:'form',size:'normal',appearance:'always',theme:'light','refresh-expired':'auto','retry':'auto','retry-interval':4000,
-  callback:function(t){T.set(f,t);R.set(f,0)},'error-callback':function(){T.delete(f);retry(f);return true},'expired-callback':function(){T.delete(f);var id=W.get(f);try{window.turnstile.reset(id)}catch(e){}},'timeout-callback':function(){T.delete(f);var id=W.get(f);try{window.turnstile.reset(id)}catch(e){}}}))}catch(e){}}
-load().then(function(ok){if(!ok||!window.turnstile)return;F.forEach(render)});
-function cur(f){var t=T.get(f)||'';if(!t){var id=W.get(f);try{if(window.turnstile&&id!=null)t=window.turnstile.getResponse(id)||''}catch(e){}}return t}
-function token(f){if(!f)return Promise.resolve('');return load().then(function(ok){if(!ok||!W.has(f))return '';var t0=Date.now();return new Promise(function(res){(function poll(){var t=cur(f);if(t||Date.now()-t0>8000)return res(t);setTimeout(poll,250)})()})})}
-var of=window.fetch;window.fetch=function(input,init){try{var url=new URL(typeof input==='string'?input:input.url,location.href),m=((init&&init.method)||(input&&input.method)||'GET').toUpperCase();
- if(m==='POST'&&url.origin===location.origin&&P.test(url.pathname)){var f=last&&F.indexOf(last)>=0?last:(F.length===1?F[0]:null);if(!f)for(var i=0;i<F.length;i++)if(W.has(F[i])){f=F[i];break}
-  return token(f).then(function(t){var h=new Headers((init&&init.headers)||{});if(t)h.set('x-ln-ts',t);var o=Object.assign({},init||{},{headers:h});return of.call(window,input,o)}).finally(function(){T.delete(f);var id=W.get(f);try{if(window.turnstile&&id!=null)window.turnstile.reset(id)}catch(e){}})}}catch(e){}
- return of.apply(window,arguments)};})();</script></body>
+<script>try{navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,q:location.search,r:document.referrer,t:/[?&]ln_test=1/.test(location.search)||localStorage.getItem("ln-test")=="1"?1:0}))}catch(e){}</script><script src="/ln-hours.js?v=1" defer></script><script src="/assets/ln-formcfg.js?v=2" defer></script><script src="/assets/scrollspy.js?v=1" defer data-nav="#menuNav" data-header="#nav"></script></body>
 </html>
