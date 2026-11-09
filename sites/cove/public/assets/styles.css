@@ -225,19 +225,30 @@ a.deal{color:inherit;cursor:pointer;text-decoration:none}
 a.deal:hover,a.deal:focus-visible{transform:translateY(-3px);box-shadow:0 10px 24px rgba(49,25,15,.12);border-color:var(--tan);border-top-color:var(--c)}
 a.deal:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
 
-/* footer credit v2 (draft): modestly larger */
-.ln-credit{font-size:14.5px}.ln-credit .ln-credit-mark{width:22px;height:22px;opacity:1}.ln-credit .ln-credit-tag{opacity:.92;font-weight:400}
-
-/* menu options (draft) */
-.ln-opts{margin-top:.35rem;font-size:.82rem;line-height:1.45;opacity:.85}.ln-opts p{margin:.1rem 0}.ln-opts b{font-weight:600}.ln-opts i{font-style:normal;opacity:.7}.ln-opts span{opacity:.75;white-space:nowrap}
-
-/* scrollspy (draft) */
+/* scrollspy */
 #menuNav a.is-active{color:#f2b33d!important;box-shadow:inset 0 -2px 0 #f2b33d}
 
-/* LN credit: logo-only on phones */
-/* phones: full "Crafted by [mark] LOADED NACHO - Empowering Digital Success", tightened but never abbreviated */
-@media (max-width:640px){.ln-credit{text-align:center;font-size:12.5px}
-.ln-credit a.ln-credit-a{display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;padding:6px 8px;row-gap:2px}
-.ln-credit .ln-credit-mark{width:20px;height:20px;opacity:1}
-.ln-credit .ln-credit-name{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
-.ln-credit .ln-credit-tag{opacity:.75;font-size:11.5px}}
+/* footer credit v2 */
+.ln-credit{font-size:14.5px}.ln-credit .ln-credit-mark{width:22px;height:22px}.ln-credit .ln-credit-tag{opacity:.8;font-weight:400}
+@media (max-width:640px){.ln-credit{text-align:center}.ln-credit a.ln-credit-a{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:6px 10px}.ln-credit a.ln-credit-a>span:first-child,.ln-credit .ln-credit-tag{display:none}.ln-credit .ln-credit-mark{width:26px;height:26px;opacity:1}.ln-credit .ln-credit-name{font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}}
+/* story badges: one row, gold theme border (Oct 26) */
+.chips{flex-wrap:nowrap;gap:.5rem}
+.chips li{white-space:nowrap;padding:.42rem .8rem;font-size:.92rem;background:rgba(217,164,65,.12);border:1.5px solid var(--gold);color:#fff}
+@media (max-width:600px){.chips{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}.chips li{text-align:center;font-size:.88rem;padding:.45rem .5rem}.chips li:last-child{grid-column:1/-1}}
+/* mobile QA Oct 26 */
+.order-cta a[aria-disabled=true]{opacity:.55;cursor:default;pointer-events:none}
+a[href^="tel:"]:not(.btn):not(.row){display:inline-block;padding:.6rem 0;margin:-.6rem 0}
+@media (max-width:600px){.order-cta{display:flex;flex-direction:column;align-items:stretch;gap:.6rem}.order-cta .btn{justify-content:center;text-align:center}}
+#posOtherWrap[hidden]{display:none!important}
+
+/* hours card v2: one shared grid for all hours rows + one-row CTAs */
+.loc .hours{display:grid;grid-template-columns:max-content 1fr;column-gap:1.25rem;align-items:baseline}
+.loc .hours h4{grid-column:1/-1}
+.loc .hours dl{display:contents}
+.loc .hours dt,.loc .hours dd{margin:0;padding:.28rem 0}
+.loc .hours dl+dl::before{content:"";grid-column:1/-1;height:0;border-top:1px solid var(--line);margin:.4rem 0}
+.loc .hours dl:first-of-type>dt:first-of-type,.loc .hours dl:first-of-type>dd:first-of-type{margin-top:.5rem}
+.loc-cta{display:flex;flex-wrap:nowrap;gap:.6rem}
+.loc-cta .btn{flex:1 1 auto;min-height:48px;padding:.7rem 1rem;font-size:1rem;gap:.45rem}
+@media (max-width:560px){.loc-cta{display:grid;grid-template-columns:1fr 1fr}.loc-cta .btn{padding:.7rem .8rem}.loc-cta .btn:last-child:nth-child(odd){grid-column:1/-1}}
+
