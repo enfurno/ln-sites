@@ -252,3 +252,9 @@ a[href^="tel:"]:not(.btn):not(.row){display:inline-block;padding:.6rem 0;margin:
 .loc-cta .btn{flex:1 1 auto;min-height:48px;padding:.7rem 1rem;font-size:1rem;gap:.45rem}
 @media (max-width:560px){.loc-cta{display:grid;grid-template-columns:1fr 1fr}.loc-cta .btn{padding:.7rem .8rem}.loc-cta .btn:last-child:nth-child(odd){grid-column:1/-1}}
 
+
+/* Turnstile: own centred row, light theme, corners matched to the inputs */
+.ln-ts{flex:0 0 100%;order:-1;display:flex;justify-content:center;align-items:center;margin:0 0 1rem;min-height:65px}
+.ln-ts>div{overflow:hidden;border-radius:10px;max-width:100%}
+.ln-ts iframe{border-radius:10px;max-width:100%}
+.rsub>.ln-ts{margin:0}
