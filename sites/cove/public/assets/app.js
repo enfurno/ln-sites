@@ -36,23 +36,32 @@ if(f)f.addEventListener('submit',function(e){e.preventDefault();var fd=new FormD
 // constants below are only the fallback when that feed is unreachable.
 // Slots every 30 min from open to 1 hour before close. Must match worker.js liveTimesFor().
 var RESERVE_OPEN='11:00',RESERVE_CLOSE={0:'20:00'},RESERVE_CLOSE_DEFAULT='21:00';
-var lnHoursMap=null,lnHoursReq=null;
+var lnHoursMap=null,lnHoursReq=null,lnHolidays=[];
+// Holidays come from the business and from the picked location: merge by date, location wins.
+function lnHolMerge(a,b){var o={};(a||[]).forEach(function(h){if(h&&h.date)o[h.date]=h});(b||[]).forEach(function(h){if(h&&h.date)o[h.date]=h});return Object.keys(o).map(function(k){return o[k]})}
 function lnMins(t){var p=String(t||'').split(':');return (+p[0])*60+(+p[1]||0)}
 function lnHM(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
 function lnHoursLoad(){if(lnHoursReq)return lnHoursReq;
  lnHoursReq=fetch('/api/hours',{credentials:'omit'}).then(function(r){return r.ok?r.json():null}).then(function(d){
   if(!d)return null;var ls=d.locations||[],l=ls.filter(function(x){return x.slug==='yukon'})[0]||ls.filter(function(x){return x.status==='open'})[0]||ls[0];
   var h=(l&&l.hours&&l.hours.length?l.hours:d.hours)||[];if(!h.length)return null;
-  var m={};h.forEach(function(x){if(x&&x.day)m[x.day]={closed:!!x.closed,open:x.open||'',close:x.close||''}});lnHoursMap=m;return m;
+  var m={};h.forEach(function(x){if(x&&x.day)m[x.day]={closed:!!x.closed,open:x.open||'',close:x.close||''}});
+  lnHolidays=lnHolMerge(d.holidays,l&&l.holidays);lnHoursMap=m;return m;
  }).catch(function(){return null});
  return lnHoursReq}
 function reserveTimes(dateStr){var dow=dateStr?new Date(dateStr+'T12:00:00').getDay():-1;
  var day=dow>=0?['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dow]:'';
  var live=lnHoursMap&&day?lnHoursMap[day]:null;
- if(live&&live.closed)return [];
+ var hol=null;
+ if(dateStr){for(var i=0;i<lnHolidays.length;i++){if(lnHolidays[i]&&lnHolidays[i].date===dateStr){hol=lnHolidays[i];break}}}
+ if(hol&&hol.closed)return [];
+ if(live&&live.closed&&!(hol&&hol.open&&hol.close))return [];
  var first=RESERVE_OPEN,closeM=lnMins(RESERVE_CLOSE[dow]||RESERVE_CLOSE_DEFAULT);
- if(live&&live.open&&live.close){first=live.open;closeM=lnMins(live.close)}
- var out=[];for(var m=lnMins(first);m<=closeM-60;m+=30)out.push(lnHM(m));return out}
+ if(hol&&hol.open&&hol.close){first=hol.open;closeM=lnMins(hol.close)}
+ else if(live&&live.open&&live.close){first=live.open;closeM=lnMins(live.close)}
+ var out=[];for(var m=lnMins(first);m<=closeM-60;m+=30)out.push(lnHM(m));
+ if(dateStr){var t=lnTzToday('America/Chicago');if(dateStr===t.date){var now=lnMins(t.hm)+30;out=out.filter(function(x){return lnMins(x)>=now})}}
+ return out}
 function lnTzToday(tz){try{var p={};new Intl.DateTimeFormat('en-US',{timeZone:tz||'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value});return{date:p.year+'-'+p.month+'-'+p.day,hm:(p.hour==='24'?'00':p.hour)+':'+p.minute}}catch(e){var n=new Date(),z=function(v){return String(v).padStart(2,'0')};return{date:n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate()),hm:z(n.getHours())+':'+z(n.getMinutes())}}}
 function lnAddDays(s,k){var d=new Date(s+'T12:00:00'),z=function(v){return String(v).padStart(2,'0')};d.setDate(d.getDate()+k);return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
 var rf=document.getElementById('reserveForm');
@@ -68,7 +77,7 @@ var rt=document.getElementById('rTime'),rp=document.getElementById('rParty'),big
  rp.addEventListener('change',function(){big.hidden=!(rp.value==='21+'||+rp.value>=12)});
  // Today's date preselected in the restaurant's time zone (America/Chicago). Past today's last seating -> next day. Guests can change it.
  var ct=lnTzToday('America/Chicago');rf.date.min=ct.date;rf.date.max=lnAddDays(ct.date,180);
- function defDate(){var t=lnTzToday('America/Chicago'),d=t.date,ts=reserveTimes(d);if(t.hm>=ts[ts.length-1])d=lnAddDays(d,1);if(d<rf.date.min)d=rf.date.min;return d}
+ function defDate(){var t=lnTzToday('America/Chicago'),d=t.date,ts=reserveTimes(d);if(!ts.length||t.hm>=ts[ts.length-1])d=lnAddDays(d,1);if(d<rf.date.min)d=rf.date.min;return d}
  function setDef(){if(!rf.date.value){rf.date.value=defDate();fillTimes()}}
  setDef();rf.addEventListener('reset',function(){setTimeout(setDef,0)});
  rf.addEventListener('submit',function(e){e.preventDefault();var o={},bad=null;new FormData(rf).forEach(function(v,k){o[k]=typeof v==='string'?v.trim():v});o.elapsed=Date.now()-rt0;

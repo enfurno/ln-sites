@@ -56,11 +56,23 @@ async function lnHoursLive(env){if(__lnHoursMemo.v&&Date.now()-__lnHoursMemo.t<6
  if(!d)return __lnHoursMemo.v;const ls=d.locations||[],l=ls.filter(x=>x.slug==='yukon')[0]||ls.filter(x=>x.status==='open')[0]||ls[0];
  const h=(l&&l.hours&&l.hours.length?l.hours:d.hours)||[];if(!h.length)return __lnHoursMemo.v;
  const m={};h.forEach(x=>{if(x&&x.day)m[x.day]={closed:!!x.closed,open:x.open||'',close:x.close||''}});
+ m.__holidays=lnHolMerge(d.holidays,l&&l.holidays);
  __lnHoursMemo={t:Date.now(),v:m};return m}
+// Holidays from the business and its location merge by date; the location wins.
+const lnHolMerge=(a,b)=>{const o={};(Array.isArray(a)?a:[]).forEach(h=>{if(h&&h.date)o[h.date]=h});(Array.isArray(b)?b:[]).forEach(h=>{if(h&&h.date)o[h.date]=h});return Object.keys(o).map(k=>o[k])};
+// Holiday hours + past slots (v1.80.38 site side): a date listed in Mother Sauce's Holiday hours overrides
+// Weekly hours for that day, closed days give no times, and today's list drops slots less than 30 min away.
+const ctMins=()=>{try{const p=new Intl.DateTimeFormat('en-GB',{timeZone:'America/Chicago',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()),o={};p.forEach(x=>o[x.type]=x.value);return (+o.hour)*60+(+o.minute)}catch(e){return 0}}
 async function liveTimesFor(env,date){const m=await lnHoursLive(env);const dow=new Date(date+'T12:00:00Z').getUTCDay(),day=m&&m[LN_DOW[dow]];
- if(day&&day.closed)return [];let first='11:00',closeM=lnMins(LAST_SLOT[dow]||LAST_DEFAULT)+60;
- if(day&&day.open&&day.close){first=day.open;closeM=lnMins(day.close)}
- const out=[];for(let i=lnMins(first);i<=closeM-60;i+=30)out.push(lnHM(i));return out}
+ const hol=(m&&Array.isArray(m.__holidays)?m.__holidays.find(h=>h&&h.date===date):null)||null;
+ if(hol&&hol.closed)return [];
+ if(day&&day.closed&&!(hol&&hol.open&&hol.close))return [];
+ let first='11:00',closeM=lnMins(LAST_SLOT[dow]||LAST_DEFAULT)+60;
+ if(hol&&hol.open&&hol.close){first=hol.open;closeM=lnMins(hol.close)}
+ else if(day&&day.open&&day.close){first=day.open;closeM=lnMins(day.close)}
+ let out=[];for(let i=lnMins(first);i<=closeM-60;i+=30)out.push(lnHM(i));
+ if(date===todayCT()){const now=ctMins()+30;out=out.filter(t=>lnMins(t)>=now)}
+ return out}
 const PARTY=new Set([...Array.from({length:20},(_,i)=>String(i+1)),'21+']);
 const todayCT=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -248,6 +260,7 @@ async function lnNewApi(req, env, k) {
   }
   if (k === 'reservations') {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || '') || !/^\d{2}:\d{2}$/.test(b.time || '')) return __LNJ({ ok: false, error: 'Pick a date and time.' }, 400);
+    if (!(await liveTimesFor(env, b.date)).includes(b.time)) return __LNJ({ ok: false, error: 'Please choose a time from the list for that day.' }, 400);
     const __row = { name, phone, email, res_date: b.date, res_time: b.time, party_size: __S(b.party, 4), notes: __S([b.occasion, b.notes].filter(Boolean).join(' | '), 1000), location: loc };
     const __dup = await fgFindDup(env, { table: 'cove_reservations', brand: LN_CFG.biz, spam: __spam, row: __row, cols: ['name', 'phone', 'email', 'res_date', 'res_time', 'party_size', 'notes', 'location'] }); if (__dup) return __LNJ({ ok: true, id: __dup });
     const r = await env.DB.prepare("INSERT INTO cove_reservations (brand,status,name,phone,email,res_date,res_time,party_size,notes,ip,user_agent,location,spam) VALUES (?,'new',?,?,?,?,?,?,?,?,?,?,?) RETURNING id")
