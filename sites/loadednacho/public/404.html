@@ -7,7 +7,7 @@
 <link rel="icon" href="/favicon.ico?v=8" sizes="48x48"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png?v=8">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=8">
 <link rel="preload" href="/assets/fonts/Garet-Heavy.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css?v=27"><link rel="stylesheet" href="/assets/theme.css?v=23">
+<link rel="stylesheet" href="/assets/style.css?v=28"><link rel="stylesheet" href="/assets/theme.css?v=23">
 <style>
 .nf{max-width:780px;margin:0 auto;padding:6.5rem 5vw 5rem;text-align:center}
 .nf .splat{width:min(54vw,290px);height:auto;display:block;margin:0 auto 1.5rem;filter:drop-shadow(0 22px 60px rgba(247,137,43,.16))}
@@ -16,8 +16,6 @@
 .nf .lead{color:var(--mute,#a89fa6);font-size:1.03rem;line-height:1.65;margin:0 auto 2.2rem;max-width:46ch}
 .nf .cta{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
 .nf .cta a{width:auto;min-width:172px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.nf .cta a.alt{background:transparent;border:1px solid var(--line,rgba(255,255,255,.16));color:var(--ink,#f7f2ea)}
-.nf .cta a.alt:hover{border-color:var(--orange,#f7892b)}
 .nf .splat{animation:sway 7s ease-in-out infinite}
 @keyframes sway{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.2deg)}}
 @media (prefers-reduced-motion:reduce){.nf .splat{animation:none}}
@@ -29,7 +27,7 @@
 <p class="kick">Error 404</p>
 <h1>This one went stale</h1>
 <p class="lead">The page you're after isn't on the menu. It moved, it retired, or the link came in a little chewed up.</p>
-<div class="cta"><a class="btn" href="/">Back home</a><a class="btn alt" href="/#contact">Start a project</a></div>
+<div class="cta"><a class="btn" href="/">Back home</a><a class="btn ghost" href="/#contact">Start a project</a></div>
 </main>
 <footer><div class="f-bot"><p class="small">&copy; <span id="yr"></span> <span class="fn">Loaded <b>Nacho</b></span></p></div></footer>
 <script>document.getElementById('yr').textContent=new Date().getFullYear()</script>
