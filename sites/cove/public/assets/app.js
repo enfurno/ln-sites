@@ -62,7 +62,7 @@ var rt=document.getElementById('rTime'),rp=document.getElementById('rParty'),big
  function fillTimes(){var keep=rt.value,ph=rt.options[0]&&rt.options[0].value===''?rt.options[0]:null;rt.innerHTML='';if(ph)rt.appendChild(ph);
   reserveTimes(rf.date.value).forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=lbl(t);rt.appendChild(o)});
   rt.value=[].some.call(rt.options,function(o){return o.value===keep})?keep:''}
- fillTimes();lnHoursLoad().then(function(h){if(!h)return;if(window.LNRUI)window.LNRUI.run(rf);else fillTimes()});rf.date.addEventListener('change',fillTimes);rf.date.addEventListener('input',fillTimes);rf.addEventListener('reset',function(){setTimeout(fillTimes,0)});
+ fillTimes();lnHoursLoad().then(function(h){if(!h)return;fillTimes();if(window.LNRUI)window.LNRUI.run(rf)});rf.date.addEventListener('change',fillTimes);rf.date.addEventListener('input',fillTimes);rf.addEventListener('reset',function(){setTimeout(fillTimes,0)});
  for(var n=1;n<=20;n++){var o=document.createElement('option');o.value=n;o.textContent=n+(n===1?' guest':' guests');rp.appendChild(o)}
  var ob=document.createElement('option');ob.value='21+';ob.textContent='More than 20 (please call)';rp.appendChild(ob);
  rp.addEventListener('change',function(){big.hidden=!(rp.value==='21+'||+rp.value>=12)});
