@@ -376,3 +376,10 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 
 /* draft: Client login link (Mother Sauce) */
 .nav nav a.clog{opacity:.8;border-left:1px solid color-mix(in srgb,currentColor 25%,transparent);padding-left:1.1rem}.nav nav a.clog:hover,.nav nav a.clog:focus-visible{opacity:1;color:var(--orange)}@media(max-width:900px){.nav nav a.clog{border-left:0;padding-left:0;color:var(--orange)}}
+/* v16 ghost label sweep: on hover/focus the ghost button's label pans pink -> orange -> lime and settles on orange.
+   Colours come from the theme vars, so light mode uses its own darkened set without a separate rule.
+   The filled button's gradient pan, the v13 rim and the v15 gap glow are untouched. */
+@keyframes btn-ghost-sweep{0%{color:var(--ink)}28%{color:var(--pink)}58%{color:var(--orange)}84%{color:var(--lime)}100%{color:var(--orange)}}
+.btn.ghost{transition:transform .25s,background-position .6s,box-shadow .25s,color .3s ease}
+.btn.ghost:hover,.btn.ghost:focus-visible{animation:btn-ghost-sweep .72s cubic-bezier(.22,.8,.28,1) forwards}
+@media (prefers-reduced-motion:reduce){.btn.ghost:hover,.btn.ghost:focus-visible{animation:none!important;color:var(--orange)}}
