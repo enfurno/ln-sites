@@ -21,6 +21,14 @@ Add these repository secrets (Settings → Secrets and variables → Actions):
 
 The token and account id are read from the environment. They are not stored in the repo.
 
+## Storage admin (`sites/storage-api`)
+
+`sites/storage-api` is not one of the production sites above, so this workflow never deploys it; it is uploaded by hand. Its `/admin` dashboard shows tenant names, phone numbers and payment state, so it is gated by an `ADMIN_TOKEN` secret on the worker:
+
+- No `ADMIN_TOKEN` set: `/admin` answers 503 and shows nothing.
+- With it: `/admin` asks for that password, then sets an `HttpOnly; SameSite=Strict` cookie (12 hours). A script can send `Authorization: Bearer <ADMIN_TOKEN>` instead.
+- `node sites/storage-api/test-admin.mjs` runs in the PR pre-checks and covers the gate.
+
 ## Branch protection
 
 Turn on branch protection for `main`: require a pull request before merging, and require the `deploy / precheck` check to pass. Direct pushes to `main` would run this workflow with the Cloudflare token, so keep that branch review-only.
