@@ -11,7 +11,7 @@
     {"id":"kids","name":"Little Buckaroos","blurb":"For the little ones, with BIG appetites!","items":[
       {"name":"Ages 4 - 7 years","description":"","price":"$10.99"},
       {"name":"Ages 8 - 11 years","description":"","price":"$12.99"}]},
-    {"id":"crab","name":"Crab Legs","blurb":"All You Can EAT! Served up hot and fresh, includes our full seafood buffet and salad bar!","items":[
+    {"id":"crab","name":"Crab Legs","blurb":"All You Can Eat! Served up hot and fresh, includes our full seafood buffet and salad bar!","items":[
       {"name":"All You Can Eat Crab Legs","description":"Served up hot and fresh, includes our full seafood buffet and salad bar!","price":"$59.99","tag":"Cove Original"}]},
     {"id":"drinks","name":"Wet Your Whistle!","blurb":"","items":[
       {"name":"Coca Cola Sodas","description":"","price":"$3.00"},

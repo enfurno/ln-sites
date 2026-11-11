@@ -1,6 +1,9 @@
 {
   "name": "ln-sites",
   "private": true,
+  "scripts": {
+    "verify:live": "node tools/verify-live.mjs"
+  },
   "type": "module",
   "engines": {
     "node": ">=20"

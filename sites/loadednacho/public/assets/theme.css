@@ -32,7 +32,7 @@
 [data-theme=light] .shot{background:#efe7da}
 [data-theme=light] .btn.ghost{background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(rgba(26,20,16,.28),rgba(26,20,16,.28)) border-box}
 [data-theme=light] .btn.ghost:hover,[data-theme=light] .btn.ghost:focus-visible{background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box}
-[data-theme=light] .btn:hover,[data-theme=light] .btn:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #f7892b,0 10px 30px -6px rgba(247,137,43,.5),0 0 24px -4px rgba(236,61,99,.35)}
+[data-theme=light] .btn:hover,[data-theme=light] .btn:focus-visible{box-shadow:0 10px 30px -6px rgba(247,137,43,.5),0 0 24px -4px rgba(236,61,99,.35)}
 [data-theme=light] .see{border-bottom-color:#f7892b}
 [data-theme=light] input,[data-theme=light] select,[data-theme=light] textarea,[data-theme=light] #contact-form select{background-color:#fff;border-color:rgba(26,20,16,.18)}
 [data-theme=light] #contact-form input:not([type=checkbox]):hover,[data-theme=light] #contact-form select:hover,[data-theme=light] #contact-form textarea:hover{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,color-mix(in srgb,var(--c) 60%,transparent),color-mix(in srgb,var(--c2,var(--c)) 60%,transparent)) border-box}
@@ -79,11 +79,11 @@ html,*{scrollbar-color:#7cc6fe99 var(--bg);scrollbar-width:thin}
 .nav > .btn.sm{white-space:nowrap;justify-content:center}
 .nav > .btn.sm.clog{min-width:12.61em;--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
 .nav > .btn.sm.clog::before{background:linear-gradient(#f7892b,#f7892b) border-box}
-.nav > .btn.sm.clog:hover,.nav > .btn.sm.clog:focus-visible{color:#fff;box-shadow:0 0 0 2px #0d0a0f,0 0 0 4px #f7892b,0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
+.nav > .btn.sm.clog:hover,.nav > .btn.sm.clog:focus-visible{color:#fff;box-shadow:0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
 .nav > .btn.sm.clog::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
 [data-theme=light] .nav > .btn.sm.clog{--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08)}
 [data-theme=light] .nav > .btn.sm.clog::before{background:linear-gradient(#b3560b,#b3560b) border-box}
-[data-theme=light] .nav > .btn.sm.clog:hover,[data-theme=light] .nav > .btn.sm.clog:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #e0601c,0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
+[data-theme=light] .nav > .btn.sm.clog:hover,[data-theme=light] .nav > .btn.sm.clog:focus-visible{box-shadow:0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
 [data-theme=light] .nav > .btn.sm.clog::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
 .nav nav{align-items:center}
 /* Tablet header: the full nav + both buttons only fit above ~1020px, so 761-1100px uses the phone menu (burger). */
@@ -96,9 +96,9 @@ html,*{scrollbar-color:#7cc6fe99 var(--bg);scrollbar-width:thin}
 @media(max-width:900px){.nav nav{align-items:flex-start}}
 
 /* Featured work: thin border that fades out on hover (draft) */
-.proj{border:1px solid rgba(255,255,255,.14);transition:transform .35s,border-color .2s ease}
-[data-theme=light] .proj{border-color:rgba(26,20,16,.16)}
-.proj:hover,.proj:focus-visible,[data-theme=light] .proj:hover,[data-theme=light] .proj:focus-visible{border-color:transparent}
+.proj{border:1.5px solid rgba(255,255,255,.18);transition:transform .35s,border-color .25s ease}
+[data-theme=light] .proj{border-color:rgba(26,20,16,.25)}
+.proj:hover,.proj:focus-visible,[data-theme=light] .proj:hover,[data-theme=light] .proj:focus-visible{border-color:var(--orange)}
 @media (prefers-reduced-motion:reduce){.proj{transition:none}}
 
 /* Results footnotes (draft) */
