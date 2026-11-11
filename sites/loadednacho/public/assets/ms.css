@@ -95,3 +95,17 @@
 @keyframes msa5{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,44px) scale(1.16)}66%{transform:translate(46px,-34px) scale(.95)}}
 @media (max-width:680px){.ms-hero,.sec.ms-hero{min-height:auto;padding-top:6rem}}
 @media (prefers-reduced-motion:reduce){.ms-ambient span{animation:none}}
+/* MS hero quote: the "mother sauce" definition sits under the hero buttons.
+   Smaller than the .btn.sm labels (.85rem), muted until hovered, then an
+   orange glow lights the text. Scoped to .ms-quote only. */
+.ms-quote{max-width:660px;margin:1.7rem auto 0;font-size:.8rem;line-height:1.7;font-style:normal;color:color-mix(in srgb,var(--ink) 72%,transparent);text-wrap:pretty;transition:color .35s ease,text-shadow .35s ease}
+.ms-quote p{margin:0}
+.ms-quote p+p{margin-top:.55rem}
+.ms-quote .ms-quote-l{font-weight:800;letter-spacing:.02em;color:var(--orange)}
+.ms-quote:hover{color:color-mix(in srgb,var(--ink) 92%,transparent);text-shadow:0 0 18px rgba(247,137,43,.45),0 0 36px rgba(247,137,43,.22)}
+.ms-quote:hover .ms-quote-l{text-shadow:0 0 16px rgba(247,137,43,.8),0 0 32px rgba(247,137,43,.4)}
+[data-theme=light] .ms-quote{color:color-mix(in srgb,var(--ink) 78%,transparent)}
+[data-theme=light] .ms-quote:hover{color:var(--ink);text-shadow:0 0 18px rgba(224,96,28,.35),0 0 36px rgba(224,96,28,.18)}
+[data-theme=light] .ms-quote:hover .ms-quote-l{text-shadow:0 0 14px rgba(224,96,28,.5)}
+@media (max-width:680px){.ms-quote{font-size:.76rem;line-height:1.6;margin-top:1.4rem}}
+@media (prefers-reduced-motion:reduce){.ms-quote{transition:none}}
