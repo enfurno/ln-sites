@@ -44,7 +44,10 @@ export default {
         return json({ ok: true, slug, name: (f && f.name) || slug, units: units || (f && f.units) || [] });
       }
       if (url.pathname === '/admin' || url.pathname === '/admin/') {
-        return new Response(await adminPage(env), { headers: { 'content-type': 'text/html; charset=utf-8' } });
+        return await adminRoute(req, env);
+      }
+      if (url.pathname === '/admin/logout' && req.method === 'POST') {
+        return new Response(null, { status: 303, headers: { location: '/admin', 'set-cookie': ADMIN_COOKIE + '=; HttpOnly; Secure; SameSite=Strict; Path=/admin; Max-Age=0', 'cache-control': 'no-store' } });
       }
       return new Response(landing(Object.keys(FACILITIES)), { headers: { 'content-type': 'text/html; charset=utf-8' } });
     } catch (e) {
@@ -81,3 +84,82 @@ async function adminPage(env) {
   }
 }
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+// ---- Admin auth -------------------------------------------------------------
+// /admin shows tenant names, phone numbers and payment state, so it is gated.
+// The cookie holds HMAC-SHA256(ADMIN_TOKEN, 'ln-admin-v1'): stateless, no KV.
+// Fail closed: with no ADMIN_TOKEN on the worker, /admin answers 503 rather
+// than rendering the dashboard.
+const ADMIN_COOKIE = 'ln_admin';
+
+async function adminRoute(req, env) {
+  const html = { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' };
+  if (!env.ADMIN_TOKEN) return new Response(unconfiguredPage(), { status: 503, headers: html });
+  if (req.method === 'POST') {
+    let pw = '';
+    try {
+      const form = await req.formData();
+      pw = String(form.get('password') || '');
+    } catch (e) { pw = ''; }
+    if (safeEq(pw, env.ADMIN_TOKEN)) {
+      const sig = await adminSig(env.ADMIN_TOKEN);
+      return new Response(null, {
+        status: 303,
+        headers: {
+          location: '/admin',
+          'set-cookie': ADMIN_COOKIE + '=' + sig + '; HttpOnly; Secure; SameSite=Strict; Path=/admin; Max-Age=43200',
+          'cache-control': 'no-store',
+        },
+      });
+    }
+    return new Response(loginPage(true), { status: 401, headers: html });
+  }
+  if (!(await isAdmin(req, env))) return new Response(loginPage(false), { status: 401, headers: html });
+  return new Response(await adminPage(env), { headers: html });
+}
+
+async function adminSig(token) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(token), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode('ln-admin-v1'));
+  return b64url(new Uint8Array(mac));
+}
+
+function b64url(bytes) {
+  let s = '';
+  for (const b of bytes) s += String.fromCharCode(b);
+  return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function safeEq(a, b) {
+  a = String(a == null ? '' : a); b = String(b == null ? '' : b);
+  if (a.length !== b.length) return false;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return d === 0;
+}
+
+function readCookie(req, name) {
+  const h = req.headers.get('cookie') || '';
+  for (const part of h.split(';')) {
+    const i = part.indexOf('=');
+    if (i > 0 && part.slice(0, i).trim() === name) return part.slice(i + 1).trim();
+  }
+  return '';
+}
+
+async function isAdmin(req, env) {
+  if (!env.ADMIN_TOKEN) return false;
+  const bearer = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  if (bearer && safeEq(bearer, env.ADMIN_TOKEN)) return true;
+  const c = readCookie(req, ADMIN_COOKIE);
+  return !!c && safeEq(c, await adminSig(env.ADMIN_TOKEN));
+}
+
+function loginPage(bad) {
+  const style = 'body{font:15px/1.55 system-ui,sans-serif;max-width:380px;margin:80px auto;padding:0 22px;color:#12233f}h1{font-size:20px;color:#0b1f3a}label{display:block;margin:18px 0 6px;font-size:13px;color:#5c6672}input{width:100%;box-sizing:border-box;font:inherit;padding:9px 11px;border:1px solid #cfd8e3;border-radius:8px}button{margin-top:16px;width:100%;font:inherit;padding:10px;border:0;border-radius:8px;background:#e2641a;color:#fff;font-weight:600;cursor:pointer}.err{margin:14px 0 0;padding:9px 11px;background:#fdecea;border:1px solid #f5c6c0;border-radius:8px;color:#8a1f11;font-size:13.5px}';
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Storage admin — sign in</title><style>' + style + '</style></head><body><h1>Storage admin</h1><form method="post" action="/admin"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required autofocus><button type="submit">Sign in</button></form>' + (bad ? '<p class="err">That password did not match.</p>' : '') + '</body></html>';
+}
+
+function unconfiguredPage() {
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Storage admin — not configured</title><style>body{font:15px/1.55 system-ui,sans-serif;max-width:560px;margin:80px auto;padding:0 22px;color:#12233f}h1{font-size:20px;color:#0b1f3a}p{color:#5c6672}code{background:#eef3f8;border-radius:5px;padding:1px 5px}</style></head><body><h1>Storage admin — not configured</h1><p>This worker has no <code>ADMIN_TOKEN</code> secret, so the dashboard is disabled. Set the secret on the worker and reload.</p></body></html>';
+}

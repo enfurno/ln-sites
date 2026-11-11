@@ -27,6 +27,7 @@ jobs:
         run: |
           node tools/deploylib.mjs dry-run
           node tools/deploy-check.mjs
+          node sites/storage-api/test-admin.mjs
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
