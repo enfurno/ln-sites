@@ -19,19 +19,23 @@
 .ms-ph .ph-in{aspect-ratio:16/10;display:grid;place-items:center;background:repeating-linear-gradient(135deg,#f7f2ea 0 14px,#f1e9dc 14px 28px)}
 .ms-ph .ph-in span{font:700 .85rem/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8a7a68;border:1.5px dashed #c9b8a2;border-radius:999px;padding:.55rem 1rem;background:#fbf7f1}
 
-/* MS page CTAs: Contact us styled like header Client login (draft) */
-.ms-ctas .btn.sm.clog{min-width:12.61em;--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
-.ms-ctas .btn.sm.clog::before{background:linear-gradient(#f7892b,#f7892b) border-box}
-.ms-ctas .btn.sm.clog:hover,.ms-ctas .btn.sm.clog:focus-visible{color:#fff;box-shadow:0 0 0 2px #0d0a0f,0 0 0 4px #f7892b,0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
-.ms-ctas .btn.sm.clog::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
-[data-theme=light] .ms-ctas .btn.sm.clog{--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08)}
-[data-theme=light] .ms-ctas .btn.sm.clog::before{background:linear-gradient(#b3560b,#b3560b) border-box}
-[data-theme=light] .ms-ctas .btn.sm.clog:hover,[data-theme=light] .ms-ctas .btn.sm.clog:focus-visible{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #e0601c,0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
-[data-theme=light] .ms-ctas .btn.sm.clog::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
+/* MS page CTAs: every button pair on the page uses ONE recipe, the same as the
+   header's "Client login" / "Start a project" pair in theme.css (.nav > .btn.sm[.clog]):
+   .85rem label, 14px radius, inset 2px rim, gradient fill, and the same hover
+   (lift + gradient sweep + soft orange bloom). No extra hard ring. */
+.ms-ctas .btn.sm,.join-in > .btn.clog{white-space:nowrap;justify-content:center}
+.ms-ctas .btn.sm{min-width:12.61em}
+.ms-ctas .btn.sm.clog,.join-in > .btn.clog{min-width:12.61em;--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
+.ms-ctas .btn.sm.clog::before,.join-in > .btn.clog::before{background:linear-gradient(#f7892b,#f7892b) border-box}
+.ms-ctas .btn.sm.clog:hover,.ms-ctas .btn.sm.clog:focus-visible,.join-in > .btn.clog:hover,.join-in > .btn.clog:focus-visible{color:#fff;box-shadow:0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
+.ms-ctas .btn.sm.clog::after,.join-in > .btn.clog::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
+[data-theme=light] .ms-ctas .btn.sm.clog,[data-theme=light] .join-in > .btn.clog{--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08)}
+[data-theme=light] .ms-ctas .btn.sm.clog::before,[data-theme=light] .join-in > .btn.clog::before{background:linear-gradient(#b3560b,#b3560b) border-box}
+[data-theme=light] .ms-ctas .btn.sm.clog:hover,[data-theme=light] .ms-ctas .btn.sm.clog:focus-visible,[data-theme=light] .join-in > .btn.clog:hover,[data-theme=light] .join-in > .btn.clog:focus-visible{box-shadow:0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
+[data-theme=light] .ms-ctas .btn.sm.clog::after,[data-theme=light] .join-in > .btn.clog::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
 .ms-ctas{display:flex;flex-wrap:wrap;gap:1rem 1.25rem;align-items:flex-end;margin-top:1.6rem}
 .ms-cta{display:flex;flex-direction:column;gap:.4rem;align-items:stretch}
 .ms-cta-l{font-size:.8rem;opacity:.65;font-weight:600}
-.ms-ctas .btn.sm{min-width:12.61em;justify-content:center}
 .join .ms-ctas{justify-content:center}.join .ms-cta-l{text-align:left}
 @media (max-width:560px){.ms-ctas{flex-direction:column;align-items:stretch}.ms-ctas .btn.sm{width:100%}}
 .join-in p.ms-incl{font-size:.8rem;font-weight:600;opacity:.75;margin:.15rem 0 0;line-height:1.3}
@@ -63,14 +67,7 @@
 .pills li.more:hover{border-style:solid}
 
 /* Homepage closing CTA (Ready to get fully loaded?): same dark style as the banner buttons */
-.join-in > .btn.clog{grid-column:2;grid-row:1/3;justify-self:end;--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
-.join-in > .btn.clog::before{background:linear-gradient(#f7892b,#f7892b) border-box}
-.join-in > .btn.clog:hover,.join-in > .btn.clog:focus-visible{color:#fff;box-shadow:0 0 0 2px #0d0a0f,0 0 0 4px #f7892b,0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
-.join-in > .btn.clog::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
-[data-theme=light] .join-in > .btn.clog{--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08);color:#fff3e6}
-[data-theme=light] .join-in > .btn.clog::before{background:linear-gradient(#b3560b,#b3560b) border-box}
-[data-theme=light] .join-in > .btn.clog:hover,[data-theme=light] .join-in > .btn.clog:focus-visible{color:#fff;box-shadow:0 0 0 2px var(--bg),0 0 0 4px #e0601c,0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
-[data-theme=light] .join-in > .btn.clog::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
+.join-in > .btn.clog{grid-column:2;grid-row:1/3;justify-self:end}
 @media(max-width:1000px){.join-in > .btn.clog{grid-column:1;grid-row:auto;justify-self:start;margin-top:.8rem}}
 
 /* MS hero headline is the page H1: keep the same look as the old H2 */
@@ -95,17 +92,18 @@
 @keyframes msa5{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-70px,44px) scale(1.16)}66%{transform:translate(46px,-34px) scale(.95)}}
 @media (max-width:680px){.ms-hero,.sec.ms-hero{min-height:auto;padding-top:6rem}}
 @media (prefers-reduced-motion:reduce){.ms-ambient span{animation:none}}
-/* MS hero quote: the "mother sauce" definition sits under the hero buttons.
-   Smaller than the .btn.sm labels (.85rem), muted until hovered, then an
-   orange glow lights the text. Scoped to .ms-quote only. */
-.ms-quote{max-width:660px;margin:1.7rem auto 0;font-size:.8rem;line-height:1.7;font-style:normal;color:color-mix(in srgb,var(--ink) 72%,transparent);text-wrap:pretty;transition:color .35s ease,text-shadow .35s ease}
+/* MS hero quote: the "mother sauce" definition sits under the hero buttons in a
+   compact rounded card. Smaller than every button label (.7rem vs .85rem), muted
+   until hovered, then an orange glow lights the text and the card edge.
+   Longhand background-color/border so var() inside color-mix always re-resolves. */
+.ms-quote{max-width:600px;margin:1.5rem auto 0;padding:1.05rem 1.35rem;font-size:.7rem;line-height:1.7;font-style:normal;text-align:left;text-wrap:pretty;color:color-mix(in srgb,var(--ink) 76%,transparent);background-color:color-mix(in srgb,var(--ink) 5%,transparent);border:1px solid;border-color:color-mix(in srgb,var(--ink) 16%,transparent);border-radius:18px;transition:color .35s ease,text-shadow .35s ease,border-color .35s ease,box-shadow .35s ease,background-color .35s ease}
 .ms-quote p{margin:0}
-.ms-quote p+p{margin-top:.55rem}
+.ms-quote p+p{margin-top:.5rem}
 .ms-quote .ms-quote-l{font-weight:800;letter-spacing:.02em;color:var(--orange)}
-.ms-quote:hover{color:color-mix(in srgb,var(--ink) 92%,transparent);text-shadow:0 0 18px rgba(247,137,43,.45),0 0 36px rgba(247,137,43,.22)}
-.ms-quote:hover .ms-quote-l{text-shadow:0 0 16px rgba(247,137,43,.8),0 0 32px rgba(247,137,43,.4)}
-[data-theme=light] .ms-quote{color:color-mix(in srgb,var(--ink) 78%,transparent)}
-[data-theme=light] .ms-quote:hover{color:var(--ink);text-shadow:0 0 18px rgba(224,96,28,.35),0 0 36px rgba(224,96,28,.18)}
-[data-theme=light] .ms-quote:hover .ms-quote-l{text-shadow:0 0 14px rgba(224,96,28,.5)}
-@media (max-width:680px){.ms-quote{font-size:.76rem;line-height:1.6;margin-top:1.4rem}}
+.ms-quote:hover,.ms-quote:focus-within{color:color-mix(in srgb,var(--ink) 94%,transparent);border-color:color-mix(in srgb,var(--orange) 55%,transparent);background-color:color-mix(in srgb,var(--ink) 7%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--orange) 20%,transparent),0 10px 30px -12px rgba(247,137,43,.45);text-shadow:0 0 14px rgba(247,137,43,.4),0 0 30px rgba(247,137,43,.18)}
+.ms-quote:hover .ms-quote-l,.ms-quote:focus-within .ms-quote-l{text-shadow:0 0 14px rgba(247,137,43,.8),0 0 28px rgba(247,137,43,.4)}
+[data-theme=light] .ms-quote{color:color-mix(in srgb,var(--ink) 78%,transparent);background-color:color-mix(in srgb,#fff 72%,transparent);border-color:color-mix(in srgb,var(--ink) 14%,transparent)}
+[data-theme=light] .ms-quote:hover,[data-theme=light] .ms-quote:focus-within{color:var(--ink);border-color:color-mix(in srgb,#e0601c 50%,transparent);background-color:color-mix(in srgb,#fff 88%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,#e0601c 20%,transparent),0 10px 30px -12px rgba(224,96,28,.4);text-shadow:0 0 14px rgba(224,96,28,.35),0 0 30px rgba(224,96,28,.16)}
+[data-theme=light] .ms-quote:hover .ms-quote-l,[data-theme=light] .ms-quote:focus-within .ms-quote-l{text-shadow:0 0 12px rgba(224,96,28,.5)}
+@media (max-width:680px){.ms-quote{font-size:.66rem;line-height:1.65;margin-top:1.3rem;padding:.9rem 1.05rem;border-radius:16px}}
 @media (prefers-reduced-motion:reduce){.ms-quote{transition:none}}
