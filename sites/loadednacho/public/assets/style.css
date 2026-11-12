@@ -7,9 +7,9 @@ img{max-width:100%;display:block}a{color:inherit;text-decoration:none}
 h1,h2,h3{font-weight:800;line-height:1.02;letter-spacing:-.02em}
 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:normal}
 .kicker{text-transform:uppercase;letter-spacing:.22em;font-size:.72rem;color:var(--orange);font-weight:800;margin-bottom:1rem}
-.btn{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 1.6rem;border-radius:999px;background:var(--grad);background-size:200%;color:#140c10;font-weight:800;border:0;cursor:pointer;font:inherit;font-weight:800;transition:transform .25s,background-position .6s,box-shadow .25s}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.1rem;border-radius:999px;background:var(--grad);background-size:200%;color:#140c10;font-weight:800;border:0;cursor:pointer;font:inherit;font-weight:800;font-size:.85rem;transition:transform .25s,background-position .6s,box-shadow .25s}
 .btn:hover{transform:translateY(-2px);background-position:100%;box-shadow:0 10px 30px -8px rgba(247,137,43,.6)}
-.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)}.btn.sm{padding:.65rem 1.1rem;font-size:.85rem}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)}
 .nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;gap:1rem;padding:.9rem 5vw;transition:background .3s,backdrop-filter .3s}
 .nav.solid{background:rgba(13,10,15,.78);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06)}
 .brand{display:flex;align-items:center;gap:.6rem;font-weight:800;letter-spacing:.12em;font-size:.95rem}.brand b{color:var(--orange);margin-left:.3em}
@@ -337,8 +337,7 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 @media(max-width:600px){.join-in{--rim:4px;--gap:3px;border-radius:22px}}
 /* v13 inset cut-out frame on gradient buttons. The rim is a separate ::before layer and the gap is truly transparent,
    so whatever sits behind shows through. box-shadow is left alone, so the existing hover glow is unchanged. */
-.btn:not(.ghost):not(.cta-dark):not(.btn-join){--rim:2px;--gap:2px;position:relative;isolation:isolate;border:calc(var(--rim) + var(--gap)) solid transparent;background:var(--grad) padding-box;background-size:200% 100%;padding:calc(1rem - 2px) calc(1.6rem - 2px)}
-.btn.sm:not(.ghost):not(.cta-dark){padding:calc(.65rem - 2px) calc(1.1rem - 2px)}
+.btn:not(.ghost):not(.cta-dark):not(.btn-join){--rim:2px;--gap:2px;position:relative;isolation:isolate;border:calc(var(--rim) + var(--gap)) solid transparent;background:var(--grad) padding-box;background-size:200% 100%;padding:calc(.65rem - 2px) calc(1.1rem - 2px)}
 .btn:not(.ghost):not(.cta-dark):not(.btn-join)::before{content:"";position:absolute;inset:calc(-1 * (var(--rim) + var(--gap)));border-radius:inherit;border:var(--rim) solid transparent;background:var(--grad) border-box;background-size:200% 100%;background-position:inherit;
  -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);pointer-events:none;z-index:-1}
 .btn:not(.ghost):not(.cta-dark):not(.btn-join):hover,.btn:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible{background-position:100% 0}
