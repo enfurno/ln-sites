@@ -229,6 +229,10 @@ footer{padding:3rem 5vw;border-top:1px solid rgba(255,255,255,.08);display:flex;
 .sec .kicker::before,.nums .kicker::before{content:"";flex:none;width:1.6em;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--orange),var(--pink));-webkit-text-fill-color:initial}
 /* v7 heading highlight: same gradient scale as "not just a chip." (~7.65em wide), never compressed */
 .hl{font-style:normal;background:linear-gradient(90deg,var(--pink) 0,var(--orange) 3.06em,var(--yellow) 5.36em,var(--lime) 7.65em,var(--lime) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+/* v8 long highlight: "nothing on the side." measures 10.28em, so the four-stop scale is stretched in the same 40%/70%/100% rhythm as .hl (was tuned to 7.65em) */
+.hl.hlx{background-image:linear-gradient(90deg,var(--pink) 0,var(--orange) 4.11em,var(--yellow) 7.2em,var(--lime) 10.28em,var(--lime) 100%);white-space:nowrap}
+/* v8b narrow phones: shave the #services headline to 8.6vw so the nowrap highlight fits with ~5px to spare down to 320px; at 390px this is a 0.1px change */
+@media (max-width:479px){#services .head h2{font-size:min(8.6vw,2.1rem)}}
 /* v7b eyebrows: solid orange + rounded chevron */
 .sec .kicker,.nums .kicker{background:none;color:var(--orange);-webkit-text-fill-color:var(--orange);gap:.45em}
 .sec .kicker::before,.nums .kicker::before{width:.95em;height:.95em;border-radius:0;background:var(--orange);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat}
