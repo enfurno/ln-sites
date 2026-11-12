@@ -351,7 +351,7 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 /* v15 hover gap glow: a dedicated ::after ring drawn exactly in the inset gap (a 2px border on a box inset into the gap).
    It is invisible at rest and on hover/focus it fades in a warm orange-pink fill plus a soft bloom (its own box-shadow).
    The element's own box-shadow (hover glow rings) and its ::before rim are untouched. */
-.btn:not(.ghost):not(.cta-dark):not(.btn-join)::after{content:"";position:absolute;inset:calc(-1 * var(--gap));border-radius:calc(14px - var(--rim));border:var(--gap) solid #ff9b72;
+.btn:not(.ghost):not(.cta-dark):not(.btn-join)::after{content:"";position:absolute;inset:calc(-1 * var(--gap));border-radius:calc(14px - var(--rim));border:var(--gap) solid #ff9b72;border-width:calc(var(--gap) + 1px);
  box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(255,95,130,.55);opacity:0;transition:opacity .25s ease;pointer-events:none;z-index:-1}
 .btn:not(.ghost):not(.cta-dark):not(.btn-join):hover::after,.btn:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible::after{opacity:1}
 .join-in{position:relative}
@@ -395,3 +395,11 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 .btn.ghost{transition:transform .25s,background-position .6s,box-shadow .25s,color .3s ease}
 .btn.ghost:hover,.btn.ghost:focus-visible{animation:btn-ghost-sweep .72s cubic-bezier(.22,.8,.28,1) forwards}
 @media (prefers-reduced-motion:reduce){.btn.ghost:hover,.btn.ghost:focus-visible{animation:none!important;color:var(--orange)}}
+/* v18 dark (clog) label sweep: the filled button pans its gradient across the FILL on hover; the dark buttons
+   get the same pan, but only inside the label. The gradient's first half is the resting text colour, so at
+   rest the label is plain cream and the pan is invisible. Brand hexes are literal because the clog button is
+   dark in both themes (the light theme's --grad tokens are the darkened, low-contrast set). */
+.btn.clog .lb{background-image:linear-gradient(90deg,#fff3e6 0%,#fff3e6 50%,#ec3d63 50%,#f7892b 68%,#f6cf1d 84%,#b9dd2a 100%);background-size:200% 100%;background-position:0 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;transition:background-position .6s cubic-bezier(.22,.8,.28,1)}
+.btn.clog:hover .lb,.btn.clog:focus-visible .lb{background-position:100% 0}
+@media (prefers-reduced-motion:reduce){.btn.clog .lb{transition:none}}
+@media (forced-colors:active){.btn.clog .lb{background-image:none;-webkit-text-fill-color:currentColor;color:inherit}}
