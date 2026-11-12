@@ -361,6 +361,19 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 .join-in:hover::after,.join-in:has(:focus-visible)::after{opacity:1}
 @media(max-width:600px){.join-in::after{border-radius:calc(22px - var(--rim))}}
 @media(prefers-reduced-motion:reduce){.btn::after,.join-in::after{transition:none!important}}
+/* v17 clog (dark ink) button: ONE shared definition, so the header pair, the Mother Sauce page,
+   the join-in block and the home hero's "See the work" all inherit the same dark fill, orange rim,
+   orange hover glow and orange gap ring in both themes. Colour only — min-width and grid placement
+   stay with their own containers. */
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join){--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join)::before{background:linear-gradient(#f7892b,#f7892b) border-box}
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):hover,.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible{color:#fff;box-shadow:0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join)::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
+[data-theme=light] .btn.clog:not(.ghost):not(.cta-dark):not(.btn-join){--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08)}
+[data-theme=light] .btn.clog:not(.ghost):not(.cta-dark):not(.btn-join)::before{background:linear-gradient(#b3560b,#b3560b) border-box}
+[data-theme=light] .btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):hover,[data-theme=light] .btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible{box-shadow:0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
+[data-theme=light] .btn.clog:not(.ghost):not(.cta-dark):not(.btn-join)::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
+
 @media (max-width:760px){.hero-mark{right:auto;left:auto}}
 .contact-in>*{min-width:0}.contact .info a{overflow-wrap:anywhere}
 .about .pos-line a{color:inherit;font-weight:700;text-decoration:underline;text-decoration-color:#f7892b;text-decoration-thickness:2px;text-underline-offset:3px;transition:color .2s ease}.about .pos-line a:hover,.about .pos-line a:focus-visible{color:#f7892b}
