@@ -75,16 +75,10 @@ html,*{scrollbar-color:#7cc6fe99 var(--bg);scrollbar-width:thin}
 [data-theme=light] .cta-dark{color:#f7f2ea}
 [data-theme=light] .cta-dark:hover,[data-theme=light] .join-in .cta-dark:focus-visible{color:var(--yellow)}
 
-/* Header "Client login": same .btn.sm element as "Start a project" (sibling in .nav, outside <nav>), colors only. */
+/* Header "Client login": same .btn.sm element as "Start a project" (sibling in .nav, outside <nav>).
+   Its dark colours come from the shared .btn.clog rule in style.css; only the width lives here. */
 .nav > .btn.sm{white-space:nowrap;justify-content:center}
-.nav > .btn.sm.clog{min-width:12.61em;--grad:linear-gradient(90deg,#3a2c33,#2a1f26 50%,#1e161c);color:#fff3e6}
-.nav > .btn.sm.clog::before{background:linear-gradient(#f7892b,#f7892b) border-box}
-.nav > .btn.sm.clog:hover,.nav > .btn.sm.clog:focus-visible{color:#fff;box-shadow:0 10px 30px -6px rgba(247,137,43,.6),0 0 24px -4px rgba(247,137,43,.5)}
-.nav > .btn.sm.clog::after{border-color:#ffb27a;box-shadow:0 0 6px 1px rgba(255,140,80,.65),inset 0 0 6px 1px rgba(247,137,43,.55)}
-[data-theme=light] .nav > .btn.sm.clog{--grad:linear-gradient(90deg,#2e241e,#1a1410 55%,#0f0b08)}
-[data-theme=light] .nav > .btn.sm.clog::before{background:linear-gradient(#b3560b,#b3560b) border-box}
-[data-theme=light] .nav > .btn.sm.clog:hover,[data-theme=light] .nav > .btn.sm.clog:focus-visible{box-shadow:0 10px 30px -6px rgba(224,96,28,.5),0 0 24px -4px rgba(224,96,28,.35)}
-[data-theme=light] .nav > .btn.sm.clog::after{border-color:#f2a06a;box-shadow:0 0 6px 1px rgba(224,96,28,.55),inset 0 0 6px 1px rgba(224,96,28,.4)}
+.nav > .btn.sm.clog{min-width:12.61em}
 .nav nav{align-items:center}
 /* Tablet header: the full nav + both buttons only fit above ~1020px, so 761-1100px uses the phone menu (burger). */
 @media(min-width:761px) and (max-width:1100px){.nav nav,.nav > .btn{display:none}.burger{display:block}.nav .tt{margin-left:auto}.nav .burger{margin-left:.4rem}
