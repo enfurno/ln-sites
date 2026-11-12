@@ -407,3 +407,10 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 .btn.clog:hover .lb,.btn.clog:focus-visible .lb{background-position:100% 0}
 @media (prefers-reduced-motion:reduce){.btn.clog .lb{transition:none}}
 @media (forced-colors:active){.btn.clog .lb{background-image:none;-webkit-text-fill-color:currentColor;color:inherit}}
+/* v9 rotator links: every card's View site / View demo sits on the same baseline at the bottom left, whatever the copy above it runs to */
+.meta{display:flex;flex-direction:column;flex:1}.meta p{margin-bottom:.8rem}.meta .go{margin-top:auto;align-self:flex-start}
+/* v9 eyebrows: block flow with a hanging indent, so a wrapped line clears the chevron instead of dropping under it */
+.sec .kicker,.nums .kicker{display:block;padding-left:1.4em;text-indent:-1.4em}
+.sec .kicker::before,.nums .kicker::before{display:inline-block;vertical-align:-.12em;margin-right:.45em}
+/* v9b narrow phones: the longest eyebrow ("Your business, one dashboard") measures ~345px at .86rem/.2em, so tighten it below 390px to keep one line down to 320px */
+@media (max-width:389px){.sec .kicker,.nums .kicker{font-size:.74rem;letter-spacing:.14em}}
