@@ -106,4 +106,31 @@ const __lnSecInner = {
 // ---- LN security headers (Oct 26, 2026) ----
 const __LN_SEC = { 'strict-transport-security': 'max-age=31536000', 'x-content-type-options': 'nosniff', 'x-frame-options': 'SAMEORIGIN', 'content-security-policy': "frame-ancestors 'self' https://mothersauce.app https://portal.loadednacho.com", 'referrer-policy': 'strict-origin-when-cross-origin' };
 function __lnSec(r) { if (!r || r.webSocket || r.status === 101) return r; let o = r; try { for (const [k, v] of Object.entries(__LN_SEC)) o.headers.set(k, v) } catch { o = new Response(r.body, r); for (const [k, v] of Object.entries(__LN_SEC)) o.headers.set(k, v) } return o }
-export default { ...__lnSecInner, async fetch(req, env, ctx) { return __lnSec(await __lnSecInner.fetch(req, env, ctx)) } };
+// ===== Mother Sauce website chat (default on every ln-sites site) =====
+// The bubble, its greeting, its answers and its on/off live in Mother Sauce > AI assistant > Website chat assistant.
+// A site carries only this tag: the embed asks Mother Sauce for the business's config and shows the bubble only
+// while that switch is on. Slug: LN_CFG.chat, else LN_CFG.biz; LN_CFG.chat = false (or no LN_CFG at all) keeps it off this site.
+// Deploy-time overrides: MS_CHAT_SLUG (use another business), MS_CHAT_OFF=1 (no bubble).
+const MS_CHAT_DEFAULT = ''; // no LN_CFG (an agency or tool site) means no bubble
+function msChatSlug(env) {
+  const norm = v => String(v == null ? '' : v).trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+  if (env && String(env.MS_CHAT_OFF || '') === '1') return '';
+  if (env && env.MS_CHAT_SLUG) return norm(env.MS_CHAT_SLUG);
+  const raw = typeof LN_CFG !== 'undefined' ? (LN_CFG.chat === false ? '' : (LN_CFG.chat || LN_CFG.biz || '')) : MS_CHAT_DEFAULT;
+  return norm(raw);
+}
+function msChatInject(req, res, env) {
+  try {
+    if (!req || req.method !== 'GET' || !res || res.status !== 200) return res;
+    if (!/text\/html/i.test(res.headers.get('content-type') || '')) return res;
+    const slug = msChatSlug(env);
+    if (!slug) return res;
+    const ts = env && env.TURNSTILE_SITEKEY ? String(env.TURNSTILE_SITEKEY).replace(/[^A-Za-z0-9_-]/g, '') : '';
+    const tag = '<script src="https://mothersauce.app/embed/chat.js" data-ms-chat="' + slug + '"' + (ts ? ' data-ts-key="' + ts + '"' : '') + ' defer></script>';
+    const out = new HTMLRewriter().on('body', { element(e) { e.append(tag, { html: true }) } }).transform(res);
+    const h = new Response(out.body, out); h.headers.delete('content-length'); return h;
+  } catch (e) { console.log('msChatInject', String(e)); return res; }
+}
+// ===== end Mother Sauce website chat =====
+
+export default { ...__lnSecInner, async fetch(req, env, ctx) { return msChatInject(req, __lnSec(await __lnSecInner.fetch(req, env, ctx)), env) } };
