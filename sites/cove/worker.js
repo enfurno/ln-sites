@@ -206,7 +206,7 @@ const __lnInner ={async fetch(req,env,ctx){if(new URL(req.url).pathname==='/api/
   if(!__spam)ctx.waitUntil(notify(env,r).then(x=>console.log('notifyReserve',x)).catch(e=>console.log('notifyReserve err',String(e))));
   return J({ok:true});}
  const ar=await env.ASSETS.fetch(req);const rr=new Response(ar.body,ar);if(new URL(req.url).hostname!=='catfishcove.co')rr.headers.set('X-Robots-Tag','noindex, nofollow');return rr;}};
-;const LN_CFG={"biz": "catfishcove", "base": "https://catfishcove.co", "phone": "(405) 265-3331", "locs": ["*"], "pages": {"/careers": "applications", "/reserve": "reservations", "/catering": "catering"}, "api": {"/api/apply": "applications", "/api/reserve": "reservations", "/api/catering": "catering", "/api/subscribe": "loyalty"}, "newApi": ["/api/catering"]};
+;const LN_CFG={"biz": "catfishcove", "chat": "catfishcove", "base": "https://catfishcove.co", "phone": "(405) 265-3331", "locs": ["*"], "pages": {"/careers": "applications", "/reserve": "reservations", "/catering": "catering"}, "api": {"/api/apply": "applications", "/api/reserve": "reservations", "/api/catering": "catering", "/api/subscribe": "loyalty"}, "newApi": ["/api/catering"]};
 // ===== LN module gate v1 =====
 // Append this to a site Worker whose own handler is renamed: `export default` -> `const __lnInner =`.
 // Needs bindings: ASSETS, PORTAL (service -> ln-portal). DB (LEADS) is needed only if LN_NEW_API is used.
@@ -313,7 +313,7 @@ const __lnSecInner0 = {
     if (lnOff(m, k)) return ln404(req, env);
     if (k === 'blog' && !p.endsWith('.html')) { const r = await lnBlog(req, env, u); return lnStrip(r, m) }
     const r = await __lnInner.fetch(req, env, ctx);
-    return (r.headers.get('content-type') || '').includes('text/html') ? __lnTsHtml(lnStrip(r, m), env, m && m.applications_keep_days) : r; // Turnstile widget + careers retention note (t616u)
+    return (r.headers.get('content-type') || '').includes('text/html') ? __lnTsHtml(lnStrip(r, m), env, m && m.applications_keep_days) : r; // Turnstile widget + Mother Sauce chat bubble + careers retention note (t616u)
   }
 };
 
@@ -440,9 +440,15 @@ var of=window.fetch;window.fetch=function(input,init){try{var url=new URL(typeof
  return of.apply(window,arguments)};})();`;
 // Injects the client script (and the careers retention note) into HTML pages that have forms.
 function __lnTsHtml(r, env, keepDays) {
-  const ct = r.headers.get('content-type') || ''; if (!ct.includes('text/html') || !env.TURNSTILE_SITEKEY) return r;
-  const k = String(env.TURNSTILE_SITEKEY).replace(/[^A-Za-z0-9_-]/g, '');
-  let rw = new HTMLRewriter().on('body', { element(e) { e.append(`<script data-k="${k}">${__TS_CLIENT}</script>`, { html: true }) } });
+  const ct = r.headers.get('content-type') || ''; if (!ct.includes('text/html')) return r;
+  const k = env.TURNSTILE_SITEKEY ? String(env.TURNSTILE_SITEKEY).replace(/[^A-Za-z0-9_-]/g, '') : '';
+  const chat = String(LN_CFG.chat || '').replace(/[^a-z0-9-]/g, '');
+  if (!k && !chat) return r;
+  // The website chat bubble is Mother Sauce's, not the site's: the tag points at /embed/chat.js there, and the
+  // bubble shows only while Mother Sauce > AI assistant > Website chat assistant is on for this slug.
+  let rw = new HTMLRewriter();
+  if (k) rw = rw.on('body', { element(e) { e.append(`<script data-k="${k}">${__TS_CLIENT}</script>`, { html: true }) } });
+  if (chat) rw = rw.on('body', { element(e) { e.append(`<script src="https://mothersauce.app/embed/chat.js" data-ms-chat="${chat}"${k ? ` data-ts-key="${k}"` : ''} defer></script>`, { html: true }) } });
   if (keepDays) rw = rw.on('form[data-ln-form="apply"], form#careerForm', { element(e) { e.append(`<p class="ln-keep" style="font-size:13px;opacity:.75;margin:10px 0 0">${keepDays === 'never' ? 'We keep applications until the hiring team deletes them.' : `Applications are kept for ${keepDays} days, then deleted.`}</p>`, { html: true }) } });
   return rw.transform(r);
 }
