@@ -82,6 +82,10 @@ for (const k of Object.keys(CFG).filter(k => k[0] !== '_')) {
   for (const rel of [s.dir, s.worker_src]) {
     say(!path.isAbsolute(rel) && fs.existsSync(absPath(rel)), rel + ' exists');
   }
+  // Every site worker carries the Mother Sauce website chat injection, so the bubble is default on
+  // existing and new sites and its on/off stays in Mother Sauce > AI assistant > Website chat assistant.
+  const wsrc = fs.existsSync(absPath(s.worker_src)) ? fs.readFileSync(absPath(s.worker_src), 'utf8') : '';
+  say(wsrc.includes('msChatInject') && wsrc.includes('mothersauce.app/embed/chat.js'), 'worker carries the Mother Sauce chat injection');
   const relTpl = path.join('dep', 's2tpl-' + s.worker + '.js');
   const tp = absPath(relTpl);
   if (fs.existsSync(tp)) {

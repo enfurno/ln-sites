@@ -6,6 +6,20 @@ Merging to `main` deploys. The push workflow looks at which `sites/<name>/` path
 
 Production sites: `loadednacho`, `meiji`, `cove`, `canrocks`.
 
+## Website chat on every site
+
+Every production site worker carries the Mother Sauce website chat injection (`msChatInject`), so the bubble is default on existing and new sites and nobody pastes a snippet into a page. On each HTML response the worker appends one tag:
+
+```html
+<script src="https://mothersauce.app/embed/chat.js" data-ms-chat="<slug>" defer></script>
+```
+
+The slug is the worker's `LN_CFG.biz` (`catfishcove`, `meiji`, `canrocks`); `LN_CFG.chat` overrides it, `LN_CFG.chat = false` or a worker with no `LN_CFG` (loadednacho, the agency site) turns it off, and the deploy-time vars `MS_CHAT_SLUG` / `MS_CHAT_OFF=1` do the same without a code change.
+
+The client site holds no copy of the assistant: the bubble, its greeting, its chat facts and its on/off live in Mother Sauce → AI assistant → Website chat assistant. The embed asks `https://mothersauce.app/api/public/aichat/<slug>/config` and only shows the bubble while that switch is on (checked on page load, so a page already open keeps its bubble until reload).
+
+`node tools/deploy-check.mjs` fails if any site worker in `tools/sites.config.json` is missing the injection, so a new site cannot ship without it.
+
 Never deployed from this workflow: `sites/feast`, `sites/toc`, `sites/feast-toc-src`, `shared/ln-portal`, and the rest of `shared/`.
 
 The workflow does not use `wrangler deploy`.
