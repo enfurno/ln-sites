@@ -4,5 +4,3 @@
   Cache-Control: no-cache
 /menu.json
   Cache-Control: no-cache
-/*
-  X-Robots-Tag: noindex, nofollow
