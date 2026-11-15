@@ -142,6 +142,10 @@ function page(url, d) {
     ? cats.map(c => `<div class="mcat"><h3>${esc(c.name)}</h3><ul>${c.items.map(i => `<li><span class="mi">${esc(i.name)}${price(i.price)}</span>${i.description ? `<span class="md">${esc(i.description)}</span>` : ''}</li>`).join('')}</ul></div>`).join('')
     : '';
   const ld = locs.filter(l => l.address).map(l => ({ '@context': 'https://schema.org', '@type': 'Restaurant', name: name + (locs.length > 1 ? ' ' + l.name : ''), servesCuisine: CFG.cuisine, telephone: l.phone || undefined, address: { '@type': 'PostalAddress', streetAddress: l.address }, url: url.origin + q(locs.length > 1 ? { loc: l.slug } : {}), openingHoursSpecification: hasHours(l.hours) ? ldHours(l.hours) : undefined }));
+  // canonical always points at the apex host; ?loc= is kept only when it names a non-default location
+  const canonOrigin = 'https://' + url.hostname.replace(/^www\./, '');
+  const defLoc = locs.find(l => l.status === 'open') || locs[0] || null;
+  const canonQ = (locs.length > 1 && loc && defLoc && loc.slug !== defLoc.slug) ? '?loc=' + encodeURIComponent(loc.slug) : '';
   const title = esc(name + (locs.length > 1 && locName ? ' · ' + locName : '') + ' | ' + CFG.titleTail);
   const desc = esc(CFG.desc + (addr ? ' ' + addr + '.' : ''));
   const longDay = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' };
@@ -154,8 +158,8 @@ function page(url, d) {
   const css = CFG.layout === 'toc' ? TOC_CSS : FEAST_CSS;
   return { live, html: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}">
-<link rel="canonical" href="${esc(url.origin + q(locs.length > 1 && loc ? { loc: loc.slug } : {}))}">
-<meta property="og:type" content="restaurant"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="${url.origin}/img/${CFG.img.hero}.webp"><meta name="theme-color" content="${th.bg}">
+<link rel="canonical" href="${esc(canonOrigin + '/' + canonQ)}">
+<meta property="og:type" content="restaurant"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:image" content="${canonOrigin}/img/${CFG.img.hero}.webp"><meta name="theme-color" content="${th.bg}">
 <link rel="preload" as="image" href="/img/${CFG.img.hero}.webp" type="image/webp">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32">
@@ -1323,6 +1327,8 @@ ${tocFooter(v)}
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
+    // One hostname per site: www.* answers a 301 to the apex host, path and query kept.
+    if (url.hostname.startsWith('www.')) return Response.redirect('https://' + url.hostname.slice(4) + url.pathname + url.search, 301);
     if (url.pathname === '/robots.txt') return new Response('User-agent: *\nAllow: /\n', { headers: { 'content-type': 'text/plain' } });
     const ICONS = { '/favicon.svg': ['svg', 'image/svg+xml'], '/favicon.ico': ['ico', 'image/x-icon'], '/icon-32.png': ['png32', 'image/png'], '/icon-16.png': ['png16', 'image/png'], '/icon-180.png': ['png180', 'image/png'] };
     if (ICONS[url.pathname]) { const [k, t] = ICONS[url.pathname]; const b = Uint8Array.from(atob(CFG.icons[k]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': t, 'cache-control': 'public, max-age=86400' } }); }
