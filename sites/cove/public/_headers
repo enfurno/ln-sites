@@ -1,3 +1,7 @@
+# Nov 14 2026: the blanket "/*  X-Robots-Tag: noindex, nofollow" rule was removed from this file.
+# Workers static assets apply _headers to every path on every host, and the worker passes the ASSETS
+# response headers through, so that rule overrode the worker's own exemption and made catfishcove.co
+# invisible to search engines. The worker still sends noindex on every host except catfishcove.co.
 /
   Cache-Control: no-cache
 /*.html
