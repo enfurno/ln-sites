@@ -93,7 +93,7 @@
   "worker": "catfishcove-preview",
   "dir": "sites/cove/public",
   "worker_src": "sites/cove/worker.js",
-  "base": "https://cove-preview.loadednacho.com",
+  "base": "https://catfishcove.co",
   "biz": "catfishcove",
   "assets": {
    "html_handling": "auto-trailing-slash",
@@ -137,7 +137,7 @@
    }
   ],
   "crons": [],
-  "noindex": true,
+  "noindex": false,
   "pages_200": [
    "/"
   ],
@@ -146,7 +146,8 @@
    "/reserve": "reservations",
    "/catering": "catering",
    "/blog": "blog"
-  }
+  },
+  "_note": "Nov 14 2026: prod catfishcove.co is indexable. The blanket /* X-Robots-Tag in sites/cove/public/_headers was removed; the worker still noindexes every host except catfishcove.co. cove-staging stays noindexed."
  },
  "loadednacho": {
   "worker": "loadednacho-preview",
