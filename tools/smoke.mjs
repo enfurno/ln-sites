@@ -38,7 +38,15 @@ for (const k of keys) {
     if (mods[m] === true) continue;
     for (const q of [p, p + '.html']) {
       const r = await get(s.base + q);
-      r.status === 404 ? ok(q + ' 404 (' + m + ' off)') : bad(q + ' ' + r.status + ' but ' + m + ' is OFF');
+      if (r.status === 404) { ok(q + ' 404 (' + m + ' off)'); continue; }
+      // A site may retire an old URL with a permanent redirect instead of a 404 (cove 301s the Wix
+      // /blog URL to /). That is the right answer for search engines, so a site can list such paths
+      // in module_redirects; the redirect still has to stay on the site own host.
+      const loc = r.headers.get('location') || '';
+      if ((s.module_redirects || []).includes(p) && (r.status === 301 || r.status === 308) && loc.startsWith(new URL(s.base).origin)) {
+        ok(q + ' ' + r.status + ' -> ' + loc + ' (' + m + ' off, retired URL)'); continue;
+      }
+      bad(q + ' ' + r.status + ' but ' + m + ' is OFF');
     }
   }
   if (s.noindex) {
