@@ -165,7 +165,7 @@ async function lnBlog(req, env, u) {
 async function lnSitemap(req, env, m) {
   const a = await env.ASSETS.fetch(new Request(new URL('/sitemap.xml', req.url))); if (!a.ok) return null;
   let xml = await a.text();
-  xml = xml.replace(/\s*<url><loc>[^<]*\/contact<\/loc><\/url>/g, ''); // /contact only redirects now
+  // /contact is a live 200 page (ContactPage schema, self-canonical): keep it in the sitemap.
   xml = xml.replace(/\s*<url><loc>([^<]*)<\/loc>(?:<[^>]+>[^<]*<\/[^>]+>)*<\/url>/g, (all, loc) => { let p = '/'; try { p = new URL(loc).pathname } catch { } return lnOff(m, lnPageMod(p)) ? '' : all });
   if (!lnOff(m, 'blog')) { const [, j] = await lnBlogFeed(env); if (j && j.on) xml = xml.replace('</urlset>', (j.posts || []).map(p => `  <url><loc>${LN_CFG.base}/blog/${p.slug}</loc><lastmod>${new Date(p.updated_at || p.publish_at).toISOString().slice(0, 10)}</lastmod></url>\n`).join('') + '</urlset>'); else xml = xml.replace(/\s*<url><loc>[^<]*\/blog<\/loc><\/url>/, '') }
   return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=300' } });
