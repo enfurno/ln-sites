@@ -12,6 +12,19 @@ The workflow does not use `wrangler deploy`.
 
 A merge deploys a site only when files under that `sites/<name>/` directory change. Editing `tools/` alone does not redeploy.
 
+## Merging
+
+Eric authorized this on 2026-11-15: merges to `main` no longer wait for him. When a pull request's checks are green (`precheck` passing) and the PR is mergeable, squash-merge it. Never merge on a red check, and never while checks are still running.
+
+A merge is the deploy. The push run deploys only the sites whose `sites/<name>/` paths changed, using the repo secrets. Report every merge and deploy in Deploys: the PR number and title, the merge commit, the deploy run id, which sites deployed, and the live evidence actually read — the smoke step passing, or a read of the live site showing the change. When only `tools/` changed, say nothing deployed rather than implying a deploy.
+
+If the deploy fails or rolls back, or the live site does not match the merge, that is 🔴 NEEDS YOU.
+
+The Cloudflare token stays in GitHub Actions. No token is needed on a working machine and none should be asked for. Never run `wrangler deploy`, and never change Cloudflare settings, bindings, Workers config or D1 directly.
+
+This applies to `enfurno/ln-sites` only. Mother Sauce is Rosie's and Ada's and stays as it is.
+
+
 ## Secrets
 
 Add these repository secrets (Settings → Secrets and variables → Actions):
