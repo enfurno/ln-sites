@@ -139,7 +139,8 @@
   "crons": [],
   "noindex": false,
   "pages_200": [
-   "/"
+   "/",
+   "/contact"
   ],
   "module_pages": {
    "/careers": "applications",
