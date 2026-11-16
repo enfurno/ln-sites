@@ -3,9 +3,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://canrocks.loadednacho.com/</loc></url>
   <url><loc>https://canrocks.loadednacho.com/menu</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/story</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/tavern</loc></url>
   <url><loc>https://canrocks.loadednacho.com/visit</loc></url>
-  <url><loc>https://canrocks.loadednacho.com/reservations</loc></url>
-  <url><loc>https://canrocks.loadednacho.com/catering</loc></url>
-  <url><loc>https://canrocks.loadednacho.com/careers</loc></url>
-  <url><loc>https://canrocks.loadednacho.com/blog</loc></url>
+  <url><loc>https://canrocks.loadednacho.com/contact</loc></url>
 </urlset>
