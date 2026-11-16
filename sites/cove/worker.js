@@ -144,7 +144,7 @@ const __lnInner ={async fetch(req,env,ctx){if(new URL(req.url).pathname==='/api/
  if(u.pathname==='/api/menu'){try{return await liveMenu(req,env)}catch(e){return J({ok:false,error:'menu unavailable'},502)}}
  // Shareable link: /reserve opens the reservation form
  if(u.pathname==='/careers/')return Response.redirect(u.origin+'/careers',301);
- if(u.pathname==='/reserve'||u.pathname==='/reserve/')return Response.redirect(u.origin+'/#reserve',301);if(u.pathname==='/catering'||u.pathname==='/catering/'||u.pathname==='/catering.html')return Response.redirect(u.origin+'/#catering',301);
+ if(u.pathname==='/reserve'||u.pathname==='/reserve/')return Response.redirect(u.origin+'/#reserve',301);if(u.pathname==='/catering'||u.pathname==='/catering/'||u.pathname==='/catering.html')return Response.redirect(u.origin+'/#visit',301);
  if(u.pathname==='/api/subscribe'||u.pathname==='/api/reserve'||u.pathname==='/api/apply'){
   if(req.method!=='POST')return J({ok:false,error:'Method not allowed'},405);
   let d,file=null;const ct=req.headers.get('content-type')||'';
@@ -206,7 +206,7 @@ const __lnInner ={async fetch(req,env,ctx){if(new URL(req.url).pathname==='/api/
   if(!__spam)ctx.waitUntil(notify(env,r).then(x=>console.log('notifyReserve',x)).catch(e=>console.log('notifyReserve err',String(e))));
   return J({ok:true});}
  const ar=await env.ASSETS.fetch(req);const rr=new Response(ar.body,ar);if(new URL(req.url).hostname!=='catfishcove.co')rr.headers.set('X-Robots-Tag','noindex, nofollow');return rr;}};
-;const LN_CFG={"biz": "catfishcove", "base": "https://catfishcove.co", "phone": "(405) 265-3331", "locs": ["*"], "pages": {"/careers": "applications", "/reserve": "reservations", "/catering": "catering"}, "api": {"/api/apply": "applications", "/api/reserve": "reservations", "/api/catering": "catering", "/api/subscribe": "loyalty"}, "newApi": ["/api/catering"]};
+;const LN_CFG={"biz": "catfishcove", "base": "https://catfishcove.co", "phone": "(405) 265-3331", "locs": ["*"], "pages": {"/careers": "applications", "/reserve": "reservations"}, "api": {"/api/apply": "applications", "/api/reserve": "reservations", "/api/catering": "catering", "/api/subscribe": "loyalty"}, "newApi": ["/api/catering"]};
 // ===== LN module gate v1 =====
 // Append this to a site Worker whose own handler is renamed: `export default` -> `const __lnInner =`.
 // Needs bindings: ASSETS, PORTAL (service -> ln-portal). DB (LEADS) is needed only if LN_NEW_API is used.
