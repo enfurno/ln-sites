@@ -5,7 +5,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const rid=o=>o.id||o._id;
 const optHtml=it=>(it.options&&it.options.length)?`<div class="ln-opts">${it.options.map(g=>`<p><b>${esc(g.name)}</b>${g.required?' <i>(required)</i>':''}: ${(g.choices||[]).map(c=>esc(c.name)+(c.price?` <span>${/^[+-]/.test(c.price)?'':'+'}${esc(String(c.price))}</span>`:'')).join(' · ')}</p>`).join('')}</div>`:'';
 function dish(it){const p=it.price;const img=it.image?`<img src="${esc(it.image)}" alt="" loading="lazy" style="width:64px;height:64px;object-fit:cover;border-radius:10px;flex:0 0 auto">`:'';
- return `<div class="dish reveal in">${img}<div style="flex:1"><h4>${esc(it.name)}</h4>${it.description?`<p>${esc(it.description)}</p>`:''}${optHtml(it)}</div>${p?`<span class="price">${esc(p)}</span>`:'<span class="price ph">$ TBD</span>'}</div>`}
+ return `<div class="dish reveal in">${img}<div style="flex:1"><h3 class="dish-t">${esc(it.name)}</h3>${it.description?`<p>${esc(it.description)}</p>`:''}${optHtml(it)}</div>${p?`<span class="price">${esc(p)}</span>`:'<span class="price ph">$ TBD</span>'}</div>`}
 const skel=n=>Array.from({length:n},()=>'<div class="dish skel"><div style="flex:1"><div class="sk sk1"></div><div class="sk sk2"></div></div><div class="sk sk3"></div></div>').join('');
 // Menu page
 const root=document.getElementById('live-menu');
