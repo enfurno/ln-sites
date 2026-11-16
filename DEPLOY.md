@@ -44,7 +44,7 @@ The token and account id are read from the environment. They are not stored in t
 
 ## Branch protection
 
-Turn on branch protection for `main`: require a pull request before merging, and require the `deploy / precheck` check to pass. Direct pushes to `main` would run this workflow with the Cloudflare token, so keep that branch review-only.
+`main` is protected: a pull request is required, admins are included, force pushes and deletions are refused, and the `precheck` check must pass on a branch that is up to date with `main`. That protection — not a person — is the gate, and it is why merging on green is safe: GitHub refuses a merge on a red or missing `precheck`, or from a branch behind `main`.
 
 ## Keeping the repo in sync with live
 
