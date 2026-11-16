@@ -70,7 +70,7 @@ section{position:relative;padding:110px 0}
 .card .ico{font-size:2.4rem;display:inline-block;animation:bob 3s ease-in-out infinite}
 .card:nth-child(2) .ico{animation-delay:.5s}.card:nth-child(3) .ico{animation-delay:1s}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-8deg)}}
-.card h3{font-family:'Oswald';text-transform:uppercase;letter-spacing:.08em;font-size:1.4rem;margin:16px 0 8px;color:var(--gold)}
+.card h3,.card h2.loc-h{font-family:'Oswald';text-transform:uppercase;letter-spacing:.08em;font-size:1.4rem;margin:16px 0 8px;color:var(--gold)}
 .card p{color:var(--mute)}
 .ph{display:inline-block;background:rgba(242,179,61,.12);border:1px dashed var(--gold);color:var(--gold);padding:2px 8px;border-radius:4px;font-size:.85em}
 .band{background:radial-gradient(ellipse at center,#2a0a0b 0,var(--ink) 70%);text-align:center}
@@ -109,7 +109,7 @@ section{position:relative;padding:110px 0}
 footer{background:#080707;border-top:1px solid rgba(242,179,61,.15);padding:70px 0 100px;color:var(--mute)}
 footer .cols{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:30px}
 @media(max-width:860px){footer .cols{grid-template-columns:1fr 1fr}}
-footer h5{font-family:'Oswald';letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+footer .fh{font-family:'Oswald';letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-size:.83em;font-weight:700}
 footer li{list-style:none;margin:6px 0}
 footer .legal{margin-top:40px;font-size:.8rem;text-align:center;opacity:.6}
 .test-banner{position:fixed;bottom:14px;right:14px;z-index:60;background:var(--gold);color:#111;font:700 .7rem 'Inter';letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.5)}
@@ -314,7 +314,7 @@ html:not(.ln-order-on) [data-ln-order],html:not(.ln-order-on) li:has(>a[data-ln-
 /* v14: location names stand out (Meiji red, lifted for contrast: 6.0:1 on ink, 4.9:1 on cards) */
 :root{--loc-red:#FF4D55}
 .loc-name{color:var(--loc-red);font-weight:600}
-.card.loc h3{color:var(--loc-red)}
+.card.loc h3,.card.loc h2.loc-h{color:var(--loc-red)}
 footer .loc-name{font-weight:600}
 /* v15: sharp cinematic hero video; light overlay for text contrast only */
 .hero .bg-video{filter:none!important;transform:none!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover;object-position:60% 50%}

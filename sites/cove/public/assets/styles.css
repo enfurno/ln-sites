@@ -98,7 +98,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .job{padding:1.5rem;border-radius:var(--r);background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--c);box-shadow:0 2px 8px rgba(49,25,15,.05)}.job p{color:var(--mute);margin-top:.4rem}
 /* footer */
 .foot{margin-top:clamp(4rem,8vw,6rem);background:var(--brown);color:#eadfce;padding:3.5rem 0 1.5rem}
-.foot-in{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2rem}.foot h4{font-size:1.2rem;color:var(--gold);margin-bottom:.6rem}.foot a:hover{color:var(--gold)}.foot img{height:auto;width:230px}
+.foot-in{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2rem}.foot .fh{font-size:1.2rem;color:var(--gold);margin-bottom:.6rem}.foot a:hover{color:var(--gold)}.foot img{height:auto;width:230px}
 .social{display:flex;flex-wrap:wrap;gap:.7rem}
 .soc{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;color:var(--brown);background:var(--cream);transition:background .2s,color .2s,transform .2s}
 .soc-facebook{--c:#1877f2}.soc-instagram{--c:#d6336c}.soc-tiktok{--c:#111}.soc-google{--c:#2f7d4a}
