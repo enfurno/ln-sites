@@ -144,7 +144,7 @@ const __lnInner ={async fetch(req,env,ctx){if(new URL(req.url).pathname==='/api/
  if(u.pathname==='/api/menu'){try{return await liveMenu(req,env)}catch(e){return J({ok:false,error:'menu unavailable'},502)}}
  // Shareable link: /reserve opens the reservation form
  if(u.pathname==='/careers/')return Response.redirect(u.origin+'/careers',301);
- if(u.pathname==='/reserve'||u.pathname==='/reserve/')return Response.redirect(u.origin+'/#reserve',302);
+ if(u.pathname==='/reserve'||u.pathname==='/reserve/')return Response.redirect(u.origin+'/#reserve',301);if(u.pathname==='/catering'||u.pathname==='/catering/'||u.pathname==='/catering.html')return Response.redirect(u.origin+'/#catering',301);
  if(u.pathname==='/api/subscribe'||u.pathname==='/api/reserve'||u.pathname==='/api/apply'){
   if(req.method!=='POST')return J({ok:false,error:'Method not allowed'},405);
   let d,file=null;const ct=req.headers.get('content-type')||'';

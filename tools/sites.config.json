@@ -144,10 +144,9 @@
   "module_pages": {
    "/careers": "applications",
    "/reserve": "reservations",
-   "/catering": "catering",
    "/blog": "blog"
   },
-  "module_redirects": ["/blog"],
+  "module_redirects": ["/blog", "/reserve"],
   "_note": "Nov 14 2026: prod catfishcove.co is indexable. The blanket /* X-Robots-Tag in sites/cove/public/_headers was removed; the worker still noindexes every host except catfishcove.co. cove-staging stays noindexed. /blog is a retired Wix URL: on catfishcove.co the worker 301s it to / (__WIX), so smoke treats that redirect as correct while the blog module is off."
  },
  "loadednacho": {
