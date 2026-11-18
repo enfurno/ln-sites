@@ -22,7 +22,7 @@ If the deploy fails or rolls back, or the live site does not match the merge, th
 
 The Cloudflare token stays in GitHub Actions. No token is needed on a working machine and none should be asked for. Never run `wrangler deploy`, and never change Cloudflare settings, bindings, Workers config or D1 directly.
 
-This applies to `enfurno/ln-sites` only. Mother Sauce is Rosie's and Ada's and stays as it is.
+This workflow applies to `enfurno/ln-sites` only. Mother Sauce merges under the same rule — green and mergeable, squash, no approval — per its own `.clinerules`, and deploys by hand with `node deploy.mjs` on that merge commit.
 
 
 ## Secrets
