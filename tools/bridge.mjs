@@ -37,6 +37,8 @@ function sites() {
     seen.add(s.worker_src);
     out.push({ key, file: path.join(ROOT, s.worker_src) });
   }
+  const tpl = path.join(ROOT, 'sites', '_template', 'worker.js');
+  if (fs.existsSync(tpl)) out.push({ key: '_template', file: tpl });
   return out;
 }
 

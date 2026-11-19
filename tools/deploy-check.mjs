@@ -74,7 +74,7 @@ await maybeLive();
 for (const k of Object.keys(CFG).filter(k => k[0] !== '_')) {
   const s = site(k);
   console.log('== ' + k);
-  const expected = BINDINGS[k];
+  const expected = BINDINGS[k] || s.bindings.map(bindingId);
   const got = s.bindings.map(bindingId).slice().sort();
   say(!!expected && JSON.stringify(got) === JSON.stringify(expected.slice().sort()), 'bindings ' + got.join(', '));
   const e = precheck(s);

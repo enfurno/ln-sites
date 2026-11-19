@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New client site</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="/assets/styles.css">
+<script type="application/ld+json" data-ln-hours-ld>{"@context":"https://schema.org","@type":"Restaurant"}</script>
+</head>
+<body>
+<header><h1>New client</h1></header>
+<main>
+  <section id="visit">
+    <h2>Visit</h2>
+    <!-- Business facts come from the Mother Sauce payload over the bridge. Do not type hours, address, phone or prices here. -->
+    <p>Hours</p>
+    <dl class="week" data-ln-hours-list data-loc="" data-fmt="lower">
+      <dt>Hours</dt><dd>Call for today’s hours</dd>
+    </dl>
+  </section>
+</main>
+<footer>
+  <p><span data-ln-hours data-fmt="lower">Call for today’s hours</span></p>
+</footer>
+<script src="/ln-hours.js?v=1" defer></script>
+</body>
+</html>
