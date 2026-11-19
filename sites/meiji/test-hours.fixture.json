@@ -1,0 +1,44 @@
+{
+  "v": 1,
+  "slug": "meiji",
+  "name": "Meiji Japanese Steak House",
+  "site_url": "https://meijiok.com",
+  "updated": "2026-11-19T12:00:00.000Z",
+  "tz": "America/Chicago",
+  "contact": { "phone": "(405) 931-3668", "email": "hello@meijiok.com" },
+  "locations": [
+    {
+      "slug": "midwest-city",
+      "name": "Midwest City",
+      "status": "open",
+      "address": "5805 SE 15th St, Midwest City, OK 73110",
+      "phone": "(405) 931-3668",
+      "email": "hello@meijiok.com",
+      "hours": [
+        { "day": "Monday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Tuesday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Wednesday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Thursday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Friday", "open": "11:00", "close": "21:30", "closed": false },
+        { "day": "Saturday", "open": "11:00", "close": "21:30", "closed": false },
+        { "day": "Sunday", "open": "11:00", "close": "21:00", "closed": false }
+      ],
+      "holidays": [],
+      "specials": []
+    },
+    {
+      "slug": "okc-memorial",
+      "name": "OKC – Memorial",
+      "status": "coming_soon",
+      "address": "1369 W Memorial Rd, Oklahoma City, OK",
+      "phone": "",
+      "email": "",
+      "hours": [],
+      "holidays": [],
+      "specials": []
+    }
+  ],
+  "modules": { "reservations": true, "ordering": false, "blog": true },
+  "ordering": { "on": false, "url": null, "locations": [] },
+  "social": {}
+}

@@ -148,7 +148,10 @@ export function lnBridgeRender(html, data) {
       if (!l || !lnbrOk(l.hours)) return m;
       const j = JSON.parse(body), sp = [], oh = [];
       let target = j;
-      if (Array.isArray(j['@graph'])) target = j['@graph'].find(x => x && (x.openingHours || x.openingHoursSpecification));
+      if (Array.isArray(j['@graph'])) target = j['@graph'].find(x => x && (
+        x.openingHours || x.openingHoursSpecification ||
+        x['@type'] === 'Restaurant' || (Array.isArray(x['@type']) && x['@type'].includes('Restaurant'))
+      ));
       if (!target) return m;
       lnbrGroups(l.hours).forEach(g => {
         if (g.v === 'closed') return;
@@ -178,7 +181,7 @@ function attrs(el){return{loc:el.getAttribute('data-loc')||'',lo:el.getAttribute
 fetch('/api/site',{credentials:'omit'}).then(function(r){return r.ok?r.json():null}).then(function(d){if(!d)return;
 [].forEach.call(E,function(el){var a=attrs(el),l=lnbrPick(d,a.loc);if(!l||!lnbrOk(l.hours))return;var s=lnbrFmt(l.hours,a.lo,a.br?'\\n':' · ');if(a.br){el.textContent='';s.split('\\n').forEach(function(x,i){if(i)el.appendChild(document.createElement('br'));el.appendChild(document.createTextNode(x))})}else el.textContent=s;el.setAttribute('data-live','1')});
 [].forEach.call(K,function(el){var a=attrs(el),l=lnbrPick(d,a.loc);if(!l||!lnbrOk(l.hours))return;el.textContent='';lnbrGroups(l.hours).forEach(function(g){var dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=LNBR_S[g.s]+(g.e!==g.s?(a.lo?' – ':'–')+LNBR_S[g.e]:'');if(g.v==='closed')dd.textContent='Closed';else{var p=g.v.split('-');dd.textContent=lnbrTime(p[0],a.lo)+(a.lo?' – ':'–')+lnbrTime(p[1],a.lo)}el.appendChild(dt);el.appendChild(dd)});el.setAttribute('data-live','1')});
-if(L){try{var j=JSON.parse(L.textContent),a=attrs(L),l=lnbrPick(d,a.loc);if(l&&lnbrOk(l.hours)){var t=j;if(Array.isArray(j['@graph']))t=j['@graph'].filter(function(x){return x&&(x.openingHours||x.openingHoursSpecification)})[0];if(t){var sp=[],oh=[];lnbrGroups(l.hours).forEach(function(g){if(g.v==='closed')return;var p=g.v.split('-'),days=[],i=LNBR_D.indexOf(g.s),n=0;while(n++<8){days.push(LNBR_D[i]);if(LNBR_D[i]===g.e)break;i=(i+1)%7}sp.push({'@type':'OpeningHoursSpecification',dayOfWeek:days.length===1?days[0]:days,opens:p[0],closes:p[1]});oh.push(LNBR_SO[g.s]+(g.e!==g.s?'-'+LNBR_SO[g.e]:'')+' '+p[0]+'-'+p[1])});t.openingHoursSpecification=sp;t.openingHours=oh;L.textContent=JSON.stringify(j)}}}catch(e){}}
+if(L){try{var j=JSON.parse(L.textContent),a=attrs(L),l=lnbrPick(d,a.loc);if(l&&lnbrOk(l.hours)){var t=j;if(Array.isArray(j['@graph']))t=j['@graph'].filter(function(x){return x&&(x.openingHours||x.openingHoursSpecification||x['@type']==='Restaurant'||(Array.isArray(x['@type'])&&x['@type'].indexOf('Restaurant')>=0))})[0];if(t){var sp=[],oh=[];lnbrGroups(l.hours).forEach(function(g){if(g.v==='closed')return;var p=g.v.split('-'),days=[],i=LNBR_D.indexOf(g.s),n=0;while(n++<8){days.push(LNBR_D[i]);if(LNBR_D[i]===g.e)break;i=(i+1)%7}sp.push({'@type':'OpeningHoursSpecification',dayOfWeek:days.length===1?days[0]:days,opens:p[0],closes:p[1]});oh.push(LNBR_SO[g.s]+(g.e!==g.s?'-'+LNBR_SO[g.e]:'')+' '+p[0]+'-'+p[1])});t.openingHoursSpecification=sp;t.openingHours=oh;L.textContent=JSON.stringify(j)}}}catch(e){}}
 }).catch(function(){})})();`;
 }
 /* LN-BRIDGE:END */
