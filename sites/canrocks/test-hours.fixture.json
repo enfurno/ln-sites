@@ -1,0 +1,33 @@
+{
+  "v": 1,
+  "slug": "canrocks",
+  "name": "Canrock's",
+  "site_url": "https://canrocks.loadednacho.com",
+  "updated": "2026-11-19T12:00:00.000Z",
+  "tz": "America/Chicago",
+  "contact": {},
+  "locations": [
+    {
+      "slug": "norman",
+      "name": "Norman",
+      "status": "open",
+      "address": "",
+      "phone": "",
+      "email": "",
+      "hours": [
+        { "day": "Monday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Tuesday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Wednesday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Thursday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Friday", "open": "11:00", "close": "21:30", "closed": false },
+        { "day": "Saturday", "open": "11:00", "close": "21:30", "closed": false },
+        { "day": "Sunday", "open": "11:00", "close": "21:00", "closed": false }
+      ],
+      "holidays": [],
+      "specials": []
+    }
+  ],
+  "modules": {},
+  "ordering": { "on": false, "url": null, "locations": [] },
+  "social": {}
+}
