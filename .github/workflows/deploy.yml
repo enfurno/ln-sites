@@ -31,6 +31,7 @@ jobs:
           node tools/bridge.mjs --check
           node sites/cove/test-hours.mjs
           node sites/meiji/test-hours.mjs
+          node sites/canrocks/test-hours.mjs
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
