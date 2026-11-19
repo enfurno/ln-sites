@@ -18,6 +18,17 @@ async function get(url) {
   return { status: r.status, text: await r.text(), type: r.headers.get('content-type') || '' };
 }
 
+// A deploy is eventually consistent: retry a non-200 instead of racing the new version.
+async function getOk(url, attempts = 6) {
+  let last;
+  for (let i = 0; i < attempts; i++) {
+    last = await get(url);
+    if (last.status === 200) return last;
+    if (i < attempts - 1) await new Promise(r => setTimeout(r, 3000));
+  }
+  return last;
+}
+
 let failed = 0;
 for (const key of keys) {
   const s = CFG[key];
@@ -28,10 +39,10 @@ for (const key of keys) {
   const pageUrl = s.base + '/?ln_bridge_test=' + Date.now();
   let payload, page;
   try {
-    const p = await get(payloadUrl);
+    const p = await getOk(payloadUrl);
     if (p.status !== 200) throw new Error('/api/site ' + p.status);
     payload = JSON.parse(p.text);
-    page = await get(pageUrl);
+    page = await getOk(pageUrl);
     if (page.status !== 200) throw new Error('page ' + page.status);
   } catch (e) {
     console.error('FAIL ' + key + ': ' + e.message);
