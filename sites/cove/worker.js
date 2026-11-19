@@ -188,7 +188,9 @@ export async function lnBridge(env, slug) {
       const r = await env.PORTAL.fetch('https://ln-portal/api/hours/' + encodeURIComponent(k));
       if (r.ok) {
         const j = await r.json();
-        if (j && Array.isArray(j.locations) && j.locations.length) data = lnBridgeAdapt(j, k);
+        // A valid but empty feed is still a payload (a coming-soon site): adapt it so
+        // /api/site answers instead of 503 and the site keeps its TBD placeholders.
+        if (j && (Array.isArray(j.locations) || Array.isArray(j.hours))) data = lnBridgeAdapt(j, k);
       }
     } catch (e) { }
   }
