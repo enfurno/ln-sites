@@ -9,7 +9,7 @@ globalThis.caches ??= { default: { match: async () => null, put: async () => {} 
 const indexHtml = await fs.readFile(new URL('./public/index.html', import.meta.url), 'utf8');
 const fixture = JSON.parse(await fs.readFile(new URL('./test-hours.fixture.json', import.meta.url), 'utf8'));
 
-function env(site) {
+function env(site, legacy) {
   return {
     ASSETS: {
       fetch: async (req) => {
@@ -22,16 +22,17 @@ function env(site) {
       fetch: async (url) => {
         const u = String(url);
         if (u.includes('/api/site/')) return site ? new Response(JSON.stringify(site), { headers: { 'content-type': 'application/json' } }) : new Response('{"error":"not found"}', { status: 404 });
+        if (u.includes('/api/hours/')) return legacy ? new Response(JSON.stringify({ client: "Canrock's", hours: [], locations: [] }), { headers: { 'content-type': 'application/json' } }) : new Response('{"error":"unavailable"}', { status: 503 });
         return new Response('{}', { status: 404, headers: { 'content-type': 'application/json' } });
       },
     },
   };
 }
 
-async function page(site, tag) {
+async function page(site, tag, legacy) {
   const moduleUrl = new URL('./worker.js', import.meta.url).href + '?fixture=' + tag;
   const worker = (await import(moduleUrl)).default;
-  const res = await worker.fetch(new Request('https://canrocks.loadednacho.com/'), env(site), { waitUntil() {} });
+  const res = await worker.fetch(new Request('https://canrocks.loadednacho.com/'), env(site, legacy), { waitUntil() {} });
   assert.equal(res.status, 200, 'served status');
   return res.text();
 }
@@ -52,6 +53,17 @@ function footers(html) {
   const empty = { ...fixture, locations: [] };
   const html = await page(empty, 'empty');
   assert.ok(footers(html).every((x) => x.trim() === 'TBD'), 'an empty payload leaves TBD alone');
+}
+
+{
+  // Before /api/site is live, an empty /api/hours/<slug> is a payload too, not a 503.
+  const moduleUrl = new URL('./worker.js', import.meta.url).href + '?fixture=legacy-empty';
+  const worker = (await import(moduleUrl)).default;
+  const res = await worker.fetch(new Request('https://canrocks.loadednacho.com/api/site'), env(null, true), { waitUntil() {} });
+  assert.equal(res.status, 200, 'empty legacy feed still answers /api/site');
+  const j = await res.json();
+  assert.equal(j.v, 1, 'legacy feed is adapted to v1');
+  assert.deepEqual(j.locations, [], 'empty locations survive adaptation');
 }
 
 console.log('canrocks hours: bridge fills payload hours and leaves TBD when the payload has none');
