@@ -28,6 +28,8 @@ jobs:
           node tools/deploylib.mjs dry-run
           node tools/deploy-check.mjs
           node sites/storage-api/test-admin.mjs
+          node sites/cove/test-hours.mjs
+          node sites/meiji/test-hours.mjs
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

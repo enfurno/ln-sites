@@ -1,0 +1,33 @@
+{
+  "client": "Meiji",
+  "hours": [],
+  "holidays": [],
+  "specials": [],
+  "locations": [
+    {
+      "slug": "midwest-city",
+      "name": "Midwest City",
+      "status": "open",
+      "hours": [
+        { "day": "Monday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Tuesday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Wednesday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Thursday", "open": "11:00", "close": "21:00", "closed": false },
+        { "day": "Friday", "open": "11:00", "close": "21:30", "closed": false },
+        { "day": "Saturday", "open": "11:00", "close": "21:30", "closed": false },
+        { "day": "Sunday", "open": "11:00", "close": "21:00", "closed": false }
+      ],
+      "holidays": [],
+      "specials": []
+    },
+    {
+      "slug": "okc-memorial",
+      "name": "OKC – Memorial",
+      "status": "coming_soon",
+      "hours": [],
+      "holidays": [],
+      "specials": []
+    }
+  ],
+  "tz": "America/Chicago"
+}
