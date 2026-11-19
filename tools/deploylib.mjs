@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { fileURLToPath, pathToFileURL } from 'url';
+import { injectWorker } from './bridge.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(HERE, '..');
@@ -188,7 +189,8 @@ function refuseUnlessProduction(key) {
 async function buildOne(key) {
   const { writeArtifacts } = await import('./mkdeploy2.mjs');
   const s = site(key);
-  const workerSrc = fs.readFileSync(absPath(s.worker_src), 'utf8');
+  // The bridge block is generated at deploy; tools/bridge.mjs --check keeps the repo copy in sync.
+  const workerSrc = injectWorker(fs.readFileSync(absPath(s.worker_src), 'utf8'));
   const built = writeArtifacts({ siteObj: s, workerSrc });
   if (!built.ok) {
     throw new Error('REFUSING TO BUILD DEPLOY for ' + key + ':\n - ' + built.bad.join('\n - '));

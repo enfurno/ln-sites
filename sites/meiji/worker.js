@@ -72,26 +72,6 @@ const __site={async scheduled(ev,env,ctx){ctx.waitUntil(retryPending(env,100))},
   return J({ok:true});}
  return env.ASSETS.fetch(req);}};
 
-// ---- server-side hours (first paint, no-JS and crawlers) ----
-// Mirrors public/ln-hours.js: the raw HTML and the in-browser refresh must agree.
-let __lnHoursMemo={t:0,raw:null};
-async function lnHoursFeed(env){if(__lnHoursMemo.raw&&Date.now()-__lnHoursMemo.t<60000)return __lnHoursMemo.raw;try{const r=await env.PORTAL.fetch('https://ln-portal/api/hours/meiji');if(r.ok){const d=await r.json();if(d&&Array.isArray(d.locations)&&d.locations.length){__lnHoursMemo={t:Date.now(),raw:d};return d}}}catch(e){}return __lnHoursMemo.raw}
-const LH_D=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-const LH_S={Monday:'Mon',Tuesday:'Tue',Wednesday:'Wed',Thursday:'Thu',Friday:'Fri',Saturday:'Sat',Sunday:'Sun'};
-const LH_SO={Monday:'Mo',Tuesday:'Tu',Wednesday:'We',Thursday:'Th',Friday:'Fr',Saturday:'Sa',Sunday:'Su'};
-const lhEsc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const lhT=(v,lo)=>{const p=String(v||'').split(':'),h=+p[0]||0,m=p[1]||'00';const s=(h%12||12)+(m!='00'?':'+m:'');return s+(h<12?(lo?'am':' AM'):(lo?'pm':' PM'))};
-const lhOk=h=>Array.isArray(h)&&h.some(x=>x&&(x.closed||(x.open&&x.close)));
-function lhGroups(h){const by={};(h||[]).forEach(x=>{if(x&&x.day)by[x.day]=x});const k=d=>{const x=by[d];return !x?'?':x.closed?'closed':(x.open&&x.close?x.open+'-'+x.close:'?')};let st=0;if(k('Sunday')==k('Monday')){st=6;let n=0;while(n++<6&&k(LH_D[st-1])==k(LH_D[st]))st--;if(n>=7)st=0}
- const o=[];for(let j=0;j<7;j++){const d=LH_D[(st+j)%7],v=k(d);if(o.length&&o[o.length-1].v==v)o[o.length-1].e=d;else o.push({s:d,e:d,v})}return o.filter(g=>g.v!='?')}
-function lhFmt(h,lo,sep){return lhGroups(h).map(g=>{const dd=LH_S[g.s]+(g.e!=g.s?(lo?' – ':'–')+LH_S[g.e]:'');if(g.v=='closed')return dd+' closed';const p=g.v.split('-');return dd+' '+lhT(p[0],lo)+(lo?' – ':'–')+lhT(p[1],lo)}).join(sep)}
-function lhPick(d,loc){const ls=(d&&d.locations)||[];if(loc)return ls.find(l=>l.slug==loc)||null;if(ls.length)return ls.find(l=>l.status=='open')||ls[0];return d&&d.hours?{hours:d.hours}:null}
-function lhAttrs(t){const g=n=>{const m=t.match(new RegExp('\\b'+n+'\\s*=\\s*"([^"]*)"','i'));return m?m[1]:''};return{loc:g('data-loc'),lo:g('data-fmt')=='lower',br:g('data-sep')=='br'}}
-function lhApply(html,d){
- if(!d||!html)return html;
- html=html.replace(/<([a-z][\w-]*)([^>]*\bdata-ln-hours(?![\w-])[^>]*)>[\s\S]*?<\/\1>/gi,(m,tag,at)=>{const a=lhAttrs(at),l=lhPick(d,a.loc);if(!l||!lhOk(l.hours))return m;const s=lhFmt(l.hours,a.lo,a.br?'<br>':' · ');const live=/\bdata-live\s*=/.test(at)?'':' data-live="1"';return '<'+tag+at+live+'>'+(a.br?s:lhEsc(s))+'</'+tag+'>'});
- return html}
-async function lhHtml(r,env){const ct=r.headers.get('content-type')||'';if(!ct.includes('text/html')||!r.body)return r;const html=await r.text();if(!html.includes('data-ln-hours'))return new Response(html,r);const d=await lnHoursFeed(env);if(!d)return new Response(html,r);return new Response(lhApply(html,d),{status:r.status,statusText:r.statusText,headers:r.headers})}
 // LN Client Portal: /menu.json is served live from ln-portal (menu-live.js falls back to /menu.json)
 const __lnInner ={...__site,async fetch(r,e,x){const u=new URL(r.url);
 if(u.pathname==='/api/menu'){try{const p=await e.PORTAL.fetch('https://ln-portal/api/menu/meiji');if(p.ok){const d=await p.json();
@@ -336,4 +316,4 @@ function __lnTsHtml(r, env, keepDays) {
   return rw.transform(r);
 }
 
-export default { ...__lnSecInner, async fetch(req, env, ctx) { return lhHtml(__lnSec(await __lnSecInner.fetch(req, env, ctx)), env) } };
+export default { ...__lnSecInner, async fetch(req, env, ctx) { return __lnSec(await __lnSecInner.fetch(req, env, ctx)) } };

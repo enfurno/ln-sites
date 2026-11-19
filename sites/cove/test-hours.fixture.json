@@ -1,21 +1,19 @@
 {
-  "client": "Catfish Cove (Yukon)",
-  "hours": [
-    { "day": "Monday", "open": "11:00", "close": "20:00", "closed": false },
-    { "day": "Tuesday", "open": "11:00", "close": "20:00", "closed": false },
-    { "day": "Wednesday", "open": "11:00", "close": "20:00", "closed": false },
-    { "day": "Thursday", "open": "11:00", "close": "20:00", "closed": false },
-    { "day": "Friday", "open": "11:00", "close": "21:00", "closed": false },
-    { "day": "Saturday", "open": "11:00", "close": "21:00", "closed": false },
-    { "day": "Sunday", "open": "11:00", "close": "20:00", "closed": false }
-  ],
-  "holidays": [],
-  "specials": [],
+  "v": 1,
+  "slug": "catfishcove",
+  "name": "Catfish Cove (Yukon)",
+  "site_url": "https://catfishcove.co",
+  "updated": "2026-11-19T12:00:00.000Z",
+  "tz": "America/Chicago",
+  "contact": { "phone": "(405) 265-3331", "email": "hello@catfishcove.co" },
   "locations": [
     {
       "slug": "yukon",
       "name": "Yukon",
       "status": "open",
+      "address": "405 N Mustang Rd, Yukon, OK 73099",
+      "phone": "(405) 265-3331",
+      "email": "hello@catfishcove.co",
       "hours": [
         { "day": "Monday", "open": "11:00", "close": "20:00", "closed": false },
         { "day": "Tuesday", "open": "11:00", "close": "20:00", "closed": false },
@@ -32,5 +30,7 @@
       "specials": []
     }
   ],
-  "tz": "America/Chicago"
+  "modules": { "reservations": true, "ordering": false, "blog": false },
+  "ordering": { "on": false, "url": null, "locations": [] },
+  "social": { "facebook": "https://www.facebook.com/catfishcoveokl/" }
 }
