@@ -34,9 +34,13 @@ export function msContact(d){
   const pick=k=>{const v=c[k];if(typeof v==='string'&&v.trim())return v;for(const l of locs)if(typeof l[k]==='string'&&l[k].trim())return l[k];return ''};
   const out={};const em=pick('email').trim();
   if(em.length<=254&&/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(em))out.email=em.toLowerCase();
-  const raw=(pick('phone')||pick('telephone')).trim();let dg=raw.replace(/\D/g,'');
+  // The phone and its display must come from the same object: the client may save
+  // the number on the top level or on a location entry.
+  const phoneEntry=(()=>{if(typeof c.phone==='string'&&c.phone.trim())return c;for(const l of locs)if(typeof l.phone==='string'&&l.phone.trim())return l;if(typeof c.telephone==='string'&&c.telephone.trim())return c;for(const l of locs)if(typeof l.telephone==='string'&&l.telephone.trim())return l;return null})();
+  const raw=phoneEntry?(phoneEntry.phone||phoneEntry.telephone||'').trim():'';let dg=raw.replace(/\D/g,'');
   if(dg.length===11&&dg[0]==='1')dg=dg.slice(1);
-  if(dg.length===10){out.tel='+1'+dg;const pd=typeof (c.phone_display??c.phoneDisplay)==='string'?(c.phone_display??c.phoneDisplay).trim():'';
+  if(dg.length===10){out.tel='+1'+dg;const pdv=phoneEntry?(phoneEntry.phone_display??phoneEntry.phoneDisplay??c.phone_display??c.phoneDisplay):(c.phone_display??c.phoneDisplay);
+    const pd=typeof pdv==='string'?pdv.trim():'';
     out.phoneText=msPhoneText(pd,dg)||('('+dg.slice(0,3)+') '+dg.slice(3,6)+'-'+dg.slice(6))}
   return (out.email||out.tel)?out:null;
 }
