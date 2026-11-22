@@ -157,6 +157,6 @@ footer .f-contact .social a.soc svg{width:17px;height:17px}
 .info .info-follow:not(:has(.social a)){display:none}
 
 /* v23: live Mother Sauce version badge (Freeman's MS .vbdg; light as-is, dark mixed toward dark bg) */
-.kicker .ms-ver{display:inline-block;padding:2px 8px 3px;border:1px solid color-mix(in srgb,#f7892b 45%,#e2d8ca);border-radius:6px;background:color-mix(in srgb,#f7892b 9%,#fff);color:color-mix(in srgb,#f7892b 55%,#1a1410);font:700 10.5px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.02em;white-space:nowrap;box-shadow:0 1px 0 color-mix(in srgb,#f7892b 20%,transparent);text-transform:none;margin-left:10px;vertical-align:middle;position:relative;top:-1px}
+.kicker .ms-ver{display:block;width:max-content;max-width:100%;padding:2px 8px 3px;border:1px solid color-mix(in srgb,#f7892b 45%,#e2d8ca);border-radius:6px;background:color-mix(in srgb,#f7892b 9%,#fff);color:color-mix(in srgb,#f7892b 55%,#1a1410);font:700 10.5px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.02em;white-space:nowrap;box-shadow:0 1px 0 color-mix(in srgb,#f7892b 20%,transparent);text-transform:none;text-indent:0;margin:6px auto 0;vertical-align:baseline;position:static;top:auto}
 :root:not([data-theme=light]) .kicker .ms-ver{border-color:color-mix(in srgb,#f7892b 45%,#3a3029);background:color-mix(in srgb,#f7892b 12%,#15110f);color:color-mix(in srgb,#f7892b 80%,#f3eadf);box-shadow:0 1px 0 color-mix(in srgb,#000 40%,transparent)}
 .kicker .ms-ver[hidden],.kicker .ms-ver:empty{display:none}
