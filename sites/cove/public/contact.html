@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Bitter:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/styles.css?v=qa7">
 <link rel="canonical" href="https://catfishcove.co/contact">
-<style>#main>.sec:first-child{padding-top:clamp(6.5rem,10vw,8rem)}.pg-links{display:flex;flex-wrap:wrap;gap:.8rem;margin:1.6rem 0 0}.contact-cta{margin:1.4rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}</style>
+<style>#main>.sec:first-child{padding-top:clamp(6.5rem,10vw,8rem)}.pg-links{display:flex;flex-wrap:wrap;gap:.8rem;margin:1.6rem 0 0}.contact-cta{margin:1.4rem 0 0;display:flex;flex-wrap:wrap;gap:.8rem}#contactMailto[hidden],#contactForm[hidden]{display:none!important}#contactForm{margin:1.4rem 0 0}</style>
 </head>
 <body data-ln-page="contact" class="subpage">
 <script type="application/ld+json" data-ln-hours-ld>{"@context":"https://schema.org","@type":"SeafoodRestaurant","name":"Catfish Cove - Yukon","telephone":"+1-405-265-3331","email":"hello@catfishcove.co","servesCuisine":["Seafood","Southern"],"address":{"@type":"PostalAddress","streetAddress":"405 N Mustang Rd","addressLocality":"Yukon","addressRegion":"OK","postalCode":"73099","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":35.4708514,"longitude":-97.7256873},"priceRange":"$$","hasMenu":"https://catfishcove.co/menu","image":"https://catfishcove.co/assets/img/og-crab-legs.jpg","sameAs":["https://www.facebook.com/catfishcoveokl/","https://www.instagram.com/catfishcoveokl/","https://www.tiktok.com/@catfishcoveoklahoma","https://maps.google.com/?cid=6982537879918034421"],"@id":"https://catfishcove.co/#restaurant"}</script>
@@ -44,7 +44,16 @@
     <article class="item"><header><h2>Visit</h2></header><p><a href="https://www.google.com/maps/dir/?api=1&amp;destination=405+N+Mustang+Rd%2C+Yukon%2C+OK+73099" target="_blank" rel="noopener">405 N Mustang Rd<br>Yukon, OK 73099</a></p><p><a class="btn ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=405+N+Mustang+Rd%2C+Yukon%2C+OK+73099" target="_blank" rel="noopener">Get directions</a></p></article>
     <article class="item"><header><h2>Hours</h2></header><dl class="week" data-ln-hours-list data-loc="yukon" data-fmt="lower"><dt>Hours</dt><dd>Call for today’s hours</dd></dl><p>Lunch buffet 11am &ndash; 4pm &middot; Dinner buffet 4pm &ndash; close.</p></article>
   </div>
-  <div class="contact-cta"><a class="btn" href="mailto:hello@catfishcove.co?subject=Message%20for%20Catfish%20Cove">Send us a message</a><a class="btn ghost" href="tel:+14052653331">Call the Cove</a></div>
+  <div class="contact-cta" id="contactMailto"><a class="btn" href="mailto:hello@catfishcove.co?subject=Message%20for%20Catfish%20Cove">Send us a message</a><a class="btn ghost" href="tel:+14052653331">Call the Cove</a></div>
+  <form id="contactForm" class="rform" data-ln-contact-form aria-label="Send us a message" hidden novalidate>
+    <label class="f" style="--c:var(--brick)"><span>Your name *</span><input name="name" required autocomplete="name" maxlength="80"></label>
+    <label class="f" style="--c:var(--river)"><span>Email <em>(or phone)</em></span><input name="email" type="email" autocomplete="email" maxlength="160"></label>
+    <label class="f" style="--c:var(--navy)"><span>Phone <em>(or email)</em></span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="(405) 555-0123"></label>
+    <label class="f full" style="--c:var(--gold-d)"><span>Message *</span><textarea name="message" rows="4" required maxlength="3000" placeholder="How can we help?"></textarea></label>
+    <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+    <div class="full rsub"><button class="btn" type="submit">Send message</button><span class="small mute">Prefer to call? <a href="tel:+14052653331">(405) 265-3331</a></span></div>
+    <p class="msg full" id="cMsg" role="status" tabindex="-1"></p>
+  </form>
 </section>
 <section class="sec wrap" id="quick" aria-labelledby="quick-h">
   <h2 id="quick-h">Looking for something else?</h2>
@@ -70,6 +79,7 @@
 </footer>
 <script src="/assets/social.js" defer></script>
 <script src="/assets/app.js?v=rf2" defer></script>
+<script src="/assets/contact.js?v=1" data-ts-key="0x4AAAAAAFnUa24V6fGHvxtA" defer></script>
 <script>try{navigator.sendBeacon("/api/hit",JSON.stringify({p:location.pathname,q:location.search,r:document.referrer,t:/[?&]ln_test=1/.test(location.search)||localStorage.getItem("ln-test")=="1"?1:0}))}catch(e){}</script><script src="/ln-hours.js?v=1" defer></script><script src="/assets/scrollspy.js?v=1" defer data-nav="#menuNav" data-header="#nav"></script>
 <script src="https://mothersauce.app/embed/chat.js" data-ms-chat="catfishcove" data-ts-key="0x4AAAAAAFnUa24V6fGHvxtA" defer></script>
 </body>
