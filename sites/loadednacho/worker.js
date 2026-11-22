@@ -18,7 +18,17 @@ async function msGet(base,kind,ctx,path){
   if(v&&cache&&ctx)ctx.waitUntil(cache.put(url,new Response(JSON.stringify(v),{headers:{'content-type':'application/json','cache-control':'max-age='+MS_TTL}})).catch(()=>{}));
   return v;
 }
-function msContact(d){
+function msPhoneText(pd,dg){
+  const s=String(pd??'').trim();
+  if(!/^[A-Za-z\d\s().+\-]{7,40}$/.test(s))return '';
+  const keys={ABC:'2',DEF:'3',GHI:'4',JKL:'5',MNO:'6',PQRS:'7',TUV:'8',WXYZ:'9'};let digits='';
+  for(const ch of s.toUpperCase()){
+    if(ch>='A'&&ch<='Z'){for(const k in keys)if(k.includes(ch)){digits+=keys[k];break}}
+    else if(/\d/.test(ch))digits+=ch;
+  }
+  return digits===dg?s:'';
+}
+export function msContact(d){
   if(!d||typeof d!=='object')return null;const c=(d.contact&&typeof d.contact==='object')?d.contact:(d.data&&typeof d.data==='object')?d.data:d;
   const locs=Array.isArray(c.locations)?c.locations.filter(l=>l&&typeof l==='object').sort((x,y)=>(Number(x.order)||99)-(Number(y.order)||99)):[];
   const pick=k=>{const v=c[k];if(typeof v==='string'&&v.trim())return v;for(const l of locs)if(typeof l[k]==='string'&&l[k].trim())return l[k];return ''};
@@ -27,7 +37,7 @@ function msContact(d){
   const raw=(pick('phone')||pick('telephone')).trim();let dg=raw.replace(/\D/g,'');
   if(dg.length===11&&dg[0]==='1')dg=dg.slice(1);
   if(dg.length===10){out.tel='+1'+dg;const pd=typeof (c.phone_display??c.phoneDisplay)==='string'?(c.phone_display??c.phoneDisplay).trim():'';
-    out.phoneText=/^[\d\s().+\-]{7,25}$/.test(pd)&&pd.replace(/\D/g,'').endsWith(dg)?pd:'('+dg.slice(0,3)+') '+dg.slice(3,6)+'-'+dg.slice(6)}
+    out.phoneText=msPhoneText(pd,dg)||('('+dg.slice(0,3)+') '+dg.slice(3,6)+'-'+dg.slice(6))}
   return (out.email||out.tel)?out:null;
 }
 function msSocial(d){
@@ -52,7 +62,7 @@ async function msInject(req,res,env,ctx){
      .on('[data-ms-contact]',{element(el){const k=el.getAttribute('data-ms-contact');el.removeAttribute('data-ms-contact');const hi=el.hasAttribute('data-ms-hi');el.removeAttribute('data-ms-hi');
        if(!c)return;
        if((k==='email'||k==='email-href')&&c.email){el.setAttribute('href','mailto:'+c.email);if(k==='email'){if(hi){const i=c.email.indexOf('@');el.setInnerContent('<span class="hi">'+msEsc(c.email.slice(0,i))+'</span>'+msEsc(c.email.slice(i)),{html:true})}else el.setInnerContent(c.email)}}
-       else if(k==='phone'&&c.tel){el.setAttribute('href','tel:'+c.tel);el.setInnerContent(c.phoneText)}}})
+       else if(k==='phone'&&c.tel){el.setAttribute('href','tel:'+c.tel);el.setInnerContent(msEsc(c.phoneText),{html:true})}}})
      .on('[data-ms-version]',{element(el){el.removeAttribute('data-ms-version');if(!ver){el.remove();return}el.removeAttribute('hidden');el.setInnerContent('v'+ver)}})
      .on('[data-ms-social]',{element(el){el.removeAttribute('data-ms-social');if(!soc.length){el.remove();return}el.setAttribute('role','list');el.setInnerContent(msSocialHtml(soc),{html:true})}});
     const out=rw.transform(res);
