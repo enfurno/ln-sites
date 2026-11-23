@@ -1,261 +1,273 @@
 {
- "_doc": "Single source of truth for every site deploy. dir and worker_src are relative to the repo root. Read by deploylib.mjs (mkdeploy2, deploy-check, smoke). Do not hand-copy these into scripts.",
- "_exceptions": {
-  "_doc": "Sites that are NOT part of this deploy pipeline. Do not scaffold or convert these. Listed so onboarding sees the complete exception list.",
-  "uptownjerky": "Client-managed Wix site. Not in this repo or the deploy pipeline. Hours and business facts are the client's to edit in Wix; we do not carry them.",
-  "rexters": "Our self-storage platform in sites/rexters, live at rexters-preview.loadednacho.workers.dev (domain pending). Built from facilities/rexters.json, not in sites.config.json and not deployed by this pipeline. No hours markers.",
-  "feast": "Draft, built from sites/feast-toc-src and uploaded by hand. Not deployed by this pipeline.",
-  "toc": "Draft, built from sites/feast-toc-src and uploaded by hand. Not deployed by this pipeline.",
-  "storage-api": "Internal storage admin API, uploaded by hand. Not a client site and not deployed by this pipeline."
- },
- "meiji": {
-  "worker": "meiji-loadednacho",
-  "dir": "sites/meiji/public",
-  "worker_src": "sites/meiji/worker.js",
-  "base": "https://meijiok.com",
-  "biz": "meiji",
-  "assets": {
-   "html_handling": "auto-trailing-slash",
-   "not_found_handling": "404-page",
-   "run_worker_first": true
+  "_doc": "Single source of truth for every site deploy. dir and worker_src are relative to the repo root. Read by deploylib.mjs (mkdeploy2, deploy-check, smoke). Do not hand-copy these into scripts.",
+  "_exceptions": {
+    "_doc": "Sites that are NOT part of this deploy pipeline. Do not scaffold or convert these. Listed so onboarding sees the complete exception list.",
+    "uptownjerky": "Client-managed Wix site. Not in this repo or the deploy pipeline. Hours and business facts are the client's to edit in Wix; we do not carry them.",
+    "rexters": "Our self-storage platform in sites/rexters, live at rexters-preview.loadednacho.workers.dev (domain pending). Built from facilities/rexters.json, not in sites.config.json and not deployed by this pipeline. No hours markers.",
+    "feast": "Draft, built from sites/feast-toc-src and uploaded by hand. Not deployed by this pipeline.",
+    "toc": "Draft, built from sites/feast-toc-src and uploaded by hand. Not deployed by this pipeline.",
+    "storage-api": "Internal storage admin API, uploaded by hand. Not a client site and not deployed by this pipeline."
   },
-  "headers_file": "_headers",
-  "bindings": [
-   {
-    "type": "assets",
-    "name": "ASSETS"
-   },
-   {
-    "type": "d1",
-    "name": "DB"
-   },
-   {
-    "type": "service",
-    "name": "PORTAL",
-    "service": "ln-portal"
-   },
-   {
-    "type": "secret_text",
-    "name": "BREVO_API_KEY"
-   }
-  ],
-  "crons": [
-   "0 9 * * *"
-  ],
-  "noindex": false,
-  "pages_200": [
-   "/",
-   "/menu",
-   "/locations"
-  ],
-  "module_pages": {
-   "/careers": "applications",
-   "/reservations": "reservations",
-   "/catering": "catering",
-   "/blog": "blog"
+  "meiji": {
+    "worker": "meiji-loadednacho",
+    "dir": "sites/meiji/public",
+    "worker_src": "sites/meiji/worker.js",
+    "base": "https://meijiok.com",
+    "biz": "meiji",
+    "assets": {
+      "html_handling": "auto-trailing-slash",
+      "not_found_handling": "404-page",
+      "run_worker_first": true
+    },
+    "headers_file": "_headers",
+    "bindings": [
+      {
+        "type": "assets",
+        "name": "ASSETS"
+      },
+      {
+        "type": "d1",
+        "name": "DB"
+      },
+      {
+        "type": "service",
+        "name": "PORTAL",
+        "service": "ln-portal"
+      },
+      {
+        "type": "secret_text",
+        "name": "BREVO_API_KEY"
+      }
+    ],
+    "crons": [
+      "0 9 * * *"
+    ],
+    "noindex": false,
+    "pages_200": [
+      "/",
+      "/menu",
+      "/locations"
+    ],
+    "module_pages": {
+      "/careers": "applications",
+      "/reservations": "reservations",
+      "/catering": "catering",
+      "/blog": "blog"
+    },
+    "fresh_files": [
+      "assets/styles.css"
+    ]
+  },
+  "canrocks": {
+    "worker": "canrocks-loadednacho",
+    "dir": "sites/canrocks/public",
+    "worker_src": "sites/canrocks/worker.js",
+    "base": "https://canrocks.loadednacho.com",
+    "biz": "canrocks",
+    "assets": {
+      "html_handling": "auto-trailing-slash",
+      "not_found_handling": "404-page",
+      "run_worker_first": true
+    },
+    "headers_file": "_headers",
+    "bindings": [
+      {
+        "type": "assets",
+        "name": "ASSETS"
+      },
+      {
+        "type": "d1",
+        "name": "DB"
+      },
+      {
+        "type": "service",
+        "name": "PORTAL",
+        "service": "ln-portal"
+      }
+    ],
+    "crons": [],
+    "noindex": false,
+    "pages_200": [
+      "/",
+      "/menu",
+      "/contact",
+      "/visit"
+    ],
+    "module_pages": {
+      "/careers": "applications",
+      "/reservations": "reservations",
+      "/catering": "catering",
+      "/blog": "blog"
+    },
+    "fresh_files": [
+      "assets/styles.css"
+    ]
+  },
+  "cove": {
+    "worker": "catfishcove-preview",
+    "dir": "sites/cove/public",
+    "worker_src": "sites/cove/worker.js",
+    "base": "https://catfishcove.co",
+    "biz": "catfishcove",
+    "assets": {
+      "html_handling": "auto-trailing-slash",
+      "not_found_handling": "404-page",
+      "run_worker_first": true
+    },
+    "headers_file": "_headers",
+    "bindings": [
+      {
+        "type": "assets",
+        "name": "ASSETS"
+      },
+      {
+        "type": "d1",
+        "name": "DB"
+      },
+      {
+        "type": "service",
+        "name": "PORTAL",
+        "service": "ln-portal"
+      },
+      {
+        "type": "r2_bucket",
+        "name": "RESUMES"
+      },
+      {
+        "type": "plain_text",
+        "name": "RESERVE_EMAIL_ENABLED"
+      },
+      {
+        "type": "plain_text",
+        "name": "CAREERS_EMAIL_ENABLED"
+      },
+      {
+        "type": "plain_text",
+        "name": "RESERVE_NOTIFY_TO"
+      },
+      {
+        "type": "plain_text",
+        "name": "CAREERS_NOTIFY_TO"
+      }
+    ],
+    "crons": [],
+    "noindex": false,
+    "pages_200": [
+      "/",
+      "/contact"
+    ],
+    "module_pages": {
+      "/careers": "applications",
+      "/reserve": "reservations",
+      "/blog": "blog"
+    },
+    "module_redirects": [
+      "/blog",
+      "/reserve"
+    ],
+    "_note": "Nov 14 2026: prod catfishcove.co is indexable. The blanket /* X-Robots-Tag in sites/cove/public/_headers was removed; the worker still noindexes every host except catfishcove.co. cove-staging stays noindexed. /blog is a retired Wix URL: on catfishcove.co the worker 301s it to / (__WIX), so smoke treats that redirect as correct while the blog module is off.",
+    "fresh_files": [
+      "assets/styles.css"
+    ]
+  },
+  "loadednacho": {
+    "worker": "loadednacho-preview",
+    "dir": "sites/loadednacho/public",
+    "worker_src": "sites/loadednacho/worker.js",
+    "base": "https://loadednacho.com",
+    "biz": null,
+    "assets": {
+      "html_handling": "auto-trailing-slash",
+      "not_found_handling": "404-page",
+      "run_worker_first": true
+    },
+    "headers_file": "_headers",
+    "bindings": [
+      {
+        "type": "assets",
+        "name": "ASSETS"
+      },
+      {
+        "type": "d1",
+        "name": "DB"
+      },
+      {
+        "type": "service",
+        "name": "PORTAL",
+        "service": "ln-portal"
+      }
+    ],
+    "crons": [],
+    "noindex": false,
+    "pages_200": [
+      "/",
+      "/mother-sauce",
+      "/privacy",
+      "/security"
+    ],
+    "module_pages": {},
+    "fresh_files": [
+      "assets/style.css"
+    ]
+  },
+  "cove-staging": {
+    "worker": "catfishcove-staging",
+    "dir": "sites/cove/public",
+    "worker_src": "sites/cove/worker.js",
+    "base": "https://catfishcove-staging.loadednacho.workers.dev",
+    "biz": "catfishcove",
+    "assets": {
+      "html_handling": "auto-trailing-slash",
+      "not_found_handling": "404-page",
+      "run_worker_first": true
+    },
+    "headers_file": "_headers",
+    "bindings": [
+      {
+        "type": "assets",
+        "name": "ASSETS"
+      },
+      {
+        "type": "d1",
+        "name": "DB"
+      },
+      {
+        "type": "service",
+        "name": "PORTAL",
+        "service": "ln-portal"
+      },
+      {
+        "type": "r2_bucket",
+        "name": "RESUMES"
+      },
+      {
+        "type": "plain_text",
+        "name": "RESERVE_EMAIL_ENABLED"
+      },
+      {
+        "type": "plain_text",
+        "name": "CAREERS_EMAIL_ENABLED"
+      },
+      {
+        "type": "plain_text",
+        "name": "RESERVE_NOTIFY_TO"
+      },
+      {
+        "type": "plain_text",
+        "name": "CAREERS_NOTIFY_TO"
+      }
+    ],
+    "crons": [],
+    "noindex": true,
+    "pages_200": [
+      "/"
+    ],
+    "module_pages": {
+      "/careers": "applications",
+      "/reserve": "reservations",
+      "/catering": "catering",
+      "/blog": "blog"
+    },
+    "_note": "Oct 26 2026 (t616u): STAGING copy of Cove on workers.dev for testing (prod catfishcove.co + cove-preview share catfishcove-preview). Email flags false."
   }
- },
- "canrocks": {
-  "worker": "canrocks-loadednacho",
-  "dir": "sites/canrocks/public",
-  "worker_src": "sites/canrocks/worker.js",
-  "base": "https://canrocks.loadednacho.com",
-  "biz": "canrocks",
-  "assets": {
-   "html_handling": "auto-trailing-slash",
-   "not_found_handling": "404-page",
-   "run_worker_first": true
-  },
-  "headers_file": "_headers",
-  "bindings": [
-   {
-    "type": "assets",
-    "name": "ASSETS"
-   },
-   {
-    "type": "d1",
-    "name": "DB"
-   },
-   {
-    "type": "service",
-    "name": "PORTAL",
-    "service": "ln-portal"
-   }
-  ],
-  "crons": [],
-  "noindex": false,
-  "pages_200": [
-   "/",
-   "/menu",
-   "/contact",
-   "/visit"
-  ],
-  "module_pages": {
-   "/careers": "applications",
-   "/reservations": "reservations",
-   "/catering": "catering",
-   "/blog": "blog"
-  }
- },
- "cove": {
-  "worker": "catfishcove-preview",
-  "dir": "sites/cove/public",
-  "worker_src": "sites/cove/worker.js",
-  "base": "https://catfishcove.co",
-  "biz": "catfishcove",
-  "assets": {
-   "html_handling": "auto-trailing-slash",
-   "not_found_handling": "404-page",
-   "run_worker_first": true
-  },
-  "headers_file": "_headers",
-  "bindings": [
-   {
-    "type": "assets",
-    "name": "ASSETS"
-   },
-   {
-    "type": "d1",
-    "name": "DB"
-   },
-   {
-    "type": "service",
-    "name": "PORTAL",
-    "service": "ln-portal"
-   },
-   {
-    "type": "r2_bucket",
-    "name": "RESUMES"
-   },
-   {
-    "type": "plain_text",
-    "name": "RESERVE_EMAIL_ENABLED"
-   },
-   {
-    "type": "plain_text",
-    "name": "CAREERS_EMAIL_ENABLED"
-   },
-   {
-    "type": "plain_text",
-    "name": "RESERVE_NOTIFY_TO"
-   },
-   {
-    "type": "plain_text",
-    "name": "CAREERS_NOTIFY_TO"
-   }
-  ],
-  "crons": [],
-  "noindex": false,
-  "pages_200": [
-   "/",
-   "/contact"
-  ],
-  "module_pages": {
-   "/careers": "applications",
-   "/reserve": "reservations",
-   "/blog": "blog"
-  },
-  "module_redirects": [
-   "/blog",
-   "/reserve"
-  ],
-  "_note": "Nov 14 2026: prod catfishcove.co is indexable. The blanket /* X-Robots-Tag in sites/cove/public/_headers was removed; the worker still noindexes every host except catfishcove.co. cove-staging stays noindexed. /blog is a retired Wix URL: on catfishcove.co the worker 301s it to / (__WIX), so smoke treats that redirect as correct while the blog module is off."
- },
- "loadednacho": {
-  "worker": "loadednacho-preview",
-  "dir": "sites/loadednacho/public",
-  "worker_src": "sites/loadednacho/worker.js",
-  "base": "https://loadednacho.com",
-  "biz": null,
-  "assets": {
-   "html_handling": "auto-trailing-slash",
-   "not_found_handling": "404-page",
-   "run_worker_first": true
-  },
-  "headers_file": "_headers",
-  "bindings": [
-   {
-    "type": "assets",
-    "name": "ASSETS"
-   },
-   {
-    "type": "d1",
-    "name": "DB"
-   },
-   {
-    "type": "service",
-    "name": "PORTAL",
-    "service": "ln-portal"
-   }
-  ],
-  "crons": [],
-  "noindex": false,
-  "pages_200": [
-   "/",
-   "/mother-sauce",
-   "/privacy",
-   "/security"
-  ],
-  "module_pages": {}
- },
- "cove-staging": {
-  "worker": "catfishcove-staging",
-  "dir": "sites/cove/public",
-  "worker_src": "sites/cove/worker.js",
-  "base": "https://catfishcove-staging.loadednacho.workers.dev",
-  "biz": "catfishcove",
-  "assets": {
-   "html_handling": "auto-trailing-slash",
-   "not_found_handling": "404-page",
-   "run_worker_first": true
-  },
-  "headers_file": "_headers",
-  "bindings": [
-   {
-    "type": "assets",
-    "name": "ASSETS"
-   },
-   {
-    "type": "d1",
-    "name": "DB"
-   },
-   {
-    "type": "service",
-    "name": "PORTAL",
-    "service": "ln-portal"
-   },
-   {
-    "type": "r2_bucket",
-    "name": "RESUMES"
-   },
-   {
-    "type": "plain_text",
-    "name": "RESERVE_EMAIL_ENABLED"
-   },
-   {
-    "type": "plain_text",
-    "name": "CAREERS_EMAIL_ENABLED"
-   },
-   {
-    "type": "plain_text",
-    "name": "RESERVE_NOTIFY_TO"
-   },
-   {
-    "type": "plain_text",
-    "name": "CAREERS_NOTIFY_TO"
-   }
-  ],
-  "crons": [],
-  "noindex": true,
-  "pages_200": [
-   "/"
-  ],
-  "module_pages": {
-   "/careers": "applications",
-   "/reserve": "reservations",
-   "/catering": "catering",
-   "/blog": "blog"
-  },
-  "_note": "Oct 26 2026 (t616u): STAGING copy of Cove on workers.dev for testing (prod catfishcove.co + cove-preview share catfishcove-preview). Email flags false."
- }
 }

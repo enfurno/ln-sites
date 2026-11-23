@@ -5,13 +5,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
-export const FRESH_FILE = 'assets/styles.css';
+// Each site declares what it actually ships under `fresh_files` in tools/sites.config.json.
+// The guard reads the first candidate that exists locally; if none does, it fails rather than
+// printing a skip, because a check that cannot run must not look like a check that passed.
+export const DEFAULT_FILES = ['assets/styles.css', 'assets/style.css'];
 
 const sha = b => crypto.createHash('sha256').update(b).digest('hex');
 
-export async function checkFreshness(siteObj, { file = FRESH_FILE, base = siteObj.base, root = process.cwd() } = {}) {
-  const local = path.resolve(root, siteObj.dir, file);
-  if (!fs.existsSync(local)) return { ok: true, skipped: 'no ' + file };
+export async function checkFreshness(siteObj, { file, base = siteObj.base, root = process.cwd() } = {}) {
+  const candidates = file ? [file] : (siteObj.fresh_files || DEFAULT_FILES);
+  const found = candidates.map(f => ({ f, p: path.resolve(root, siteObj.dir, f) })).find(x => fs.existsSync(x.p));
+  if (!found) return { ok: false, error: 'no freshness candidate exists under ' + siteObj.dir + ' (tried ' + candidates.join(', ') + ')' };
+  file = found.f;
+  const local = found.p;
   const want = sha(fs.readFileSync(local));
   const url = String(base).replace(/\/$/, '') + '/' + file + '?freshness=' + Date.now();
   let res;
@@ -28,6 +34,7 @@ export async function checkFreshness(siteObj, { file = FRESH_FILE, base = siteOb
 // Throws (fails the deploy) only on a real mismatch. A skipped file is not a failure.
 export async function assertFresh(siteObj, opts) {
   const r = await checkFreshness(siteObj, opts);
-  if (r.ok) { console.log('fresh  ' + siteObj.worker + ' ' + (r.file || '') + (r.skipped ? ' (skipped: ' + r.skipped + ')' : '') + ' matches live'); return r; }
+  if (r.ok) { console.log('fresh  ' + siteObj.worker + ' ' + r.file + ' matches live'); return r; }
+  if (r.error && !r.url) throw new Error('FRESHNESS CANNOT RUN: ' + r.error + '. Refusing to call this deploy verified.');
   throw new Error('STALE ASSETS: ' + (r.url || '') + ' does not match the repo (' + (r.error || (r.want + ' != ' + r.got)) + '). The upload reported success but the live asset set is older. Do not trust this deploy.');
 }
