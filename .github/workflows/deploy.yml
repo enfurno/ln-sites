@@ -33,6 +33,7 @@ jobs:
           node sites/meiji/test-hours.mjs
           node sites/canrocks/test-hours.mjs
           node sites/loadednacho/test-contact.mjs
+          node tools/offers.mjs --check
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
