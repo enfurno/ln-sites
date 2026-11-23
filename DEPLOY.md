@@ -46,6 +46,14 @@ The token and account id are read from the environment. They are not stored in t
 
 `main` is protected: a pull request is required, admins are included, force pushes and deletions are refused, and the `precheck` check must pass on a branch that is up to date with `main`. That protection — not a person — is the gate, and it is why merging on green is safe: GitHub refuses a merge on a red or missing `precheck`, or from a branch behind `main`.
 
+## Hand uploads (`feast`, `toc`)
+
+These two are built and uploaded by hand from `sites/feast-toc-src`: `node build.mjs` writes `dist/feast-preview.js` and `dist/toc-preview.js`, each its own upload unit, plus a `dist/deploy-<name>.js` runner. Three things the upload must get right:
+
+- **The worker name is the production one** (`feast-loadednacho`, `tasteofchina-loadednacho`), not the `dist` file name. The generated runner defaults to production; `WORKER_NAME=...` overrides it.
+- **Bindings come from `BINDINGS` in `build.mjs`**, not from the dashboard. The upload replaces the worker's bindings with that list, so a binding added in Cloudflare is wiped by the next upload.
+- **The file part must be named `worker.js`** (`filename="worker.js"`); otherwise the API answers "No such module: worker.js".
+
 ## Keeping the repo in sync with live
 
 Live is the baseline. Before touching a worker, check the repo against what is
