@@ -78,6 +78,56 @@ function modState(mods, key) {
 }
 const safeUrl = u => { try { const x = new URL(String(u)); return /^https?:$/.test(x.protocol) ? x.href : null; } catch (e) { return null; } };
 
+// ---- real requests, not promises -------------------------------------------------------------
+// Reservations and catering render an actual form and post to this worker (/api/reserve, /api/catering).
+// The worker relays to Mother Sauce the same way cove/meiji do: catering -> PORTAL internal/catering,
+// reservations -> the shared cove_reservations table through the DB binding, separated by brand.
+const fld = (k, l, t, o) => `<div class="mf"><label for="m-${k}">${esc(l)}</label><input id="m-${k}" name="${k}" type="${t}"${o || ''}></div>`;
+const RES_FORM = `<form class="mform" data-ln-form="/api/reserve" action="/api/reserve" method="post">
+<span class="mfh">Book a table</span>
+<div class="r2">${fld('name', 'Name', 'text', ' required autocomplete="name" maxlength="80"')}${fld('phone', 'Phone', 'tel', ' required autocomplete="tel" maxlength="30"')}</div>
+${fld('email', 'Email', 'email', ' autocomplete="email" maxlength="200"')}
+<div class="r2">${fld('date', 'Date', 'date', ' required')}${fld('time', 'Time', 'time', ' required')}</div>
+<div class="r2">${fld('party', 'Party size', 'number', ' min="1" max="30" required inputmode="numeric"')}${fld('location', 'Location', 'text', ' maxlength="60"')}</div>
+<label for="m-notes">Anything we should know?</label><textarea id="m-notes" name="notes" rows="2" maxlength="1000"></textarea>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="sq msub" type="submit">Request a table</button>
+<p class="mmsg" role="status" aria-live="polite"></p></form>`;
+const CAT_FORM = `<form class="mform" data-ln-form="/api/catering" action="/api/catering" method="post">
+<span class="mfh">Request catering</span>
+<div class="r2">${fld('name', 'Name', 'text', ' required autocomplete="name" maxlength="80"')}${fld('phone', 'Phone', 'tel', ' required autocomplete="tel" maxlength="30"')}</div>
+${fld('email', 'Email', 'email', ' autocomplete="email" maxlength="200"')}
+<div class="r2">${fld('event_date', 'Event date', 'date', ' required')}${fld('guests', 'Guests', 'number', ' min="10" max="1000" required inputmode="numeric"')}</div>
+<label for="m-notes">Menu ideas, allergies, anything else</label><textarea id="m-notes" name="notes" rows="2" maxlength="2000"></textarea>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="sq msub" type="submit">Send request</button>
+<p class="mmsg" role="status" aria-live="polite"></p></form>`;
+
+const MOD_CSS = `.mod .mform{display:grid;gap:10px;margin-top:14px;max-width:640px;text-align:left}
+.mod .mform .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.mod .mform .r2{grid-template-columns:1fr}}
+.mod .mform .mf{display:block;min-width:0}
+.mod .mform .mfh{font:700 13px/1.2 'Space Grotesk',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--acc,currentColor)}
+.mod .mform label{display:block;margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+.mod .mform input,.mod .mform textarea{width:100%;min-height:42px;padding:10px 12px;font:inherit;font-size:16px;color:inherit;background:transparent;border:1px solid var(--line,currentColor);border-radius:4px}
+.mod .mform textarea{min-height:76px}
+.mod .mform .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.mod .mform .msub{justify-self:start;margin-top:4px}
+.mod .mform .mmsg{margin:2px 0 0;font-size:.92em;min-height:1.2em}`;
+
+// One small handler for both forms: post JSON, keep the page, show the answer.
+const FORM_JS = `(function(){
+document.querySelectorAll('form[data-ln-form]').forEach(function(f){
+var t0=Date.now();f.addEventListener('submit',function(e){
+e.preventDefault();var b=f.querySelector('button[type=submit]'),m=f.querySelector('.mmsg');
+var o={};new FormData(f).forEach(function(v,k){o[k]=v});o.elapsed=Date.now()-t0;
+b.disabled=true;if(m)m.textContent='Sending…';
+fetch(f.getAttribute('data-ln-form'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)})
+.then(function(r){return r.json().then(function(j){return [r.ok,j]}).catch(function(){return [r.ok,{}]})})
+.then(function(x){if(x[0]){f.reset();if(m)m.textContent='Thanks! We got it and will be in touch.'}else if(m)m.textContent=(x[1]&&x[1].error)||'Something went wrong. Please call us.'})
+.catch(function(){if(m)m.textContent='Something went wrong. Please call us.'})
+.then(function(){b.disabled=false});});});})();`;
+
 function themeCss(th) {
   return `:root{--navy:${th.navy||th.ink};--ink:${th.ink};--gold:${th.gold||th.acc};--bg:${th.bg};--fg:${th.fg};--mut:${th.mut};--brand:${th.brand};--brand-fg:${th.brandFg};--acc:${th.acc};--acc2:${th.acc2};--card:${th.card};--line:${th.line};--hf:${th.hf}}`;
 }
@@ -86,7 +136,7 @@ function themeCss(th) {
 const chip = s => s ? `<span class="oc ${s.state}" data-open="${s.state}"><i aria-hidden="true"></i>${esc(openText(s))}</span>` : '';
 const modRow = (m, cls) => `<li class="${cls}" data-mod="${m.key}" data-state="on">
 <span class="mn" aria-hidden="true">${m.n}</span>
-<div class="mb"><h3>${esc(m.title)}</h3><p class="mc-on">${esc(m.onLine)}</p>${m.url ? `<a class="mgo" href="${esc(m.url)}" rel="noopener"${/^https?:/.test(m.url) && m.ext ? ' target="_blank"' : ''}>${esc(m.cta)}</a>` : (m.extra || '')}</div></li>`;
+<div class="mb"><h3>${esc(m.title)}</h3>${m.form || `<p class="mc-on">${esc(m.onLine)}</p>${m.url ? `<a class="mgo" href="${esc(m.url)}" rel="noopener"${/^https?:/.test(m.url) && m.ext ? ' target="_blank"' : ''}>${esc(m.cta)}</a>` : (m.extra || '')}`}</div></li>`;
 
 function page(url, d) {
   const { contact, hours, menu, social, jobs, mods, site } = d;
@@ -130,11 +180,13 @@ function page(url, d) {
     { key: 'careers', n: '05', title: 'Careers', st: { on: !!jobsOn }, onLine: MC.careers.on, offLine: MC.careers.off, cta: MC.careers.cta, soon: MC.careers.soon, ext: false },
   ].map(m => {
     const url = m.st.url || null;
-    // Only a module with a working feature here renders: ordering (link) and careers (job list).
-    // Reservations, catering and club stay off until their intake handlers ship; a row with a CTA that
-    // goes nowhere is the fault this PR removes.
-    const on = m.key === 'ordering' ? !!(m.st.on && url) : m.key === 'careers' ? !!m.st.on : false;
-    return { ...m, on, url, soonLabel: m.soon,
+    // Only a module with a working feature on this worker renders: ordering (link), careers (job list),
+    // reservations and catering (the forms below). Club has no form and no signup yet, so it renders
+    // nothing rather than a dead row.
+    const on = m.key === 'ordering' ? !!(m.st.on && url)
+      : (m.key === 'careers' || m.key === 'reservations' || m.key === 'catering') ? !!m.st.on : false;
+    return { ...m, on, url, form: (m.key === 'reservations' ? RES_FORM : m.key === 'catering' ? CAT_FORM : null),
+      soonLabel: m.soon,
       extra: m.key === 'careers' && jobsOn ? `<ul class="jobs">${jobs.jobs.slice(0, 6).map(j => `<li>${esc(j.title || j.name || 'Open role')}</li>`).join('')}</ul>` : '' };
   });
 
@@ -142,7 +194,7 @@ function page(url, d) {
   // Eric's rule: off = absent. The section exists only when something inside it does.
   const liveMods = modList.filter(m => m.on);
   const showMore = liveMods.length > 0 || delAll.length > 0;
-  const moreHead = liveMods.map(m => m.key === 'ordering' ? 'Order online' : m.key === 'careers' ? 'Careers' : '').filter(Boolean);
+  const moreHead = liveMods.map(m => m.key === 'ordering' ? 'Order online' : m.key === 'careers' ? 'Careers' : m.key === 'reservations' ? 'Book a table' : m.key === 'catering' ? 'Catering' : '').filter(Boolean);
   const moreLine = moreHead.length ? moreHead.join(', ').replace(/, ([^,]*)$/, ' and $1') + '.' : '';
   const specHtml = specials.length ? `<ul class="spec">${specials.map(s => `<li><strong>${esc(s.title || s.name)}</strong>${s.description ? ' ' + esc(s.description) : ''}</li>`).join('')}</ul>` : '';
   const socLinks = social && social.links && typeof social.links === 'object' ? Object.entries(social.links).filter(([k, v]) => /^https:\/\//.test(String(v))).map(([k, v]) => ({ k, n: k[0].toUpperCase() + k.slice(1), u: String(v) })) : [];
@@ -159,7 +211,7 @@ function page(url, d) {
   const navMods = modList.filter(m => m.on && m.url && m.key !== 'careers');
   const v = { name, locs, cLocs, loc, locName, addr, phone, tel, mapUrl, hRows, specHtml, socLinks, q, longDay, th, modList, delAll, menuHtml, open, jobsOn, cats, MED, navMods, showMore, moreLine };
   const body = CFG.layout === 'toc' ? tocBody(v) : feastBody(v);
-  const css = CFG.layout === 'toc' ? TOC_CSS : FEAST_CSS;
+  const css = (CFG.layout === 'toc' ? TOC_CSS : FEAST_CSS) + MOD_CSS;
   return { live, html: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}"><meta name="robots" content="noindex,nofollow">
 <link rel="canonical" href="${esc(url.origin + q(locs.length > 1 && loc ? { loc: loc.slug } : {}))}">
@@ -179,6 +231,7 @@ ${ld.map(x => `<script type="application/ld+json">${JSON.stringify(x).replace(/<
 <div class="pv" data-pv>Preview only. Not the live site.</div>
 ${body}
 <script>${PAGE_JS}</script>
+<script>${FORM_JS}</script>
 </body></html>` };
 }
 
@@ -1307,6 +1360,38 @@ export default {
     if (ICONS[url.pathname]) { const [k, t] = ICONS[url.pathname]; const b = Uint8Array.from(atob(CFG.icons[k]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': t, 'cache-control': 'public, max-age=86400' } }); }
     if (url.pathname === '/site.webmanifest') return new Response(JSON.stringify({ name: CFG.icon.name, short_name: CFG.icon.short, icons: [{ src: '/icon-180.png', sizes: '180x180', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }], theme_color: CFG.icon.theme, background_color: CFG.icon.theme, display: 'standalone' }), { headers: { 'content-type': 'application/manifest+json', 'cache-control': 'public, max-age=86400' } });
     const im = url.pathname.match(/^\/img\/([a-z_]+)\.webp$/); if (im && IMG[im[1]]) { const b = Uint8Array.from(atob(IMG[im[1]]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': 'image/webp', 'cache-control': 'public, max-age=86400' } }); }
+    // ---- form intake: reservations and catering post here, this worker relays to Mother Sauce ----
+    if (url.pathname === '/api/reserve' || url.pathname === '/api/catering') {
+      const J = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } });
+      if (req.method !== 'POST') return J({ ok: false, error: 'Method not allowed' }, 405);
+      const raw = await req.text(); if (raw.length > 12000) return J({ ok: false, error: 'Too large' }, 413);
+      let b = {}; try { b = JSON.parse(raw); } catch (e) { try { b = Object.fromEntries(new URLSearchParams(raw)); } catch (e2) { return J({ ok: false, error: 'Bad request' }, 400); } }
+      if (b.website) return J({ ok: true });
+      const S = (v, n) => String(v ?? '').trim().slice(0, n);
+      const name = S(b.name, 120), phone = S(b.phone, 40), email = S(b.email, 200).toLowerCase(), loc = S(b.location, 60);
+      if (!name || phone.replace(/\D/g, '').length < 10) return J({ ok: false, error: 'Please add your name and a phone number we can call or text.' }, 400);
+      const fast = Number(b.elapsed) > 0 && Number(b.elapsed) < 2500; // too fast = saved and flagged, not dropped
+      const ip = req.headers.get('cf-connecting-ip') || '', ua = S(req.headers.get('user-agent'), 300);
+      if (url.pathname === '/api/catering') {
+        if (!env.PORTAL) return J({ ok: false, error: 'This form is not connected yet. Please call us.' }, 503);
+        let p; try { p = await env.PORTAL.fetch('https://ln-portal/internal/catering', { method: 'POST', body: JSON.stringify({ client: CFG.slug, name, phone, email, event_date: S(b.event_date, 10), guests: S(b.guests, 5), notes: S(b.notes, 2000), location: loc, ip, spam: fast }) }); } catch (e) { return J({ ok: false, error: 'Please try again, or call us.' }, 502); }
+        const j = await p.json().catch(() => ({ error: 'unavailable' })); delete j.notice;
+        return J(j, p.status);
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || '') || !/^\d{2}:\d{2}$/.test(b.time || '')) return J({ ok: false, error: 'Please pick a date and time.' }, 400);
+      if (!env.DB) return J({ ok: false, error: 'This form is not connected yet. Please call us.' }, 503);
+      const party = S(b.party, 4), notes = S(b.notes, 1000);
+      if (!party) return J({ ok: false, error: 'Please choose your party size.' }, 400);
+      try {
+        // cove_reservations is shared by cove, meiji and feast; brand separates them, and every
+        // list query filters on brand, so a feast booking never shows in Cove's or Meiji's list.
+        const r = await env.DB.prepare("INSERT INTO cove_reservations (brand,status,name,phone,email,res_date,res_time,party_size,notes,ip,user_agent,location,spam) VALUES (?,'new',?,?,?,?,?,?,?,?,?,?,?) RETURNING id")
+          .bind(CFG.slug, name, phone, email, b.date, b.time, party, notes, ip, ua, loc, fast ? 1 : 0).first();
+        const id = r && r.id;
+        if (id && email && !fast && env.PORTAL) { try { await env.PORTAL.fetch('https://ln-portal/internal/reservation-booked', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ client: CFG.slug, id }) }); } catch (e) {} }
+        return J({ ok: true, id });
+      } catch (e) { return J({ ok: false, error: 'Please try again, or call us.' }, 502); }
+    }
     if (url.pathname !== '/' && url.pathname !== '/index.html') return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } });
     const s = CFG.slug;
     const [contact, hours, menu, social, jobs, mods, site] = await Promise.all([
