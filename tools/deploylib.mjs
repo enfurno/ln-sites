@@ -225,7 +225,8 @@ async function deploy(key) {
   if (!session?.jwt) throw new Error('asset upload session did not return a jwt');
   const { uploadAssets } = await import('./up2.mjs');
   const jwt = await uploadAssets(absPath(s.dir), session);
-  console.log('assets uploaded (' + (session.buckets?.length || 0) + ' buckets)');
+  const nb = session.buckets?.length || 0;
+  console.log('assets uploaded (' + nb + ' bucket' + (nb === 1 ? '' : 's') + ')' + (nb ? '' : ' - every hash was already present, so nothing needed sending; this is normal for a worker-only change'));
   let result;
   try {
     result = await executeScript(s2Script(s, built.cfg, { workerSrc, jwt }));
@@ -236,6 +237,10 @@ async function deploy(key) {
   }
   console.log(JSON.stringify({ ...result, prev: result?.prev ? '[versions]' : result?.prev }));
   if (!result?.ok) process.exit(2);
+  // A deploy that cannot tell "nothing to upload" from "uploaded nothing" is the whole failure mode
+  // this guards: the API answers ok:true either way, so read one static file back and compare it.
+  try { const { assertFresh } = await import('./freshness.mjs'); await assertFresh(s); }
+  catch (err) { console.error('FRESHNESS FAILED: ' + err.message); process.exit(2); }
   const smoke = spawnSync(process.execPath, [path.join(HERE, 'smoke.mjs'), key, '--rollback'], {
     cwd: ROOT,
     stdio: 'inherit',
