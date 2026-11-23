@@ -115,8 +115,8 @@ const brands = {
 // (for example feast's DB and PORTAL for the catering and reservation intake), add it here and the
 // same upload that adds it is the one that keeps it. Do not add bindings here without approval.
 const BINDINGS = {
-  'feast-preview': [],
-  'toc-preview': [],
+  'feast-preview': [{ type: 'd1', name: 'DB' }, { type: 'service', name: 'PORTAL', service: 'ln-portal' }],
+  'toc-preview': [{ type: 'd1', name: 'DB' }, { type: 'service', name: 'PORTAL', service: 'ln-portal' }],
 };
 fs.mkdirSync('dist', { recursive: true });
 const ICON_META = {
