@@ -65,7 +65,9 @@ const openText = s => !s ? '' : s.state === 'open'
   : 'Closed · opens ' + t12(s.opens) + (s.when ? ' ' + s.when : '');
 
 // ---- modules: flags from public MS /api/public/modules/<slug> (keys: applications, reservations, catering, loyalty, blog). Unreadable = OFF.
-// A button renders only when the flag is on AND a URL exists (URLs will come from /api/site/<slug> later).
+// A bare `true` means ON. Only ordering needs a URL; every other module is a real feature of this page.
+// Eric's rule (2026-11-23, reversed): a module that is OFF is absent from the page - no placeholder, no
+// "coming soon", no hole. The section itself only exists when something in it is on.
 const MOD_ALIAS = { club: 'loyalty', careers: 'applications', ordering: 'ordering' };
 function modState(mods, key) {
   if (!mods || typeof mods !== 'object') return { on: false };
@@ -76,17 +78,65 @@ function modState(mods, key) {
 }
 const safeUrl = u => { try { const x = new URL(String(u)); return /^https?:$/.test(x.protocol) ? x.href : null; } catch (e) { return null; } };
 
+// ---- real requests, not promises -------------------------------------------------------------
+// Reservations and catering render an actual form and post to this worker (/api/reserve, /api/catering).
+// The worker relays to Mother Sauce the same way cove/meiji do: catering -> PORTAL internal/catering,
+// reservations -> the shared cove_reservations table through the DB binding.
+const fld = (k, l, t, o) => `<div class="mf"><label for="m-${k}">${esc(l)}</label><input id="m-${k}" name="${k}" type="${t}"${o || ''}></div>`;
+const RES_FORM = `<form class="mform" data-ln-form="/api/reserve" action="/api/reserve" method="post">
+<span class="mfh">Book a table</span>
+<div class="r2">${fld('name', 'Name', 'text', ' required autocomplete="name" maxlength="80"')}${fld('phone', 'Phone', 'tel', ' required autocomplete="tel" maxlength="30"')}</div>
+${fld('email', 'Email', 'email', ' autocomplete="email" maxlength="200"')}
+<div class="r2">${fld('date', 'Date', 'date', ' required')}${fld('time', 'Time', 'time', ' required')}</div>
+<div class="r2">${fld('party', 'Party size', 'number', ' min="1" max="30" required inputmode="numeric"')}${fld('location', 'Location', 'text', ' maxlength="60"')}</div>
+<label for="m-notes">Anything we should know?</label><textarea id="m-notes" name="notes" rows="2" maxlength="1000"></textarea>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="sq msub" type="submit">Request a table</button>
+<p class="mmsg" role="status" aria-live="polite"></p></form>`;
+const CAT_FORM = `<form class="mform" data-ln-form="/api/catering" action="/api/catering" method="post">
+<span class="mfh">Request catering</span>
+<div class="r2">${fld('name', 'Name', 'text', ' required autocomplete="name" maxlength="80"')}${fld('phone', 'Phone', 'tel', ' required autocomplete="tel" maxlength="30"')}</div>
+${fld('email', 'Email', 'email', ' autocomplete="email" maxlength="200"')}
+<div class="r2">${fld('event_date', 'Event date', 'date', ' required')}${fld('guests', 'Guests', 'number', ' min="10" max="1000" required inputmode="numeric"')}</div>
+<label for="m-notes">Menu ideas, allergies, anything else</label><textarea id="m-notes" name="notes" rows="2" maxlength="2000"></textarea>
+<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="sq msub" type="submit">Send request</button>
+<p class="mmsg" role="status" aria-live="polite"></p></form>`;
+
+const MOD_CSS = `.mod .mform{display:grid;gap:10px;margin-top:14px;max-width:640px;text-align:left}
+.mod .mform .r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.mod .mform .r2{grid-template-columns:1fr}}
+.mod .mform .mfh{font:700 13px/1.2 'Space Grotesk',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--acc,currentColor)}
+.mod .mform .mf{display:block;min-width:0}
+.mod .mform label{display:block;margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+.mod .mform input,.mod .mform textarea{width:100%;min-height:42px;padding:10px 12px;font:inherit;font-size:16px;color:inherit;background:transparent;border:1px solid var(--line,currentColor);border-radius:4px}
+.mod .mform textarea{min-height:76px}
+.mod .mform .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.mod .mform .msub{justify-self:start;margin-top:4px}
+.mod .mform .mmsg{margin:2px 0 0;font-size:.92em;min-height:1.2em}`;
+
+// One small handler for both forms: post JSON, keep the page, show the answer.
+const FORM_JS = `(function(){
+document.querySelectorAll('form[data-ln-form]').forEach(function(f){
+var t0=Date.now();f.addEventListener('submit',function(e){
+e.preventDefault();var b=f.querySelector('button[type=submit]'),m=f.querySelector('.mmsg');
+var o={};new FormData(f).forEach(function(v,k){o[k]=v});o.elapsed=Date.now()-t0;
+b.disabled=true;if(m)m.textContent='Sending…';
+fetch(f.getAttribute('data-ln-form'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)})
+.then(function(r){return r.json().then(function(j){return [r.ok,j]}).catch(function(){return [r.ok,{}]})})
+.then(function(x){if(x[0]){f.reset();if(m)m.textContent='Thanks! We got it and will be in touch.'}else if(m)m.textContent=(x[1]&&x[1].error)||'Something went wrong. Please call us.'})
+.catch(function(){if(m)m.textContent='Something went wrong. Please call us.'})
+.then(function(){b.disabled=false});});});})();`;
+
 function themeCss(th) {
   return `:root{--navy:${th.navy||th.ink};--ink:${th.ink};--gold:${th.gold||th.acc};--bg:${th.bg};--fg:${th.fg};--mut:${th.mut};--brand:${th.brand};--brand-fg:${th.brandFg};--acc:${th.acc};--acc2:${th.acc2};--card:${th.card};--line:${th.line};--hf:${th.hf}}`;
 }
 
 // shared bits --------------------------------------------------------------
 const chip = s => s ? `<span class="oc ${s.state}" data-open="${s.state}"><i aria-hidden="true"></i>${esc(openText(s))}</span>` : '';
-const modRow = (m, cls) => `<li class="${cls}" data-mod="${m.key}" data-state="${m.on ? 'on' : 'off'}">
+const modRow = (m, cls) => `<li class="${cls}" data-mod="${m.key}" data-state="on">
 <span class="mn" aria-hidden="true">${m.n}</span>
-<div class="mb"><h3>${esc(m.title)}</h3>${m.on
-  ? `<p class="mc-on">${esc(m.onLine)}</p>${m.url ? `<a class="mgo" href="${esc(m.url)}" rel="noopener"${/^https?:/.test(m.url) && m.ext ? ' target="_blank"' : ''}>${esc(m.cta)}</a>` : (m.extra || '')}`
-  : `<p class="mc-off">${esc(m.offLine)}</p><span class="msoon">${esc(m.soonLabel)}</span>`}</div></li>`;
+<div class="mb"><h3>${esc(m.title)}</h3>${m.form || `<p class="mc-on">${esc(m.onLine)}</p>${m.url ? `<a class="mgo" href="${esc(m.url)}" rel="noopener"${/^https?:/.test(m.url) && m.ext ? ' target="_blank"' : ''}>${esc(m.cta)}</a>` : (m.extra || '')}`}</div></li>`;
 
 function page(url, d) {
   const { contact, hours, menu, social, jobs, mods, site } = d;
@@ -130,12 +180,18 @@ function page(url, d) {
     { key: 'careers', n: '05', title: 'Careers', st: { on: !!jobsOn }, onLine: MC.careers.on, offLine: MC.careers.off, cta: MC.careers.cta, soon: MC.careers.soon, ext: false },
   ].map(m => {
     const url = m.st.url || null;
-    const on = m.key === 'careers' ? !!m.st.on : !!(m.st.on && url);
-    return { ...m, on, url, soonLabel: m.soon,
+    const on = m.key === 'ordering' ? !!(m.st.on && url) : !!m.st.on;
+    return { ...m, on, url, form: (m.key === 'reservations' ? RES_FORM : m.key === 'catering' ? CAT_FORM : null),
+      soonLabel: m.soon,
       extra: m.key === 'careers' && jobsOn ? `<ul class="jobs">${jobs.jobs.slice(0, 6).map(j => `<li>${esc(j.title || j.name || 'Open role')}</li>`).join('')}</ul>` : '' };
   });
 
   const delAll = [['doordash', 'DoorDash'], ['ubereats', 'Uber Eats'], ['grubhub', 'Grubhub']].map(([k, n]) => ({ n, u: dv[k] != null ? safeUrl(dv[k]) : null })).filter(x => x.u);
+  // Eric's rule: off = absent. The section exists only when something inside it does.
+  const liveMods = modList.filter(m => m.on);
+  const showMore = liveMods.length > 0 || delAll.length > 0;
+  const moreHead = [ORD.on ? 'Order online' : '', M('reservations').on ? 'Book a table' : '', M('catering').on ? 'Catering' : '', M('club').on ? 'Join the club' : '', jobsOn ? 'Careers' : ''].filter(Boolean);
+  const moreLine = moreHead.length ? moreHead.join(', ').replace(/, ([^,]*)$/, ' and $1') + '.' : '';
   const specHtml = specials.length ? `<ul class="spec">${specials.map(s => `<li><strong>${esc(s.title || s.name)}</strong>${s.description ? ' ' + esc(s.description) : ''}</li>`).join('')}</ul>` : '';
   const socLinks = social && social.links && typeof social.links === 'object' ? Object.entries(social.links).filter(([k, v]) => /^https:\/\//.test(String(v))).map(([k, v]) => ({ k, n: k[0].toUpperCase() + k.slice(1), u: String(v) })) : [];
   const menuHtml = cats.length
@@ -149,9 +205,9 @@ function page(url, d) {
 
   // every place a module can appear gets a designed on + off state
   const navMods = modList.filter(m => m.on && m.url && m.key !== 'careers');
-  const v = { name, locs, cLocs, loc, locName, addr, phone, tel, mapUrl, hRows, specHtml, socLinks, q, longDay, th, modList, delAll, menuHtml, open, jobsOn, cats, MED, navMods };
+  const v = { name, locs, cLocs, loc, locName, addr, phone, tel, mapUrl, hRows, specHtml, socLinks, q, longDay, th, modList, delAll, menuHtml, open, jobsOn, cats, MED, navMods, showMore, moreLine };
   const body = CFG.layout === 'toc' ? tocBody(v) : feastBody(v);
-  const css = CFG.layout === 'toc' ? TOC_CSS : FEAST_CSS;
+  const css = (CFG.layout === 'toc' ? TOC_CSS : FEAST_CSS) + MOD_CSS;
   return { live, html: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}"><meta name="robots" content="noindex,nofollow">
 <link rel="canonical" href="${esc(url.origin + q(locs.length > 1 && loc ? { loc: loc.slug } : {}))}">
@@ -171,6 +227,7 @@ ${ld.map(x => `<script type="application/ld+json">${JSON.stringify(x).replace(/<
 <div class="pv" data-pv>Preview only. Not the live site.</div>
 ${body}
 <script>${PAGE_JS}</script>
+<script>${FORM_JS}</script>
 </body></html>` };
 }
 
@@ -273,7 +330,7 @@ const FEAST_CSS = `*,*:before,*:after{box-sizing:border-box;border-radius:0!impo
 :root{--r-s:6px;--r-m:10px;--r-l:12px}
 .sq,.ordcta,.seal-btn,.sw>button,.locpick,.burger,.drawer .x,.oc,.dlinks a,.mgo,.drawer .df .sw a,.logo{border-radius:var(--r-s)!important}
 .locpick{overflow:hidden}
-.loc .cur,.stn .im .tag,.mod .jobs li,.msoon{border-radius:4px!important}
+.loc .cur,.stn .im .tag,.mod .jobs li{border-radius:4px!important}
 .sw .menu{border-radius:var(--r-m)!important;overflow:hidden}
 .sw .menu a{border-radius:6px!important}
 .loc{border-radius:var(--r-l)!important}
@@ -515,10 +572,6 @@ font:700 11px/1 'Space Grotesk';letter-spacing:.16em;text-transform:uppercase;bo
 .mod .mgo:hover{background:var(--acc);color:#141217;border-color:var(--acc)}
 .mod .mgo:after{content:"";width:14px;height:1px;background:currentColor}
 .mod[data-state="off"] .mb h3{color:rgba(244,239,230,.56)}
-.mod .mc-off{color:rgba(244,239,230,.56);max-width:52ch}
-.mod .msoon{justify-self:end;display:inline-flex;align-items:center;gap:8px;font:700 9px/1 'Space Grotesk';letter-spacing:.22em;text-transform:uppercase;
-color:rgba(244,239,230,.52);border:1px solid rgba(244,239,230,.18);padding:9px 12px;white-space:nowrap}
-.mod .msoon:before{content:"";width:5px;height:5px;background:rgba(244,239,230,.45);transform:rotate(45deg)}
 .mod .jobs{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .mod .jobs li{font:700 10px/1 'Space Grotesk';letter-spacing:.14em;text-transform:uppercase;color:var(--acc);border:1px solid rgba(245,166,35,.4);padding:8px 10px}
 .dlv{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--line);display:grid;grid-template-columns:var(--num-col) minmax(0,1fr) auto;gap:var(--s4);align-items:start;min-height:calc(var(--s4) * 2 + 84px)}
@@ -599,7 +652,7 @@ ${LN_CREDIT_CSS}
 .locpick{display:flex;width:100%;margin-top:var(--s3)}
 .locpick a{flex:1 1 0;justify-content:center;padding:0 10px;min-height:46px;font-size:10px;letter-spacing:.16em}
 .mod,.dlv{grid-template-columns:40px minmax(0,1fr);gap:var(--s2) var(--s3)}
-.mod .mgo,.mod .msoon,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
+.mod .mgo,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
 .dlv .mn{grid-row:1}
 }
 @media(max-width:760px){
@@ -659,7 +712,7 @@ const chev = '<svg viewBox="0 0 9 6" aria-hidden="true"><path d="M1 1l3.5 3.5L8 
 
 function feastHeader(v) {
   const { locs, loc, tel, phone, q, MED } = v;
-  const nav = [['#stations', 'The hall'], ['#locations', 'Locations'], ['#hours', 'Hours'], ['#menu', 'Menu'], ['#more', 'Order & more']];
+  const nav = [['#stations', 'The hall'], ['#locations', 'Locations'], ['#hours', 'Hours'], ['#menu', 'Menu'], ...(v.showMore ? [['#more', 'Order & more']] : [])];
   const ord = v.modList[0];
   const ordBtn = ord.on && ord.url ? `<a class="sq ordcta" href="${esc(ord.url)}" rel="noopener" target="_blank">Order online${arrow}</a>` : '';
   const sw = locs.length > 1 ? `<div class="sw" data-sw>
@@ -752,12 +805,13 @@ ${specHtml ? `<div style="margin-top:var(--s5)"><span class="lbl">Specials</span
 }
 
 function feastModules(v) {
-  const { modList, delAll } = v;
-  const on = modList.filter(m => m.on).length;
+  const { modList, delAll, moreLine, showMore } = v;
+  if (!showMore) return '';
+  const on = modList.filter(m => m.on);
   return `<section class="sec wrapx mods-sec" id="more">
-<div class="hd"><div class="t"><span class="lbl">Online</span><h2 class="dsp">Order &amp; more</h2></div><p class="side">${on ? 'Live now at this location.' : 'Nothing live at this location yet. Everything here is wired and waiting.'}</p></div>
-<ul class="mods">${modList.map(m => modRow(m, 'mod')).join('')}</ul>
-<div class="dlv"><span class="mn">06</span><div><h3>Delivery apps</h3><p>${delAll.length ? 'Order from us through a delivery app. Links open the app or its website.' : 'Delivery links appear here the moment the location is connected. Until then, call us and we will sort you out.'}</p></div>${delAll.length ? `<div class="dlinks">${delAll.map(d => `<a href="${esc(d.u)}" rel="noopener" target="_blank">${esc(d.n)}</a>`).join('')}</div>` : '<span class="msoon">Coming soon</span>'}</div>
+<div class="hd"><div class="t"><span class="lbl">Online</span><h2 class="dsp">Order &amp; more</h2></div>${moreLine ? `<p class="side">${esc(moreLine)}</p>` : ''}</div>
+${on.length ? `<ul class="mods">${on.map(m => modRow(m, 'mod')).join('')}</ul>` : ''}
+${delAll.length ? `<div class="dlv"><span class="mn">06</span><div><h3>Delivery apps</h3><p>Order from us through a delivery app. Links open the app or its website.</p></div><div class="dlinks">${delAll.map(d => `<a href="${esc(d.u)}" rel="noopener" target="_blank">${esc(d.n)}</a>`).join('')}</div></div>` : ''}
 </section>`;
 }
 
@@ -778,13 +832,13 @@ function feastFamilies(v) {
 
 function feastFooter(v) {
   const { locs, cLocs, tel, phone, socLinks, modList, menuHtml } = v;
-  const nav = [['#stations', 'The hall'], ['#locations', 'Locations'], ['#hours', 'Hours'], ['#menu', 'Menu'], ['#more', 'Order & more'], ['#families', 'Families']];
+  const nav = [['#stations', 'The hall'], ['#locations', 'Locations'], ['#hours', 'Hours'], ['#menu', 'Menu'], ...(v.showMore ? [['#more', 'Order & more']] : []), ['#families', 'Families']];
   return `<footer><div class="wrapx">
 <div class="fgrid">
 <div class="fbrand"><a class="logo" href="${esc(v.q({}))}" aria-label="${esc(v.name)} home">${CFG.logos[v.th.logo]}</a><p>${esc(CFG.footLine)}</p></div>
 <div class="fcol"><h4>Explore</h4><ul>${nav.map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul></div>
 <div class="fcol"><h4>Find us</h4><ul>${locs.map(l => `<li><span class="nm">${esc(l.name)}</span><br>${esc(l.address || '')}${l.phone ? `<br><a href="tel:+1${String(l.phone).replace(/\D/g, '')}">${esc(l.phone)}</a>` : ''}</li>`).join('')}</ul></div>
-<div class="fcol"><h4>Online</h4><ul>${modList.filter(m => m.on && m.url).map(m => `<li><a href="${esc(m.url)}" rel="noopener"${m.ext ? ' target="_blank"' : ''}>${esc(m.title)}</a></li>`).join('') || '<li class="sm">Online ordering, reservations and more arrive as they go live.</li>'}${socLinks.map(s => `<li><a href="${esc(s.u)}" rel="noopener" target="_blank">${esc(s.n)}</a></li>`).join('')}</ul></div>
+${(modList.some(m => m.on && m.url) || socLinks.length) ? `<div class="fcol"><h4>Online</h4><ul>${modList.filter(m => m.on && m.url).map(m => `<li><a href="${esc(m.url)}" rel="noopener"${m.ext ? ' target="_blank"' : ''}>${esc(m.title)}</a></li>`).join('')}${socLinks.map(s => `<li><a href="${esc(s.u)}" rel="noopener" target="_blank">${esc(s.n)}</a></li>`).join('')}</ul></div>` : ''}
 </div>
 ${tel ? `<p style="margin-top:var(--s4)"><a class="sq" href="tel:${tel}">Call ${esc(v.loc ? v.loc.name : v.name)}${arrow}</a></p>` : ''}
 <div class="fbot"><span>&copy; ${new Date().getFullYear()} ${esc(v.name)}. All rights reserved.</span><span>Powered by Mother Sauce</span></div>
@@ -816,7 +870,7 @@ const TOC_CSS = `*,*:before,*:after{box-sizing:border-box;border-radius:0!import
 /* buttons get a small radius; cards and panels stay square */
 :root{--r-s:6px;--r-m:10px;--r-l:12px}
 .sq,.ordcta,.seal-btn,.sw>button,.burger,.drawer .x,.oc,.dlinks a,.mgo,.seal,.logo,.drawer .df .sw a{border-radius:var(--r-s)!important}
-.mod .jobs li,.msoon{border-radius:4px!important}
+.mod .jobs li{border-radius:4px!important}
 .frame{border-radius:var(--r-l)!important}
 .frame:before{border-radius:8px!important}
 .frame .imw{border-radius:3px!important}
@@ -1060,8 +1114,6 @@ background:linear-gradient(0deg,rgba(9,7,6,.82),rgba(9,7,6,.12) 62%)}
 .mod .mgo{align-self:center;display:inline-grid;place-items:center;min-height:46px;padding:0 22px;background:var(--brand);color:#F8EDD6;
 font:500 9.5px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;outline:1px solid var(--brand);outline-offset:3px;transition:outline-offset .25s,background .2s}
 .mod .mgo:hover{outline-offset:7px}
-.mod .msoon{align-self:center;font:500 9px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:rgba(20,17,15,.5);
-border-bottom:1px solid rgba(20,17,15,.28);padding-bottom:5px;white-space:nowrap}
 .mod .jobs{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .mod .jobs li{font:500 9.5px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:var(--brand);border:1px solid rgba(158,27,20,.32);padding:8px 10px}
 .dlv{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid rgba(201,162,75,.55);display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:var(--s3);align-items:start}
@@ -1072,7 +1124,6 @@ border-bottom:1px solid rgba(20,17,15,.28);padding-bottom:5px;white-space:nowrap
 .dlinks a{display:inline-grid;place-items:center;min-height:42px;padding:0 16px;border:1px solid rgba(20,17,15,.34);
 font:500 9.5px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;transition:background .2s,color .2s,border-color .2s}
 .dlinks a:hover{background:var(--navy);color:var(--gold);border-color:var(--navy)}
-.dlv .msoon{align-self:center;font:500 9px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:rgba(20,17,15,.5);border-bottom:1px solid rgba(20,17,15,.28);padding-bottom:5px;white-space:nowrap}
 
 /* menu */
 .menu-sec .ttl{margin-bottom:var(--s4)}
@@ -1149,7 +1200,7 @@ ${LN_CREDIT_CSS}
 .hrs .ln{display:none}
 .hrs li{padding:12px 0;border-bottom:1px solid rgba(20,17,15,.12)}
 .mod,.dlv{grid-template-columns:34px minmax(0,1fr)}
-.mod .mgo,.mod .msoon,.dlv .msoon,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
+.mod .mgo,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
 .mod .mn,.dlv .mn{font-size:10px;padding-top:6px}
 .frame{padding:9px}.frame:before{inset:4px}
 .stamp{width:58px;height:58px;font-size:20px;right:-8px;top:-8px}
@@ -1168,7 +1219,7 @@ const RN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 const sealChev = '<svg viewBox="0 0 9 6" aria-hidden="true" style="width:9px;height:6px;fill:none;stroke:currentColor;stroke-width:1.5"><path d="M1 1l3.5 3.5L8 1"/></svg>';
 
 function tocHeader(v) {
-  const nav = [['#chapters', 'The table'], ['#hours', 'Hours'], ['#family', 'Family'], ['#menu', 'Menu'], ['#more', 'Order & more']];
+  const nav = [['#chapters', 'The table'], ['#hours', 'Hours'], ['#family', 'Family'], ['#menu', 'Menu'], ...(v.showMore ? [['#more', 'Order & more']] : [])];
   const ord = v.modList[0];
   const ordBtn = ord.on && ord.url ? `<a class="ordcta" href="${esc(ord.url)}" rel="noopener" target="_blank">Order online</a>` : '';
   return `<div class="pv">Preview only. Not the live site.</div>
@@ -1255,23 +1306,24 @@ ${cats.length ? `<div class="mcats">${menuHtml}</div>` : `<div class="menu-off">
 }
 
 function tocModules(v) {
-  const { modList, delAll } = v;
-  const on = modList.filter(m => m.on).length;
+  const { modList, delAll, moreLine, showMore } = v;
+  if (!showMore) return '';
+  const on = modList.filter(m => m.on);
   return `<section class="blk in" id="more">
-<div class="ttl"><div class="ch"><span class="rn cap">Online</span><span class="ln" aria-hidden="true"></span></div><h2>Order &amp; more</h2><p class="sub">${on ? 'Available now.' : 'Wired and waiting. Nothing is live here yet.'}</p></div>
-<ul class="mods">${modList.map((m, i) => modRow({ ...m, n: RN[i] || m.n }, 'mod')).join('')}</ul>
-<div class="dlv"><span class="mn">VI</span><div><h3>Delivery apps</h3><p>${delAll.length ? 'Order through a delivery app. Links open the app or its website.' : 'Delivery links appear here as soon as the restaurant is connected. Until then, call us.'}</p></div>${delAll.length ? `<div class="dlinks">${delAll.map(d => `<a href="${esc(d.u)}" rel="noopener" target="_blank">${esc(d.n)}</a>`).join('')}</div>` : '<span class="msoon">Coming soon</span>'}</div>
+<div class="ttl"><div class="ch"><span class="rn cap">Online</span><span class="ln" aria-hidden="true"></span></div><h2>Order &amp; more</h2>${moreLine ? `<p class="sub">${esc(moreLine)}</p>` : ''}</div>
+${on.length ? `<ul class="mods">${on.map((m, i) => modRow({ ...m, n: RN[i] || m.n }, 'mod')).join('')}</ul>` : ''}
+${delAll.length ? `<div class="dlv"><span class="mn">VI</span><div><h3>Delivery apps</h3><p>Order through a delivery app. Links open the app or its website.</p></div><div class="dlinks">${delAll.map(d => `<a href="${esc(d.u)}" rel="noopener" target="_blank">${esc(d.n)}</a>`).join('')}</div></div>` : ''}
 </section>`;
 }
 
 function tocFooter(v) {
   const { socLinks, modList, tel, phone } = v;
-  const nav = [['#chapters', 'The table'], ['#hours', 'Hours'], ['#family', 'Family'], ['#menu', 'Menu'], ['#more', 'Order & more']];
+  const nav = [['#chapters', 'The table'], ['#hours', 'Hours'], ['#family', 'Family'], ['#menu', 'Menu'], ...(v.showMore ? [['#more', 'Order & more']] : [])];
   return `<footer><div class="fgrid">
 <div class="fbrand"><a class="logo" href="${esc(v.q({}))}" aria-label="${esc(v.name)} home">${CFG.logos[v.th.logo]}</a><p>${esc(CFG.footLine)}</p></div>
 <div class="fcol"><h4>Explore</h4><ul>${nav.map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('')}</ul></div>
 <div class="fcol"><h4>Find us</h4><ul>${v.addr ? `<li><span class="nm">${esc(v.name)}</span>${esc(v.addr)}</li>` : ''}${tel ? `<li><a href="tel:${tel}">${esc(phone)}</a></li>` : ''}</ul></div>
-<div class="fcol"><h4>Online</h4><ul>${modList.filter(m => m.on && m.url).map(m => `<li><a href="${esc(m.url)}" rel="noopener"${m.ext ? ' target="_blank"' : ''}>${esc(m.title)}</a></li>`).join('') || '<li>Online ordering and reservations arrive as they go live.</li>'}${socLinks.map(s => `<li><a href="${esc(s.u)}" rel="noopener" target="_blank">${esc(s.n)}</a></li>`).join('')}</ul></div>
+${(modList.some(m => m.on && m.url) || socLinks.length) ? `<div class="fcol"><h4>Online</h4><ul>${modList.filter(m => m.on && m.url).map(m => `<li><a href="${esc(m.url)}" rel="noopener"${m.ext ? ' target="_blank"' : ''}>${esc(m.title)}</a></li>`).join('')}${socLinks.map(s => `<li><a href="${esc(s.u)}" rel="noopener" target="_blank">${esc(s.n)}</a></li>`).join('')}</ul></div>` : ''}
 </div>
 <div class="fbot"><span>&copy; ${new Date().getFullYear()} ${esc(v.name)}. All rights reserved.</span><span>Powered by Mother Sauce</span></div>
 ${lnCredit('tasteofchina')}</footer>`;
@@ -1304,6 +1356,36 @@ export default {
     if (ICONS[url.pathname]) { const [k, t] = ICONS[url.pathname]; const b = Uint8Array.from(atob(CFG.icons[k]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': t, 'cache-control': 'public, max-age=86400' } }); }
     if (url.pathname === '/site.webmanifest') return new Response(JSON.stringify({ name: CFG.icon.name, short_name: CFG.icon.short, icons: [{ src: '/icon-180.png', sizes: '180x180', type: 'image/png' }, { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' }], theme_color: CFG.icon.theme, background_color: CFG.icon.theme, display: 'standalone' }), { headers: { 'content-type': 'application/manifest+json', 'cache-control': 'public, max-age=86400' } });
     const im = url.pathname.match(/^\/img\/([a-z_]+)\.webp$/); if (im && IMG[im[1]]) { const b = Uint8Array.from(atob(IMG[im[1]]), c => c.charCodeAt(0)); return new Response(b, { headers: { 'content-type': 'image/webp', 'cache-control': 'public, max-age=86400' } }); }
+    // ---- form intake: reservations and catering post here, this worker relays to Mother Sauce ----
+    if (url.pathname === '/api/reserve' || url.pathname === '/api/catering') {
+      const J = (o, st = 200) => new Response(JSON.stringify(o), { status: st, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } });
+      if (req.method !== 'POST') return J({ ok: false, error: 'Method not allowed' }, 405);
+      const raw = await req.text(); if (raw.length > 12000) return J({ ok: false, error: 'Too large' }, 413);
+      let b = {}; try { b = JSON.parse(raw); } catch (e) { try { b = Object.fromEntries(new URLSearchParams(raw)); } catch (e2) { return J({ ok: false, error: 'Bad request' }, 400); } }
+      if (b.website) return J({ ok: true });
+      const S = (v, n) => String(v ?? '').trim().slice(0, n);
+      const name = S(b.name, 120), phone = S(b.phone, 40), email = S(b.email, 200).toLowerCase(), loc = S(b.location, 60);
+      if (!name || phone.replace(/\D/g, '').length < 10) return J({ ok: false, error: 'Please add your name and a phone number we can call or text.' }, 400);
+      const fast = Number(b.elapsed) > 0 && Number(b.elapsed) < 2500; // too fast = saved and flagged, not dropped
+      const ip = req.headers.get('cf-connecting-ip') || '', ua = S(req.headers.get('user-agent'), 300);
+      if (url.pathname === '/api/catering') {
+        if (!env.PORTAL) return J({ ok: false, error: 'This form is not connected yet. Please call us.' }, 503);
+        let p; try { p = await env.PORTAL.fetch('https://ln-portal/internal/catering', { method: 'POST', body: JSON.stringify({ client: CFG.slug, name, phone, email, event_date: S(b.event_date, 10), guests: S(b.guests, 5), notes: S(b.notes, 2000), location: loc, ip, spam: fast }) }); } catch (e) { return J({ ok: false, error: 'Please try again, or call us.' }, 502); }
+        const j = await p.json().catch(() => ({ error: 'unavailable' })); delete j.notice;
+        return J(j, p.status);
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || '') || !/^\d{2}:\d{2}$/.test(b.time || '')) return J({ ok: false, error: 'Please pick a date and time.' }, 400);
+      if (!env.DB) return J({ ok: false, error: 'This form is not connected yet. Please call us.' }, 503);
+      const party = S(b.party, 4), notes = S(b.notes, 1000);
+      if (!party) return J({ ok: false, error: 'Please choose your party size.' }, 400);
+      try {
+        const r = await env.DB.prepare("INSERT INTO cove_reservations (brand,status,name,phone,email,res_date,res_time,party_size,notes,ip,user_agent,location,spam) VALUES (?,'new',?,?,?,?,?,?,?,?,?,?,?) RETURNING id")
+          .bind(CFG.slug, name, phone, email, b.date, b.time, party, notes, ip, ua, loc, fast ? 1 : 0).first();
+        const id = r && r.id;
+        if (id && email && !fast && env.PORTAL) { try { await env.PORTAL.fetch('https://ln-portal/internal/reservation-booked', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ client: CFG.slug, id }) }); } catch (e) {} }
+        return J({ ok: true, id });
+      } catch (e) { return J({ ok: false, error: 'Please try again, or call us.' }, 502); }
+    }
     if (url.pathname !== '/' && url.pathname !== '/index.html') return new Response('Not found', { status: 404, headers: { 'x-robots-tag': 'noindex' } });
     const s = CFG.slug;
     const [contact, hours, menu, social, jobs, mods, site] = await Promise.all([
