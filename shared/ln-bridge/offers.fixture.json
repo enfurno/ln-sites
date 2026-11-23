@@ -1,0 +1,24 @@
+{
+  "_sample": true,
+  "_note": "Sample data for the offers renderer only. Never deployed and never treated as live offers.",
+  "offers": [
+    {
+      "id": "sample-special",
+      "kind": "special",
+      "title": "20% off dinner",
+      "details": "Sample special for the Specials & coupons section.",
+      "when": "Mon-Thu 4-8 PM",
+      "active": true,
+      "link": "https://mothersauce.app/l/sample-special"
+    },
+    {
+      "id": "sample-coupon",
+      "kind": "coupon",
+      "title": "$5 off crab legs",
+      "details": "Sample coupon for the Specials & coupons section.",
+      "when": "Through Dec 31",
+      "active": true,
+      "link": "https://mothersauce.app/l/sample-coupon"
+    }
+  ]
+}

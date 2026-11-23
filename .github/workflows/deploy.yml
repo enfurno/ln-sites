@@ -34,6 +34,7 @@ jobs:
           node sites/canrocks/test-hours.mjs
           node sites/loadednacho/test-contact.mjs
           node tools/offers.mjs --check
+          node tools/test-offers.mjs
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
