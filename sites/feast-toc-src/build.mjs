@@ -115,9 +115,17 @@ const brands = {
 // (for example feast's DB and PORTAL for the catering and reservation intake), add it here and the
 // same upload that adds it is the one that keeps it. Do not add bindings here without approval.
 const BINDINGS = {
-  'feast-preview': [{ type: 'd1', name: 'DB' }, { type: 'service', name: 'PORTAL', service: 'ln-portal' }],
-  'toc-preview': [{ type: 'd1', name: 'DB' }, { type: 'service', name: 'PORTAL', service: 'ln-portal' }],
+  'feast-preview': [
+    { type: 'd1', name: 'DB', id: 'eea44892-bb31-4980-9251-620614175930' },
+    { type: 'service', name: 'PORTAL', service: 'ln-portal', environment: 'production' },
+  ],
+  'toc-preview': [
+    { type: 'd1', name: 'DB', id: 'eea44892-bb31-4980-9251-620614175930' },
+    { type: 'service', name: 'PORTAL', service: 'ln-portal', environment: 'production' },
+  ],
 };
+// The build key is the preview name; production workers are named differently on Cloudflare.
+const PRODUCTION = { 'feast-preview': 'feast-loadednacho', 'toc-preview': 'tasteofchina-loadednacho' };
 fs.mkdirSync('dist', { recursive: true });
 const ICON_META = {
   'feast-preview': { name: 'Feast Buffet', short: 'Feast', theme: '#0B0A0D' },
@@ -133,7 +141,7 @@ for (const [w, c] of Object.entries(brands)) {
   const IMG = {}; for (const n of names) IMG[n] = fs.readFileSync('/workspace/feast-toc/images/' + n + '.webp').toString('base64');
   const code = tpl.replace('__CFG__', JSON.stringify(c)).replace('__IMG__', JSON.stringify(IMG));
   fs.writeFileSync(`dist/${w}.js`, code);
-  const deploy = `async () => { const NAME=${JSON.stringify(w)}; const code=${JSON.stringify(code)};
+  const deploy = `async () => { const NAME=(typeof process!=='undefined'&&process.env&&process.env.WORKER_NAME)||${JSON.stringify(PRODUCTION[w] || w)}; const code=${JSON.stringify(code)};
 const meta={main_module:'worker.js',compatibility_date:'2026-10-01',bindings:${JSON.stringify(BINDINGS[w] || [])}};
 const b='F'+Date.now(); const body=['--'+b,'Content-Disposition: form-data; name="metadata"','Content-Type: application/json','',JSON.stringify(meta),'--'+b,'Content-Disposition: form-data; name="worker.js"; filename="worker.js"','Content-Type: application/javascript+module','',code,'--'+b+'--'].join('\\r\\n');
 const r=await cloudflare.request({method:'PUT',path:'/accounts/'+accountId+'/workers/scripts/'+NAME,body,contentType:'multipart/form-data; boundary='+b,rawBody:true});
