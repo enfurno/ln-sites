@@ -1,0 +1,6 @@
+# Permanent moves handled by the assets router, before its own trailing-slash 307.
+# Mother Sauce's marketing page lives once, on the product domain (2026-11-24).
+# The worker also answers these; this file covers the paths the router normalises first.
+/mother-sauce/      https://mothersauce.app/  301
+/mother-sauce.html  https://mothersauce.app/  301
+/mother-sauce       https://mothersauce.app/  301
