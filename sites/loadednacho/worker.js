@@ -126,6 +126,8 @@ const __lnSecInner = {async fetch(req,env,__x){if(new URL(req.url).pathname==='/
  if(u.hostname==='www.loadednacho.com'){u.hostname='loadednacho.com';u.protocol='https:';return Response.redirect(u.toString(),301);}
  const hn=u.hostname;const pv=hn.endsWith('.workers.dev')||/^preview[.-]|\.preview\./.test(hn)||(hn!=='loadednacho.com'&&hn!=='www.loadednacho.com'&&hn.endsWith('.loadednacho.com')&&hn.includes('preview'));
  if(pv&&u.pathname==='/robots.txt')return new Response('User-agent: *\nDisallow: /\n',{headers:{'content-type':'text/plain'}});
+ // Mother Sauce's marketing page lives once, on the product domain (2026-11-24). Permanent, single hop, query kept.
+ if(/^\/mother-sauce(\.html)?\/?$/i.test(u.pathname))return Response.redirect('https://mothersauce.app/'+u.search,301);
  if(u.pathname==='/api/contact'||u.pathname==='/api/subscribe'){
   if(req.method!=='POST')return J({ok:false,error:'Method not allowed'},405);
   let d;try{d=await req.json()}catch{return J({ok:false,error:'Bad request'},400)}
