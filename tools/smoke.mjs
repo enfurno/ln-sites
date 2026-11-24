@@ -32,6 +32,15 @@ for (const k of keys) {
     const r = await get(s.base + p);
     r.status === 200 ? ok(p + ' 200') : bad(p + ' ' + r.status);
   }
+  // A page that moved permanently off this host: config lists the path and the exact destination.
+  // Only a 301/308 counts — a 302 would tell search engines the old URL still stands.
+  for (const [p, want] of Object.entries(s.pages_redirect || {})) {
+    const r = await get(s.base + p);
+    const loc = r.headers.get('location') || '';
+    const permanent = r.status === 301 || r.status === 308;
+    if (permanent && loc.split('?')[0] === want) ok(p + ' ' + r.status + ' -> ' + loc);
+    else bad(p + ' ' + r.status + ' ' + (loc || 'no location') + ' (expected 301 -> ' + want + ')');
+  }
   const h = await get(s.base + '/_headers');
   h.status === 404 ? ok('/_headers 404') : bad('/_headers ' + h.status);
   for (const [p, m] of Object.entries(s.module_pages)) {
