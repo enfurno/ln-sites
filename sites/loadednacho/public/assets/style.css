@@ -414,3 +414,66 @@ footer .small .fn{color:var(--ink);font-weight:800}footer .small .fn b{color:var
 .sec .kicker::before,.nums .kicker::before{display:inline-block;vertical-align:-.12em;margin-right:.45em}
 /* v9b narrow phones: the longest eyebrow ("Your business, one dashboard") measures ~345px at .86rem/.2em, so tighten it below 390px to keep one line down to 320px */
 @media (max-width:389px){.sec .kicker,.nums .kicker{font-size:.74rem;letter-spacing:.14em}}
+
+/* ===================================================================
+   v40 — type scale + button system taken from the Mother Sauce marketing page
+   (Eric, 2026-11-25). One heading scale, one button shape, one ghost outline.
+   Palette tokens from that page are declared here for the values this site
+   did not already carry; the light theme in theme.css already used the same
+   cream/ink/mute trio.
+   =================================================================== */
+:root{--or:#f7892b;--or-deep:#b3560b;--plum:#4b2b52;--line:#e7dac7;--card:#fffdfa;--edge:rgba(26,20,16,.26)}
+body{font-size:17.5px;line-height:1.62}
+h1,h2,h3{font-weight:800;line-height:1.06;letter-spacing:-.02em}
+h1,.hero h1{font-size:clamp(44px,4.6vw,63px);line-height:1.02;letter-spacing:-.028em}
+.head h2,.sec h2,.join-in h2{font-size:clamp(30px,3.2vw,42px);line-height:1.06;letter-spacing:-.02em}
+@media (max-width:479px){#services .head h2{font-size:30px}}
+
+/* buttons: 12px radius, 15px block / 26px inline, 800 15px. Primary is the
+   flat Mother Sauce orange with dark text; ghost is a 1.5px edge, no fill.
+   The older pill radius, gradient rim (::before) and hover gap ring (::after)
+   are switched off here rather than deleted, so nothing else has to change. */
+.btn,.btn.sm,.btn.clog,.btn.cta-dark{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+ padding:15px 26px;border:0;border-radius:12px;cursor:pointer;
+ font:800 15px/1.2 Garet,system-ui,sans-serif;letter-spacing:0;
+ transition:transform .2s,box-shadow .2s,background-color .2s,border-color .2s,color .2s}
+.btn:not(.ghost):not(.cta-dark):not(.btn-join),.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join){
+ position:relative;isolation:auto;border:0;background:var(--or);background-size:auto;color:#1a0f08;
+ box-shadow:0 10px 26px -10px rgba(247,137,43,.7);padding:15px 26px}
+.btn:not(.ghost):not(.cta-dark):not(.btn-join)::before,.btn:not(.ghost):not(.cta-dark):not(.btn-join)::after,
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join)::before,.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join)::after{content:none;display:none}
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join){background:var(--plum);color:#fdf7f1;box-shadow:0 10px 26px -12px rgba(75,43,82,.8)}
+.btn:hover,.btn:focus-visible{transform:translateY(-2px);outline:none}
+.btn:not(.ghost):not(.cta-dark):not(.btn-join):hover,.btn:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible,
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):hover,.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible{
+ background-position:0 0;box-shadow:0 14px 32px -10px rgba(247,137,43,.85);color:#1a0f08}
+.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):hover,.btn.clog:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible{box-shadow:0 14px 32px -10px rgba(75,43,82,.9);color:#fff}
+.btn:focus-visible{outline:2px solid var(--or);outline-offset:3px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--edge);box-shadow:none}
+[data-theme=dark] .btn.ghost{border-color:rgba(247,242,234,.3)}
+.btn.ghost:hover,.btn.ghost:focus-visible{background:transparent;border-color:var(--or);color:var(--ink);box-shadow:none;transform:translateY(-2px)}
+.btn.ghost:hover .bi,.btn.ghost:focus-visible .bi{color:var(--or)}
+.btn .bi{flex:0 0 auto;margin-left:-.15rem}
+/* nav and secondary buttons: one step smaller than the page CTAs
+   (the guard is repeated so this beats the 4-class primary rule above) */
+.btn.sm:not(.ghost):not(.cta-dark):not(.btn-join),.btn.sm.ghost{padding:11px 18px;border-radius:10px;font-size:14px}
+/* the subscribe button sits inside a dark/white input row, so it matches the
+   primary shape but keeps the row height */
+.inline .btn,.inline .btn.btn-join{background:var(--or);background-size:auto;color:#1a0f08;border:0;border-radius:0 12px 12px 0;padding:0 20px;box-shadow:none}
+.inline .btn:hover,.inline .btn:focus-visible,.inline .btn.btn-join:hover,.inline .btn.btn-join:focus-visible{
+ background:var(--or-deep);color:#fff7ef;box-shadow:none;transform:none}
+.inline .btn.btn-join:hover .bi,.inline .btn.btn-join:focus-visible .bi{color:#fff7ef}
+/* the closing band's dark CTA: ink fill instead of the old near-black tile */
+.btn.cta-dark,.join-in .cta-dark{background:#1a1410;color:#fdf7f1;border:0;box-shadow:0 10px 26px -12px rgba(26,20,16,.8);border-radius:12px;padding:15px 26px;font-size:15px}
+.btn.cta-dark:hover,.btn.cta-dark:focus-visible,.join-in .cta-dark:hover,.join-in .cta-dark:focus-visible{background:#1a1410;color:var(--or);box-shadow:0 14px 32px -12px rgba(26,20,16,.9);transform:translateY(-2px)}
+.btn.cta-dark:focus-visible{outline:2px solid var(--or);outline-offset:3px}
+/* inputs follow the button radius, so form rows and CTAs line up */
+input,select,textarea{border-radius:12px}
+.inline input{border-radius:12px 0 0 12px}
+/* nav links hover in the site orange rather than the yellow, which now reads
+   as a highlight colour on cards only */
+.nav nav a:hover{color:var(--or)}
+@media (prefers-reduced-motion:reduce){.btn,.btn:hover,.btn:focus-visible,.btn.cta-dark:hover{transform:none;transition:none}}
+/* v40 fix: the new .btn.sm rule must not bring the header buttons back on
+   phones — theme.css hides .nav > .btn below 760px */
+@media (max-width:760px){.nav>.btn,.nav>.btn.sm,.nav>.btn.clog{display:none}}

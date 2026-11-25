@@ -30,9 +30,9 @@
 [data-theme=light] .info li,[data-theme=light] footer,[data-theme=light] .rx-h,[data-theme=light] .rx-list li{border-color:rgba(26,20,16,.1)}
 [data-theme=light] .nums-in{border-color:rgba(26,20,16,.1);background:linear-gradient(135deg,#ffffff,#f7f0e6);box-shadow:0 0 40px rgba(247,137,43,.12)}
 [data-theme=light] .shot{background:#efe7da}
-[data-theme=light] .btn.ghost{background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(rgba(26,20,16,.28),rgba(26,20,16,.28)) border-box}
-[data-theme=light] .btn.ghost:hover,[data-theme=light] .btn.ghost:focus-visible{background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box}
-[data-theme=light] .btn:hover,[data-theme=light] .btn:focus-visible{box-shadow:0 10px 30px -6px rgba(247,137,43,.5),0 0 24px -4px rgba(236,61,99,.35)}
+[data-theme=light] .btn.ghost{background:transparent;border-color:var(--edge)}
+[data-theme=light] .btn.ghost:hover,[data-theme=light] .btn.ghost:focus-visible{background:transparent;border-color:var(--or)}
+[data-theme=light] .btn:not(.ghost):not(.cta-dark):not(.btn-join):hover,[data-theme=light] .btn:not(.ghost):not(.cta-dark):not(.btn-join):focus-visible{box-shadow:0 14px 32px -10px rgba(247,137,43,.5)}
 [data-theme=light] .see{border-bottom-color:#f7892b}
 [data-theme=light] input,[data-theme=light] select,[data-theme=light] textarea,[data-theme=light] #contact-form select{background-color:#fff;border-color:rgba(26,20,16,.18)}
 [data-theme=light] #contact-form input:not([type=checkbox]):hover,[data-theme=light] #contact-form select:hover,[data-theme=light] #contact-form textarea:hover{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,color-mix(in srgb,var(--c) 60%,transparent),color-mix(in srgb,var(--c2,var(--c)) 60%,transparent)) border-box}
