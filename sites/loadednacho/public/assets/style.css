@@ -477,3 +477,15 @@ input,select,textarea{border-radius:12px}
 /* v40 fix: the new .btn.sm rule must not bring the header buttons back on
    phones — theme.css hides .nav > .btn below 760px */
 @media (max-width:760px){.nav>.btn,.nav>.btn.sm,.nav>.btn.clog{display:none}}
+/* v41 — mobile header: the mark sits on the viewport centre, not in the space
+   left over between the theme toggle and the hamburger, so it reads centred
+   rather than arithmetic-centred (Eric, 2026-11-25). Desktop is untouched.
+   The toggle moves to the left gutter: the 190px lockup plus a 38px toggle and
+   a 40px hamburger do not fit either side of a centred mark below ~430px, and
+   this keeps the mark at full size with nothing overlapping. */
+@media (max-width:760px){
+  .nav{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center}
+  .nav .brand{grid-column:2;grid-row:1;justify-self:center;margin:0}
+  .nav .tt{grid-column:1;grid-row:1;justify-self:start;margin:0}
+  .nav .burger{grid-column:3;grid-row:1;justify-self:end;margin:0}
+}
