@@ -12,7 +12,7 @@ import { injectWorker } from './bridge.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(HERE, '..');
-export const PRODUCTION_SITES = ['loadednacho', 'meiji', 'cove', 'canrocks'];
+export const PRODUCTION_SITES = ['loadednacho', 'meiji', 'cove', 'canrocks', 'rexters'];
 // These trees are never deployed, even if a commit touches them.
 export const EXCLUDED_PREFIXES = ['sites/feast/', 'sites/toc/', 'sites/feast-toc-src/', 'shared/'];
 
@@ -63,7 +63,12 @@ export function configKeys() {
 export function precheck(s, meta) {
   const err = [];
   if (s.assets?.run_worker_first !== true) err.push('config: run_worker_first must be true');
-  for (const b of ['ASSETS', 'PORTAL']) if (!s.bindings.some(x => x.name === b)) err.push('config: required binding ' + b + ' missing');
+  // ASSETS is always required. PORTAL is required only when the worker actually
+  // talks to the portal service, so a site that never does (rexters) does not get
+  // a service binding it has no use for.
+  const required = ['ASSETS'];
+  try { if (/env\.PORTAL\b/.test(fs.readFileSync(absPath(s.worker_src), 'utf8'))) required.push('PORTAL'); } catch { required.push('PORTAL'); }
+  for (const b of required) if (!s.bindings.some(x => x.name === b)) err.push('config: required binding ' + b + ' missing');
   const portal = s.bindings.find(x => x.name === 'PORTAL');
   if (portal && portal.service !== 'ln-portal') err.push('config: PORTAL service must be ln-portal');
   if (meta) {

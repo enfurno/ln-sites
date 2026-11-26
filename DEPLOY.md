@@ -4,7 +4,7 @@ Work on a branch and open a pull request. The PR workflow runs pre-checks only: 
 
 Merging to `main` deploys. The push workflow looks at which `sites/<name>/` paths changed. For each changed production site it runs the existing pipeline: pre-checks, refuse if a live binding is missing, upload assets, deploy while keeping every binding and `run_worker_first`, read the settings back, `node tools/smoke.mjs`, and roll back to the previous version if that fails.
 
-Production sites: `loadednacho`, `meiji`, `cove`, `canrocks`.
+Production sites: `loadednacho`, `meiji`, `cove`, `canrocks`, `rexters`.
 
 Never deployed from this workflow: `sites/feast`, `sites/toc`, `sites/feast-toc-src`, `shared/ln-portal`, and the rest of `shared/`.
 
