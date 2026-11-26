@@ -477,15 +477,18 @@ input,select,textarea{border-radius:12px}
 /* v40 fix: the new .btn.sm rule must not bring the header buttons back on
    phones — theme.css hides .nav > .btn below 760px */
 @media (max-width:760px){.nav>.btn,.nav>.btn.sm,.nav>.btn.clog{display:none}}
-/* v41 — mobile header: the mark sits on the viewport centre, not in the space
-   left over between the theme toggle and the hamburger, so it reads centred
-   rather than arithmetic-centred (Eric, 2026-11-25). Desktop is untouched.
-   The toggle moves to the left gutter: the 190px lockup plus a 38px toggle and
-   a 40px hamburger do not fit either side of a centred mark below ~430px, and
-   this keeps the mark at full size with nothing overlapping. */
+/* v41 — mobile header: the mark is centred on the viewport, not on the box it
+   happens to sit in, so it reads centred rather than arithmetic-centred between
+   the theme toggle and the hamburger (Eric, 2026-11-25). Desktop is untouched.
+   The toggle sits in the left gutter: the 190px lockup with a 38px toggle and a
+   40px hamburger does not fit either side of a centred mark below ~430px.
+   Centring uses 50vw, not 50% of the header, so a classic desktop scrollbar does
+   not pull the mark 5px off the viewport centre; on a phone, where there is no
+   scrollbar, the two are identical. */
 @media (max-width:760px){
-  .nav{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center}
-  .nav .brand{grid-column:2;grid-row:1;justify-self:center;margin:0}
-  .nav .tt{grid-column:1;grid-row:1;justify-self:start;margin:0}
-  .nav .burger{grid-column:3;grid-row:1;justify-self:end;margin:0}
+  .nav{display:flex;align-items:center}
+  .nav .brand{position:absolute;left:50vw;top:50%;transform:translate(-50%,-50%);margin:0}
+  /* body-scoped so these beat theme.css's .nav .tt{margin-left:auto} one rule later */
+  body .nav .tt{order:-1;margin-left:0}
+  body .nav .burger{margin-left:auto;margin-right:0}
 }
