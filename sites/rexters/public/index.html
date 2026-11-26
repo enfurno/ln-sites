@@ -6,7 +6,7 @@
 <title>Rexter's Self Storage | Self Storage in Gainesville, TX</title>
 <meta name="description" content="Clean, secure, convenient self storage in Gainesville, TX. A range of unit sizes, gated access, and easy online rentals. Call (940) 665-7245.">
 <meta name="theme-color" content="#0b1f3a">
-<link rel="icon" href="__LOGO_URI__" type="image/jpeg">
+<link rel="icon" href="/assets/rexters-logo.jpg" type="image/jpeg">
 <style>
 :root{
   --navy:#0b1f3a; --navy-2:#12325e; --blue:#1f5fbf;
@@ -125,6 +125,19 @@ footer .base{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,
 
 @media(max-width:900px){nav{display:none}.two{grid-template-columns:1fr}}
 @media(max-width:640px){.util .r{display:none}}
+/* phones: the header logo was 144px tall beside the CTA and the footer kept its
+   2fr 1fr 1fr grid, so the contact column (261px) sat outside the viewport and
+   widened the document. Stack the footer, shrink the header, and give every
+   footer link a 40px tap target. Desktop above 760px is unchanged. */
+@media(max-width:760px){
+  .hdr .wrap{flex-wrap:wrap;gap:10px}
+  .brand .logo{height:58px;max-width:180px}
+  .hdr .brand .name{font-size:13.5px}
+  .hdr .cta{margin-left:auto;padding:10px 16px;font-size:14px;min-height:40px;display:inline-flex;align-items:center}
+  footer .wrap{grid-template-columns:1fr;gap:14px}
+  footer h4{margin-bottom:6px}
+  footer a{display:flex;align-items:center;min-height:40px;margin:0;overflow-wrap:anywhere}
+}
 </style>
 </head>
 <body>
@@ -142,7 +155,7 @@ footer .base{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,
 <header class="hdr">
   <div class="wrap">
     <a class="brand" href="#top">
-      <img class="logo" src="__LOGO_URI__" alt="Rexter's Self Storage">
+      <img class="logo" src="/assets/rexters-logo.jpg" alt="Rexter's Self Storage">
       <span class="name">Self Storage · Gainesville, TX</span>
     </a>
     <nav>
@@ -277,7 +290,7 @@ footer .base{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,
 <footer>
   <div class="wrap">
     <div>
-      <div class="brand" style="color:#fff"><img class="logo" src="__LOGO_URI__" alt="" style="height:62px;width:auto;max-width:220px;object-fit:contain;background:#fff;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:5px"><span class="name">Rexter's<br><span style="color:#93a5bd">Self Storage · Gainesville, TX</span></span></div>
+      <div class="brand" style="color:#fff"><img class="logo" src="/assets/rexters-logo.jpg" alt="" style="height:62px;width:auto;max-width:220px;object-fit:contain;background:#fff;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:5px"><span class="name">Rexter's<br><span style="color:#93a5bd">Self Storage · Gainesville, TX</span></span></div>
       <p style="margin-top:14px;color:#93a5bd">Clean, secure, and convenient storage in Gainesville, TX.</p>
     </div>
     <div><h4>Explore</h4><a href="#units">Units &amp; Pricing</a><a href="#how">How It Works</a><a href="#reserve">Rent Online</a><a href="#pay">Pay Online</a></div>
