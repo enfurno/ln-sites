@@ -144,7 +144,8 @@ if(miss.length) return {ok:false,refused:'live worker is missing required bindin
 const prev=((await cloudflare.request({method:'GET',path:A+'/workers/scripts/'+NAME+'/deployments'})).result.deployments[0]||{}).versions;
 let worker=${workerJs};
 if(!worker){const c=await cloudflare.request({method:'GET',path:A+'/workers/scripts/'+NAME+'/content/v2'});const raw=typeof c==='string'?c:c.result;const i=raw.indexOf('\\r\\n\\r\\n');const bnd=raw.slice(0,raw.indexOf('\\r\\n'));worker=raw.slice(i+4,raw.lastIndexOf('\\r\\n'+bnd))}
-const bindings=st.bindings.filter(b=>b.type!=='secret_text').map(b=>b.type==='d1'?{type:'d1',name:b.name,id:b.id||b.database_id}:b.type==='assets'?{type:'assets',name:b.name}:b);
+const add=REQ.filter(r=>ALLOW.includes(r.type+':'+r.name)&&!live.includes(r.type+':'+r.name)).map(r=>({type:r.type,name:r.name}));
+const bindings=st.bindings.filter(b=>b.type!=='secret_text').map(b=>b.type==='d1'?{type:'d1',name:b.name,id:b.id||b.database_id}:b.type==='assets'?{type:'assets',name:b.name}:b).concat(add);
 const meta={main_module:'worker.js',compatibility_date:st.compatibility_date,keep_bindings:['secret_text'],assets:{jwt:${jwtJs},config:CFG},bindings,observability:{enabled:true,head_sampling_rate:1,logs:{enabled:true,head_sampling_rate:1,persist:true,invocation_logs:true}}};
 if(Array.isArray(st.compatibility_flags)&&st.compatibility_flags.length) meta.compatibility_flags=st.compatibility_flags;
 const b='----F'+Date.now();const body=['--'+b,'Content-Disposition: form-data; name="metadata"','Content-Type: application/json','',JSON.stringify(meta),'--'+b,'Content-Disposition: form-data; name="worker.js"; filename="worker.js"','Content-Type: application/javascript+module','',worker,'--'+b+'--',''].join('\\r\\n');

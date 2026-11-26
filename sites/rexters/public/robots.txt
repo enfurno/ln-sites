@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /
+# client preview host; the site is not meant to be crawled
