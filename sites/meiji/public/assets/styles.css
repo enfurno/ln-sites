@@ -346,5 +346,7 @@ html.ln-order-on .card h3 .off-only,html.ln-order-on .card p.off-only{display:no
   footer a{display:flex;align-items:center;min-height:44px}
   footer li{margin:0}
   .ln-chk label{min-height:44px;align-items:center}
+  /* 20px painted box -> 24px; the 44px label row stays the tap target */
+  .ln-chk input[type=checkbox],.ln-consent input[type=checkbox],.form input[type=checkbox]{width:24px!important;height:24px!important;flex:0 0 24px}
   .ln-consent{min-height:44px;align-items:center}
 }
