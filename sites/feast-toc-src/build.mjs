@@ -129,8 +129,11 @@ const BINDINGS = {
     { type: 'service', name: 'PORTAL', service: 'ln-portal', environment: 'production' },
   ],
 };
-// The build key is the preview name; production workers are named differently on Cloudflare.
+// The build key is the preview worker name. Production workers are named differently on
+// Cloudflare (feast-loadednacho, tasteofchina-loadednacho) and this build never targets them:
+// upload.mjs has an allowlist of the two preview names only.
 const PRODUCTION = { 'feast-preview': 'feast-loadednacho', 'toc-preview': 'tasteofchina-loadednacho' };
+const COMPAT_DATE = '2026-10-01';
 fs.mkdirSync('dist', { recursive: true });
 const ICON_META = {
   'feast-preview': { name: 'Feast Buffet', short: 'Feast', theme: '#0B0A0D' },
@@ -146,13 +149,13 @@ for (const [w, c] of Object.entries(brands)) {
   const IMG = {}; for (const n of names) IMG[n] = fs.readFileSync(R('images/' + n + '.webp')).toString('base64');
   const code = tpl.replace('__CFG__', JSON.stringify(c)).replace('__IMG__', JSON.stringify(IMG));
   fs.writeFileSync(`dist/${w}.js`, code);
-  const deploy = `async () => { const NAME=(typeof process!=='undefined'&&process.env&&process.env.WORKER_NAME)||${JSON.stringify(PRODUCTION[w] || w)}; const code=${JSON.stringify(code)};
-const meta={main_module:'worker.js',compatibility_date:'2026-10-01',bindings:${JSON.stringify(BINDINGS[w] || [])}};
-const b='F'+Date.now(); const body=['--'+b,'Content-Disposition: form-data; name="metadata"','Content-Type: application/json','',JSON.stringify(meta),'--'+b,'Content-Disposition: form-data; name="worker.js"; filename="worker.js"','Content-Type: application/javascript+module','',code,'--'+b+'--'].join('\\r\\n');
-const r=await cloudflare.request({method:'PUT',path:'/accounts/'+accountId+'/workers/scripts/'+NAME,body,contentType:'multipart/form-data; boundary='+b,rawBody:true});
-const s=await cloudflare.request({method:'POST',path:'/accounts/'+accountId+'/workers/scripts/'+NAME+'/subdomain',body:{enabled:true,previews_enabled:false}});
-return {ok:r.success,id:r.result&&r.result.id,sub:s.success,size:code.length}; }`;
-  fs.writeFileSync(path.join(ROOT, `dist/deploy-${w}.js`), deploy);
+  fs.writeFileSync(path.join(ROOT, `dist/${w}.meta.json`), JSON.stringify({
+    worker: w,                      // the ONLY worker this bundle may be uploaded to
+    compatibility_date: COMPAT_DATE,
+    bindings: BINDINGS[w] || [],
+    bytes: code.length,
+    built_from: 'sites/feast-toc-src',
+  }, null, 2) + '\n');
   console.log(w, (code.length / 1024 / 1024).toFixed(2) + ' MB');
 }
 console.log('ok');
