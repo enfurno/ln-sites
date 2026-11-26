@@ -193,7 +193,9 @@ html,body{overflow-x:clip;max-width:100%}
  .hero h1{font-size:2.6rem}
  footer .cols{grid-template-columns:1fr}
 }
-@media(min-width:861px){.marquee{margin:-10px 0 0;transform:rotate(-1.5deg) scaleX(1.03)}}
+/* the rotated band must not exceed the viewport: scaleX(1.03) added 22px of
+   overflow that html,body{overflow-x:clip} only hid. Full width minus 2px, tilted. */
+@media(min-width:861px){.marquee{margin:-10px 1px 0;width:calc(100% - 2px);transform:rotate(-1.5deg)}}
 .hero+.marquee{position:relative}
 @media(max-width:860px){.hero .bg-video{height:74%;object-position:center top}.hero .shade{background:linear-gradient(180deg,rgba(13,12,11,.5) 0,rgba(13,12,11,0) 18%,rgba(13,12,11,0) 40%,rgba(13,12,11,.85) 66%,var(--ink) 76%)}}
 @media(max-width:860px){

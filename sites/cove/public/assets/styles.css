@@ -258,3 +258,8 @@ a[href^="tel:"]:not(.btn):not(.row){display:inline-block;padding:.6rem 0;margin:
 .ln-ts>div{border-radius:10px;max-width:100%}
 .ln-ts iframe{border-radius:10px;max-width:100%}
 .rsub>.ln-ts{margin:0}
+
+/* phones: the location card's two CTA buttons side by side (162+144+10) set a 375.6px
+   min-content track inside a ~350px wrap, so the card, 'Call the Cove' and 'Directions'
+   ran past the right edge and widened the document. Stack them below 560. */
+@media (max-width:560px){.visit{grid-template-columns:minmax(0,1fr)}.loc,.map{min-width:0}.loc-cta{grid-template-columns:1fr}}
