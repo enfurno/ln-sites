@@ -131,12 +131,15 @@ export async function executeScript(src) {
 // The execute() script. Pre-flight against LIVE settings, PUT, post-verify, auto-rollback to the previous version on a failed post-verify.
 export function s2Script(s, cfg, { workerSrc, jwt } = {}) {
   const req = s.bindings.map(b => ({ type: b.type, name: b.name }));
+  // A site can allow specific bindings to be ADDED on deploy, for a one-time move to
+  // asset routing where the live worker predates it. Anything not listed still refuses.
+  const allowAdd = s.allow_add_bindings || [];
   const jwtJs = JSON.stringify(jwt || '__JWT__');
   const workerJs = workerSrc ? JSON.stringify(workerSrc) : 'null';
-  return `async () => { const A='/accounts/'+accountId, NAME=${JSON.stringify(s.worker)}, REQ=${JSON.stringify(req)}, CRONS=${JSON.stringify(s.crons || [])}, CFG=${JSON.stringify(cfg)};
+  return `async () => { const A='/accounts/'+accountId, NAME=${JSON.stringify(s.worker)}, REQ=${JSON.stringify(req)}, ALLOW=${JSON.stringify(allowAdd)}, CRONS=${JSON.stringify(s.crons || [])}, CFG=${JSON.stringify(cfg)};
 if(CFG.run_worker_first!==true) return {ok:false,refused:'run_worker_first missing'};
 const st=(await cloudflare.request({method:'GET',path:A+'/workers/scripts/'+NAME+'/settings'})).result;
-const live=st.bindings.map(b=>b.type+':'+b.name), miss=REQ.filter(r=>!live.includes(r.type+':'+r.name));
+const live=st.bindings.map(b=>b.type+':'+b.name), miss=REQ.filter(r=>!live.includes(r.type+':'+r.name)&&!ALLOW.includes(r.type+':'+r.name));
 if(miss.length) return {ok:false,refused:'live worker is missing required bindings',missing:miss};
 const prev=((await cloudflare.request({method:'GET',path:A+'/workers/scripts/'+NAME+'/deployments'})).result.deployments[0]||{}).versions;
 let worker=${workerJs};
