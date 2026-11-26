@@ -1,10 +1,15 @@
 import fs from 'fs';
-const ICONS = JSON.parse(fs.readFileSync('/workspace/feast-toc/icons/inline.json', 'utf8'));
-const L = f => fs.readFileSync('/workspace/feast-toc/logos/' + f, 'utf8').replace(/<\?xml[^>]*>/, '').replace(/\s(width|height)="[^"]*"/g, (m, a, o) => o < 200 ? m : '').replace('<svg', '<svg role="img"');
+import path from 'path';
+import { fileURLToPath } from 'url';
+// Paths are relative to this file so a build runs from the repo (no /workspace tree needed).
+const ROOT = path.dirname(fileURLToPath(import.meta.url));
+const R = p => path.join(ROOT, p);
+const ICONS = JSON.parse(fs.readFileSync(R('icons/inline.json'), 'utf8'));
+const L = f => fs.readFileSync(R('logos/' + f), 'utf8').replace(/<\?xml[^>]*>/, '').replace(/\s(width|height)="[^"]*"/g, (m, a, o) => o < 200 ? m : '').replace('<svg', '<svg role="img"');
 const tpl = fs.readFileSync('worker.tpl.js', 'utf8');
 // Footer credit mark, inlined as a data URI: this worker is one self-contained bundle with no /assets/ dir,
 // so the credit must paint with zero network requests. Built here from the canonical component.
-const LN_MARK = 'data:image/png;base64,' + fs.readFileSync('/workspace/loadednacho/footer-credit/ln-mark.png').toString('base64');
+const LN_MARK = 'data:image/png;base64,' + fs.readFileSync(R('logos/ln-mark.png')).toString('base64');
 // Media host for the hero video/poster. Absolute URLs live here in config, never in worker.tpl.js logic.
 const MEDIA_HOST = 'https://ln-media.loadednacho.workers.dev';
 // v2 = the forward-and-back loop: last frame lands on the first, so the restart is invisible.
@@ -138,7 +143,7 @@ for (const [w, c] of Object.entries(brands)) {
   const names = new Set([c.img.hero, c.img.pattern, c.img.room, ...c.img.food.map(f => f.src)]);
   (c.stations || []).forEach(s => s.img && names.add(s.img));
   (c.chapters || []).forEach(s => s.img && names.add(s.img));
-  const IMG = {}; for (const n of names) IMG[n] = fs.readFileSync('/workspace/feast-toc/images/' + n + '.webp').toString('base64');
+  const IMG = {}; for (const n of names) IMG[n] = fs.readFileSync(R('images/' + n + '.webp')).toString('base64');
   const code = tpl.replace('__CFG__', JSON.stringify(c)).replace('__IMG__', JSON.stringify(IMG));
   fs.writeFileSync(`dist/${w}.js`, code);
   const deploy = `async () => { const NAME=(typeof process!=='undefined'&&process.env&&process.env.WORKER_NAME)||${JSON.stringify(PRODUCTION[w] || w)}; const code=${JSON.stringify(code)};
@@ -147,7 +152,7 @@ const b='F'+Date.now(); const body=['--'+b,'Content-Disposition: form-data; name
 const r=await cloudflare.request({method:'PUT',path:'/accounts/'+accountId+'/workers/scripts/'+NAME,body,contentType:'multipart/form-data; boundary='+b,rawBody:true});
 const s=await cloudflare.request({method:'POST',path:'/accounts/'+accountId+'/workers/scripts/'+NAME+'/subdomain',body:{enabled:true,previews_enabled:false}});
 return {ok:r.success,id:r.result&&r.result.id,sub:s.success,size:code.length}; }`;
-  fs.writeFileSync(`dist/deploy-${w}.js`, deploy);
+  fs.writeFileSync(path.join(ROOT, `dist/deploy-${w}.js`), deploy);
   console.log(w, (code.length / 1024 / 1024).toFixed(2) + ' MB');
 }
 console.log('ok');

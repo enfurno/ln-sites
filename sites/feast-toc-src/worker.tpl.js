@@ -334,7 +334,7 @@ const FEAST_CSS = `*,*:before,*:after{box-sizing:border-box;border-radius:0!impo
 :root{--r-s:6px;--r-m:10px;--r-l:12px}
 .sq,.ordcta,.seal-btn,.sw>button,.locpick,.burger,.drawer .x,.oc,.dlinks a,.mgo,.drawer .df .sw a,.logo{border-radius:var(--r-s)!important}
 .locpick{overflow:hidden}
-.loc .cur,.stn .im .tag,.mod .jobs li{border-radius:4px!important}
+.loc .cur,.stn .im .tag,.mod .jobs li,.msoon{border-radius:4px!important}
 .sw .menu{border-radius:var(--r-m)!important;overflow:hidden}
 .sw .menu a{border-radius:6px!important}
 .loc{border-radius:var(--r-l)!important}
@@ -656,7 +656,11 @@ ${LN_CREDIT_CSS}
 .locpick{display:flex;width:100%;margin-top:var(--s3)}
 .locpick a{flex:1 1 0;justify-content:center;padding:0 10px;min-height:46px;font-size:10px;letter-spacing:.16em}
 .mod,.dlv{grid-template-columns:40px minmax(0,1fr);gap:var(--s2) var(--s3)}
-.mod .mgo,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
+.mod .mgo,.mod .msoon,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
+.mod .msoon{justify-self:end;display:inline-flex;align-items:center;gap:8px;font:700 9px/1 'Space Grotesk';letter-spacing:.22em;text-transform:uppercase;color:rgba(244,239,230,.52);border:1px solid rgba(244,239,230,.18);padding:9px 12px;white-space:nowrap}
+.mod .msoon:before{content:"";width:5px;height:5px;background:rgba(244,239,230,.45);transform:rotate(45deg)}
+.mod .mc-off{color:rgba(244,239,230,.56);max-width:52ch}
+
 .dlv .mn{grid-row:1}
 }
 @media(max-width:760px){
@@ -698,6 +702,7 @@ html{scroll-behavior:auto}
 .stn .im img{transition:none}
 .hero video{transition:none}
 }
+
 `;
 
 // Hero video block: absolute media-host URLs from config; the inlined still is the always-present fallback.
@@ -1204,7 +1209,7 @@ ${LN_CREDIT_CSS}
 .hrs .ln{display:none}
 .hrs li{padding:12px 0;border-bottom:1px solid rgba(20,17,15,.12)}
 .mod,.dlv{grid-template-columns:34px minmax(0,1fr)}
-.mod .mgo,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
+.mod .mgo,.mod .msoon,.dlinks{grid-column:2;justify-self:start;margin-top:var(--s2)}
 .mod .mn,.dlv .mn{font-size:10px;padding-top:6px}
 .frame{padding:9px}.frame:before{inset:4px}
 .stamp{width:58px;height:58px;font-size:20px;right:-8px;top:-8px}
@@ -1217,6 +1222,7 @@ footer{padding-block:var(--s4)}
 }
 @media(max-width:420px){.hero h1{font-size:clamp(36px,11vw,50px)}.band .bn .n{font-size:32px}.chapter p{font-size:18px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero video{transition:none}.frame img{transition:none}}
+
 `;
 
 const RN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
