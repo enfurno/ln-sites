@@ -48,7 +48,7 @@ body.open .drawer a{transform:none;opacity:1}.drawer a:nth-child(2){transition-d
 @keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 .subhero{min-height:62svh}.subhero .neon{font-size:clamp(44px,9vw,104px)}
 /* marquee */
-.marquee{background:var(--red);color:#fff;overflow:hidden;white-space:nowrap;padding:14px 0;border-block:2px solid var(--gold);transform:rotate(-1.2deg);margin:-14px -10px 0;position:relative;z-index:2}
+.marquee{background:var(--red);color:#fff;overflow:hidden;white-space:nowrap;padding:14px 0;border-block:2px solid var(--gold);transform:rotate(-1.2deg);margin:-14px 1px 0;width:calc(100% - 2px);position:relative;z-index:2}
 .marquee div{display:inline-block;animation:mq 38s linear infinite;font-family:Rye,serif;font-size:20px}.marquee span{margin:0 22px;color:var(--gold)}
 @keyframes mq{to{transform:translateX(-50%)}}
 section{padding:clamp(70px,10vw,130px) 0;position:relative}
