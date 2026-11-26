@@ -333,3 +333,18 @@ html.ln-order-on .card h3 .on-only{display:inline}
 html.ln-order-on .card p.on-only{display:block}
 html.ln-order-on .card h3 .off-only,html.ln-order-on .card p.off-only{display:none}
 .nowrap{white-space:nowrap}
+
+/* ===================================================================
+   phones/tablets: 44px tap targets. The location card's phone and email
+   were 20px tall, footer links 37.6px, and the consent box 20px with a
+   plain label. Visual size of the checkbox stays; the label row is the
+   44px target, as with any checkbox + label pair. Scoped <=860 so the
+   1440 layout does not move.
+   =================================================================== */
+@media (max-width:860px){
+  a[href^="tel"],a[href^="mailto"]{display:inline-flex;align-items:center;min-height:44px}
+  footer a{display:flex;align-items:center;min-height:44px}
+  footer li{margin:0}
+  .ln-chk label{min-height:44px;align-items:center}
+  .ln-consent{min-height:44px;align-items:center}
+}
