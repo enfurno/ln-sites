@@ -703,6 +703,19 @@ html{scroll-behavior:auto}
 .hero video{transition:none}
 }
 
+/* phones: Dot's mobile audit. Labels below 11px and targets under 44px.
+   Selectors re-resolved against the live DOM: "You're looking at" is
+   p.here > span.lb (their rule outranks a bare .here .lb) and the kitchen
+   chip is span.tag inside .stn .im. */
+@media(max-width:640px){
+  /* their own rule is .hero .here .lb{10px}, so this must match that specificity */
+  .locpick a,.hero .here .lb{font-size:11px;letter-spacing:.10em}
+  .stn .im .tag{font-size:10px}
+  .pv{font-size:10px;letter-spacing:.08em}
+  /* a.ph sits in .visit on this brand and in .loc on the other, so match the class */
+  a.ph,a.go,.sw a{display:flex;align-items:center;min-height:44px}
+  footer a{display:flex;align-items:center;min-height:44px}
+}
 `;
 
 // Hero video block: absolute media-host URLs from config; the inlined still is the always-present fallback.
@@ -1223,6 +1236,16 @@ footer{padding-block:var(--s4)}
 @media(max-width:420px){.hero h1{font-size:clamp(36px,11vw,50px)}.band .bn .n{font-size:32px}.chapter p{font-size:18px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero video{transition:none}.frame img{transition:none}}
 
+/* phones: Dot's mobile audit. The call seal's phone was the smallest type on
+   the page at 7.5px. */
+@media(max-width:640px){
+  .seals .seal-btn small{font-size:9.5px;letter-spacing:.10em}
+  .navyband span{font-size:10.5px;letter-spacing:.12em}
+  .kick{font-size:11px;letter-spacing:.18em}
+  .pv{font-size:9.5px;letter-spacing:.08em}
+  .hours-grid .ul,.fcol a{display:flex;align-items:center;min-height:44px}
+  a[href*="google.com/maps"]{display:inline-flex;align-items:center;min-height:44px}
+}
 `;
 
 const RN = ['I', 'II', 'III', 'IV', 'V', 'VI'];
