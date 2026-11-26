@@ -1,0 +1,59 @@
+# Upload the Feast Buffet and Taste of China previews.
+#
+# Dispatch only. Nothing here runs on a push or a pull request, and merging a change
+# to sites/feast-toc-src still deploys nothing: these two previews are outside the
+# deploy pipeline in deploy.yml.
+#
+# What it does: builds the two bundles from source, then uploads each one to its
+# preview worker (feast-preview, toc-preview) through the Cloudflare API using
+# sites/feast-toc-src/upload.mjs. The runner has a hard allowlist of those two names;
+# the production workers feast-loadednacho and tasteofchina-loadednacho cannot be
+# reached from here.
+name: upload-feast-toc
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type exactly: upload-previews'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upload-feast-toc
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    if: github.event.inputs.confirm == 'upload-previews'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build both previews
+        working-directory: sites/feast-toc-src
+        run: node build.mjs
+
+      - name: Upload feast-preview
+        working-directory: sites/feast-toc-src
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node upload.mjs feast-preview
+
+      - name: Upload toc-preview
+        working-directory: sites/feast-toc-src
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node upload.mjs toc-preview
