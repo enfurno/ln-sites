@@ -515,3 +515,9 @@ input,select,textarea{border-radius:12px}
   .scrollcue{min-width:44px;min-height:44px}
   .nav .tt{width:44px;height:44px}
 }
+
+/* v45: the Mother Sauce CTA is a direct child of .reveal, not an .inline row, so
+   give this one button its own 24px gap from the copy. A relative offset, not a
+   margin: a margin grew the copy column and pushed the dashboard image and #work
+   down 24px on a phone. Other .btn CTAs are untouched. */
+#mother-sauce .ms-blip .reveal > .btn{position:relative;top:1.5rem}
